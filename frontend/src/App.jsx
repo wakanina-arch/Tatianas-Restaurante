@@ -204,9 +204,24 @@ function MenuItem({ item, addToCart }) {
         <img src={imageUrl} alt={item.nombre} className="food-image" loading="lazy" />
       </div>
       <div className="food-info">
-        <span className="food-meta">Categoría: {item.nombre}</span>
         <h3>{item.nombre}</h3>
         <p className="food-description">{description}</p>
+
+        {/* CHECKBOX DE OPCIONES */}
+        {Array.isArray(item.opciones) && item.opciones.length > 0 && (
+          <div className="opciones">
+            {item.opciones.slice(0, 3).map((op, idx) => (
+              <label className="opcion-label" key={op.nombre}>
+                <input
+                  type="checkbox"
+                  checked={selectedOption === op.nombre}
+                  onChange={() => setSelectedOption(selectedOption === op.nombre ? null : op.nombre)}
+                />
+                <span>{op.nombre} <small style={{color:'#888'}}>{op.calorias} kcal</small></span>
+              </label>
+            ))}
+          </div>
+        )}
 
         {/* SECCIÓN NUTRICIONAL DINÁMICA */}
         <div className="nutrition-container">
