@@ -1,3 +1,307 @@
+/* Contenedor de la info nutricional */
+.nutrition-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo de cada micro-dato (Kcal, Proteínas, etc.) */
+.nutri-chip {
+  background: white;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #636e72;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  
+  /* El brillo LED blanco sutil */
+  box-shadow: 
+    0 0 8px rgba(255, 255, 255, 0.8),
+    0 2px 5px rgba(0, 0, 0, 0.03);
+    
+  transition: all 0.3s ease;
+}
+
+.nutri-chip:hover {
+  transform: scale(1.1);
+  color: #d4a373; /* El color café/oro que usamos antes */
+  box-shadow: 0 0 12px rgba(255, 255, 255, 1);
+}
+
+/* Indicador de Alérgenos (Sutil) */
+.allergen-icon {
+  font-size: 0.8rem;
+  filter: grayscale(1);
+  opacity: 0.5;
+  transition: 0.3s;
+  cursor: help;
+}
+
+.allergen-icon:hover {
+  filter: grayscale(0);
+  opacity: 1;
+}
+/* Google Fonts import (agrega esto en tu index.html para que funcione) */
+/* <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"> */
+
+/* Aplicar a toda la app una base limpia */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f8f9fa; /* Fondo grisáceo para que el LED resalte */
+  color: #2d3436;
+}
+
+/* Títulos de los Platos: Elegancia pura */
+.food-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.02em;
+}
+
+/* Descripciones: Claridad y estilo */
+.food-description {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300; /* Peso ligero para que se vea sutil */
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #636e72;
+  margin-bottom: 1.2rem;
+}
+
+/* Categorías (Primeros, Segundos...): Look profesional */
+.category-title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #2d3436;
+  text-align: center;
+  margin: 3rem 0 1.5rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+/* Precios con un toque moderno */
+.item-price {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  color: #d4a373; /* Tono dorado/café elegante */
+  font-size: 1.1rem;
+}
+
+.food-description::first-letter {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3436; /* Resalta un poquito el inicio de la descripción */
+}
+.food-description {
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+.food-card:hover .food-description {
+  opacity: 1;
+  color: #2f3542; /* Se oscurece un poco para leer mejor al hacer hover */
+}
+/* Estilo para la descripción detallada */
+.food-description {
+  font-size: 0.92rem;        /* Tamaño equilibrado */
+  line-height: 1.6;          /* Espacio entre líneas para facilitar la lectura */
+  color: #57606f;            /* Gris suave que no cansa la vista */
+  margin: 0.8rem 0;
+  font-weight: 400;
+  text-align: justify;       /* Opcional: da un aspecto de menú de papel premium */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;     /* Limita a 3 líneas para no romper la densidad */
+  -webkit-box-orient: vertical;
+  overflow: hidden;          /* Corta el texto si es muy largo con "..." */
+}
+
+/* Título del plato más marcado */
+.food-info h3 {
+  font-family: 'Playfair Display', serif; /* Una fuente con serifa queda muy bien en comida */
+  font-size: 1.3rem;
+  color: #2f3542;
+  margin-bottom: 0.2rem;
+  letter-spacing: -0.5px;
+}
+
+/* Detalle extra (ej: alérgenos o calorías) en pequeño */
+.food-meta {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #a4b0be;
+  letter-spacing: 1px;
+}
+/* Contenedor principal para que las tarjetas se acomoden solas */
+.menu-grid {
+  display: grid;
+  /* Esto hace que las tarjetas no midan menos de 250px ni más de 1fr */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.food-card {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  
+  /* LED Sutil (Efecto profundidad) */
+  box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.05),
+    0 0 15px rgba(255, 255, 255, 0.7);
+    
+  /* Dinamismo sutil */
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.food-card:hover {
+  transform: translateY(-5px) scale(1.01); /* Movimiento muy fino */
+  box-shadow: 
+    0 20px 30px -10px rgba(0, 0, 0, 0.1),
+    0 0 25px rgba(255, 255, 255, 1); /* El LED se intensifica */
+}
+
+/* Imagen con aspecto dinámico */
+.food-image-container {
+  width: 100%;
+  aspect-ratio: 16 / 10; /* Proporción equilibrada: ni muy alta ni muy chata */
+  overflow: hidden;
+}
+
+.food-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Filtro sutil para que la comida se vea más viva */
+  filter: saturate(1.1);
+  transition: transform 0.6s ease;
+}
+
+.food-card:hover .food-image {
+  transform: scale(1.08);
+}
+
+/* Información con espaciado equilibrado */
+.food-info {
+  padding: 1.2rem;
+  text-align: left;
+}
+
+.food-info h3 {
+  font-size: 1.15rem;
+  margin: 0;
+  color: #2d3436;
+  font-weight: 700;
+}
+
+.food-info p {
+  font-size: 0.88rem; /* Tamaño optimizado para lectura rápida */
+  color: #636e72;
+  margin: 0.5rem 0 1.2rem 0;
+  line-height: 1.4;
+}
+
+/* Botón flotante sutil para añadir */
+.add-btn-small {
+  background: var(--primary-gradient); /* Usamos tu gradiente */
+  color: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.add-btn-small:hover {
+  transform: rotate(90deg); /* Giro dinámico al pasar el mouse */
+}
+/* Contenedor de la Tarjeta con Efecto LED Blanco */
+.food-card {
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden; /* Para que la imagen no se salga de las esquinas redondeadas */
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  
+  /* Efecto LED Blanco Suave (No molesta a la vista) */
+  box-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8), 
+    0 0 20px rgba(255, 255, 255, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.08); /* Sombra base para dar profundidad */
+    
+  transition: all 0.3s ease-in-out;
+}
+
+.food-card:hover {
+  transform: translateY(-8px);
+  /* El LED se "ilumina" un poco más al pasar el ratón */
+  box-shadow: 
+    0 0 15px rgba(255, 255, 255, 1), 
+    0 0 30px rgba(255, 255, 255, 0.6),
+    0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Contenedor de la Imagen */
+.food-image-container {
+  width: 100%;
+  height: 180px; /* Altura fija para que todas las tarjetas midan lo mismo */
+  overflow: hidden;
+  background: #f0f0f0; /* Color de carga por si falla la imagen */
+}
+
+.food-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ajusta la imagen sin deformarla */
+  transition: transform 0.5s ease;
+}
+
+.food-card:hover .food-image {
+  transform: scale(1.1); /* Efecto zoom suave al tocar la tarjeta */
+}
+
+/* Contenido de texto bajo la imagen */
+.food-info {
+  padding: 1.2rem;
+}
+
+.food-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.food-info p {
+  color: #777;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+body {
+  background-color: #f0f2f5; /* Un gris muy clarito para que el blanco brille */
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
 .app {
   min-height: 100vh;
   display: flex;

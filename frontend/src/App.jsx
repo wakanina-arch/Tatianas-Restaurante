@@ -190,40 +190,41 @@ function MenuItem({ item, addToCart }) {
     setSelectedOption(null);
   };
 
+  // Imagen por defecto según el nombre del plato (puedes personalizar las rutas)
+  const imageMap = {
+    'Primero': '/public/img/primero.jpg',
+    'Segundo': '/public/img/segundo.jpg',
+    'Postre': '/public/img/postre.jpg',
+  };
+  const imageUrl = imageMap[item.nombre] || '/public/img/default-food.jpg';
+
   return (
-    <div className="menu-item">
-      <h3>{item.nombre}</h3>
-      <p className="precio">${item.precio.toFixed(2)}</p>
-      <div className="info-tabs">
-        <p className="region">📍 Región: {item.region}</p>
-        <p className="historia">📖 {description}</p>
+    <div className="food-card">
+      <div className="food-image-container">
+        <img src={imageUrl} alt={item.nombre} className="food-image" loading="lazy" />
       </div>
+      <div className="food-info">
+        <span className="food-meta">Categoría: {item.nombre}</span>
+        <h3>{item.nombre}</h3>
+        <p className="food-description">{description}</p>
 
-      {/*INFORMACION NUTRICIONAL*/}
-      {item.opciones && item.opciones.length > 0 && (
-        <div className="opciones">
-          {item.opciones.map((opcion, idx) => (
-            <label key={idx} className="opcion-label">
-              <input
-                type="checkbox"
-                checked={selectedOption === opcion.nombre}
-                onChange={() => setSelectedOption(selectedOption === opcion.nombre ? null : opcion.nombre)}
-              />
-              <span>{opcion.nombre}</span>
-            </label>
-          ))}
+        {/* SECCIÓN NUTRICIONAL DINÁMICA */}
+        <div className="nutrition-container">
+          <div className="nutri-chip">{nutrition.calorias} Kcal</div>
+          <div className="nutri-chip">{nutrition.proteina}g Prot</div>
+          <div className="nutri-chip">{nutrition.carbohidratos}g Carbs</div>
+          {/* Iconos de alérgenos sutiles (ejemplo, puedes personalizar según datos reales) */}
+          <div className="allergen-info" style={{marginLeft: 'auto'}}>
+            <span className="allergen-icon" title="Contiene Gluten">🌾</span>
+            <span className="allergen-icon" title="Sin Lactosa">🥛</span>
+          </div>
         </div>
-      )}
-{/*INFORMACION NUTRICIONAL DINAMICA*/}
-      <div className="nutrition-stats" style={{marginTop: '10px', fontSize: '0.9rem', color: '#666'}}>
-         <span>🔥 {nutrition.calorias} kcal</span>
-         <span>💪 {nutrition.proteina}g Prot</span>
-         <span>🥕 {nutrition.carbohidratos}g carbs</span>
-      </div>
 
-      <button className="add-btn" onClick={handleAddToCart}>
-        Añadir al Carrito
-      </button>
+        <div className="card-footer" style={{marginTop: '1.2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <span className="item-price">${item.precio.toFixed(2)}</span>
+          <button className="add-btn-small" onClick={handleAddToCart}>+</button>
+        </div>
+      </div>
     </div>
   );
 }
