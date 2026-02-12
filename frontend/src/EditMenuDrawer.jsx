@@ -58,6 +58,14 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
               <label>Precio:
                 <input type="number" value={item.precio} onChange={e => handleChange(idx, 'precio', parseFloat(e.target.value))} />
               </label>
+              <label>Foto:
+                <input type="text" value={item.imagen || ''} onChange={e => handleChange(idx, 'imagen', e.target.value)} placeholder="URL de la imagen" />
+              </label>
+              {item.imagen && (
+                <div style={{margin:'0.5rem 0'}}>
+                  <img src={item.imagen} alt={item.nombre} style={{width: '120px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)'}} />
+                </div>
+              )}
               <div className="edit-options">
                 <span>Opciones:</span>
                 {item.opciones && item.opciones.map((opt, oidx) => (
