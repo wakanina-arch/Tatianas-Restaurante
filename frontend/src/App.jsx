@@ -138,9 +138,11 @@ function HomePage({ platillos }) {
   const { addToCart } = useCart();
   return (
     <section className="home-page">
-      <div className="hero">
-        <h2>One To One 🎉</h2>
-        <p>Bienvenidos, descubre nuestros deliciosos menús diarios con platos típicos</p>
+      <div className="hero" style={{textAlign:'center'}}>
+        <img src="/The-One-icon.png" alt="Logo One To One" style={{width:'90px',height:'90px',marginBottom:'0.5rem',borderRadius:'22px',boxShadow:'0 4px 18px rgba(118,75,162,0.13)'}} />
+        <h2 style={{marginBottom:'0.3rem'}}>One To One 🎉</h2>
+        <div style={{fontWeight:600, color:'#764ba2', fontSize:'1.1rem', marginBottom:'0.2rem'}}>los platos y One To One</div>
+        <p style={{marginBottom:'0.5rem'}}>Bienvenidos, descubre nuestros deliciosos menús diarios con platos típicos</p>
       </div>
       <div className="menu-container">
         {platillos.map((platillo) => (
@@ -211,13 +213,18 @@ function MenuItem({ item, addToCart }) {
         {Array.isArray(item.opciones) && item.opciones.length > 0 && (
           <div className="opciones">
             {item.opciones.slice(0, 3).map((op, idx) => (
-              <label className="opcion-label" key={op.nombre}>
-                <input
-                  type="checkbox"
-                  checked={selectedOption === op.nombre}
-                  onChange={() => setSelectedOption(selectedOption === op.nombre ? null : op.nombre)}
-                />
-                <span>{op.nombre} <small style={{color:'#888'}}>{op.calorias} kcal</small></span>
+              <label className="opcion-label" key={op.nombre} style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:'1rem'}}>
+                <span style={{display:'flex', alignItems:'center', gap:'0.5rem'}}>
+                  <input
+                    type="checkbox"
+                    checked={selectedOption === op.nombre}
+                    onChange={() => setSelectedOption(selectedOption === op.nombre ? null : op.nombre)}
+                  />
+                  <span>{op.nombre}</span>
+                </span>
+                <span style={{marginLeft:'auto', fontWeight:600, color:'#667eea', minWidth:60, textAlign:'right'}}>
+                  ${op.precio ? Number(op.precio).toFixed(2) : item.precio.toFixed(2)}
+                </span>
               </label>
             ))}
           </div>
@@ -228,16 +235,19 @@ function MenuItem({ item, addToCart }) {
           <div className="nutri-chip">{nutrition.calorias} Kcal</div>
           <div className="nutri-chip">{nutrition.proteina}g Prot</div>
           <div className="nutri-chip">{nutrition.carbohidratos}g Carbs</div>
-          {/* Iconos de alérgenos sutiles (ejemplo, puedes personalizar según datos reales) */}
-          <div className="allergen-info" style={{marginLeft: 'auto'}}>
-            <span className="allergen-icon" title="Contiene Gluten">🌾</span>
-            <span className="allergen-icon" title="Sin Lactosa">🥛</span>
-          </div>
         </div>
 
         <div className="card-footer" style={{marginTop: '1.2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-          <span className="item-price">${item.precio.toFixed(2)}</span>
-          <button className="add-btn-small" onClick={handleAddToCart}>+</button>
+          <span className="item-price">{
+            selectedOption
+              ? `$${item.precio.toFixed(2)}`
+              : '$0.00'
+          }</span>
+          <button className="add-btn-small" onClick={handleAddToCart} title="Añadir al carrito">
+            <span role="img" aria-label="One To One" style={{fontSize: '1.3rem', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', filter: 'drop-shadow(0 1px 2px #764ba2aa)'}}>
+              🍽️
+            </span>
+          </button>
         </div>
       </div>
     </div>

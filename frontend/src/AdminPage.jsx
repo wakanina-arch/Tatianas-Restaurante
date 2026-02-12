@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import QuickCheckout from './QuickCheckout';
 import EditMenuDrawer from './EditMenuDrawer';
 import OrdersDrawer from './OrdersDrawer';
 import OrdersLogDrawer from './OrdersLogDrawer';
@@ -59,18 +60,65 @@ export default function AdminPage({ menuItems, onSaveMenu, log, addLog, pendingO
     <section className="admin-page">
       <h2>Dashboard del Restaurante</h2>
       <div className="admin-container">
-        {/* 1. CAJA RÁPIDA */}
-        <div className="admin-card" style={{ borderLeft: '5px solid #28a745' }}>
+        {/* 1. CAJA RÁPIDA - BOTÓN Y LISTA DE PEDIDOS */}
+        <div className="admin-card" style={{ minWidth: 320 }}>
           <h3>Caja Rápida</h3>
-          <p>Registrar cobro total de mesas</p>
-          <form onSubmit={handlePayment}>
-            <div className="payment-total" style={{ margin: '10px 0', fontSize: '1.2rem' }}>
-              Total a cobrar: <b>${total.toFixed(2)}</b>
+          {/* Texto eliminado para ganar espacio */}
+          <button
+            className="admin-btn"
+            style={{
+              background: finishedOrders.length > 0 ? '#28a745' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: '#fff',
+              width: '100%',
+              fontWeight: 700,
+              fontSize: '1.08rem',
+              marginBottom: 12,
+              transition: 'background 0.3s',
+              boxShadow: finishedOrders.length > 0 ? '0 0 12px #28a74555' : undefined
+            }}
+            onClick={() => setOrdersOpen(o => !o)}
+            disabled={finishedOrders.length === 0}
+          >
+            {finishedOrders.length === 0
+              ? ''
+              : `${finishedOrders.length} pendiente${finishedOrders.length > 1 ? 's' : ''}`}
+          </button>
+          {/* Checkout QR y manual */}
+          <QuickCheckout finishedOrders={finishedOrders} setFinishedOrders={setFinishedOrders} addLog={addLog} />
+          {ordersOpen && pendingOrders.length > 0 && (
+            <div style={{maxHeight: 320, overflowY: 'auto', marginBottom: 8, marginTop: 8}}>
+              <table style={{width:'100%', fontSize:'0.98rem', borderCollapse:'collapse'}}>
+                <thead>
+                  <tr style={{background:'#f8f9fa'}}>
+                    <th style={{textAlign:'left', padding:'6px 4px'}}>Orden</th>
+                    <th style={{textAlign:'center', padding:'6px 4px'}}>Estado</th>
+                    <th style={{textAlign:'center', padding:'6px 4px'}}>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pendingOrders.map((order, idx) => (
+                    <tr key={order.id || idx} style={{borderBottom:'1px solid #eee'}}>
+                      <td style={{padding:'6px 4px'}}>#{order.numero || order.id || idx+1}</td>
+                      <td style={{textAlign:'center', color:'#e67e22', fontWeight:600}}>
+                        Pendiente
+                      </td>
+                      <td style={{textAlign:'center'}}>
+                        <button className="admin-btn" style={{background:'#28a745', color:'#fff', padding:'0.3rem 0.8rem', fontSize:'0.98rem'}}
+                          onClick={() => {
+                            setPendingOrders(pendingOrders.filter((_, i) => i !== idx));
+                            setFinishedOrders([...finishedOrders, {...order, entregado: true, horaEntrega: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}]);
+                          }}
+                        >
+                          Entrega confirmada
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <button className="admin-btn" style={{ background: '#28a745', color: 'white' }} type="submit">
-              Confirmar Pago
-            </button>
-          </form>
+          )}
+          {/* Texto de registro eliminado por solicitud */}
         </div>
 
         {/* 2. MENÚ */}

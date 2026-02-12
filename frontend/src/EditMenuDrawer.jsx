@@ -69,12 +69,21 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
               <div className="edit-options">
                 <span>Opciones:</span>
                 {item.opciones && item.opciones.map((opt, oidx) => (
-                  <div key={oidx} className="edit-option-block">
-                    <input value={opt.nombre} onChange={e => handleOptionChange(idx, oidx, 'nombre', e.target.value)} />
-                    <input type="number" value={opt.calorias} onChange={e => handleOptionChange(idx, oidx, 'calorias', parseInt(e.target.value))} placeholder="Calorías" />
-                    <input type="number" value={opt.proteina} onChange={e => handleOptionChange(idx, oidx, 'proteina', parseInt(e.target.value))} placeholder="Proteína" />
-                    <input type="number" value={opt.carbohidratos} onChange={e => handleOptionChange(idx, oidx, 'carbohidratos', parseInt(e.target.value))} placeholder="Carbohidratos" />
-                    <input value={opt.descripcion} onChange={e => handleOptionChange(idx, oidx, 'descripcion', e.target.value)} placeholder="Descripción" />
+                  <div key={oidx} className="edit-option-block" style={{display:'flex', flexDirection:'column', gap:'0.5rem', marginBottom:'1rem'}}>
+                    <label>Nombre de la opción:
+                      <input value={opt.nombre} onChange={e => handleOptionChange(idx, oidx, 'nombre', e.target.value)} />
+                    </label>
+                    <label>Precio:
+                      <input type="number" value={opt.precio || ''} onChange={e => handleOptionChange(idx, oidx, 'precio', parseFloat(e.target.value))} placeholder="Precio de la opción" />
+                    </label>
+                    <label>Foto:
+                      <input type="text" value={opt.imagen || ''} onChange={e => handleOptionChange(idx, oidx, 'imagen', e.target.value)} placeholder="URL de la imagen" />
+                    </label>
+                    {opt.imagen && (
+                      <div style={{margin:'0.3rem 0'}}>
+                        <img src={opt.imagen} alt={opt.nombre} style={{width: '38px', borderRadius: '6px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)'}} />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -10,6 +10,7 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
     tarjeta: '',
     vencimiento: '',
     cvv: '',
+    metodo: 'tarjeta', // tarjeta, bimo, payphone, deuna
   });
   const [qr, setQr] = useState(null);
   const [orderId, setOrderId] = useState(null);
@@ -19,6 +20,17 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // Cambia el método de pago y limpia campos específicos
+  const handleMetodoChange = (e) => {
+    setForm(f => ({
+      ...f,
+      metodo: e.target.value,
+      tarjeta: '',
+      vencimiento: '',
+      cvv: '',
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -44,7 +56,9 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
       }
 
       setOrderId(generatedId);
-      setQr(`https://api.qrserver.com/v1/create-qr-code/?data=TICKET-${generatedId}&size=200x200`);
+      // Cambia la URL base por la de tu frontend real si es necesario
+      const orderUrl = `https://one-to-one.app/orden/${generatedId}`;
+      setQr(`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(orderUrl)}&size=200x200`);
       
       const newOrder = {
         id: generatedId,
@@ -74,7 +88,7 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
 
         {step === 1 && (
           <>
-            <h2>Pago con Tarjeta</h2>
+            <h2>Pago</h2>
             <form onSubmit={handleSubmit} className="payment-form">
               <label>Nombre Completo
                 <input name="nombre" value={form.nombre} onChange={handleChange} required />
@@ -82,17 +96,147 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
               <label>Email
                 <input name="email" type="email" value={form.email} onChange={handleChange} required />
               </label>
-              <label>Número de Tarjeta
-                <input name="tarjeta" type="text" value={form.tarjeta} onChange={handleChange} required maxLength={16} />
+              <label>Método de pago
+                <select name="metodo" value={form.metodo} onChange={handleMetodoChange} style={{marginLeft:'0.5rem', fontWeight:600}}>
+                  <option value="tarjeta">Tarjeta</option>
+                  <option value="bimo">BIMO</option>
+                  <option value="payphone">PayPhone</option>
+                  <option value="deuna">Deuna</option>
+                </select>
               </label>
-              <div style={{display:'flex', gap:'1rem'}}>
-                <label>Vencimiento
-                  <input name="vencimiento" type="text" value={form.vencimiento} onChange={handleChange} required placeholder="MM/AA" maxLength={5} />
+              {/* Input dinámico según método */}
+              {form.metodo === 'tarjeta' && (
+                <label style={{width:'100%'}}>Número de Tarjeta
+                  <div style={{position:'relative', width:'100%'}}>
+                    <input
+                      name="tarjeta"
+                      type="text"
+                      value={form.tarjeta}
+                      onChange={handleChange}
+                      required
+                      maxLength={16}
+                      placeholder="VISA/mastercard/Diners"
+                      style={{
+                        width:'100%',
+                        paddingRight:'2.2rem',
+                        fontFamily: 'Montserrat, sans-serif',
+                        fontWeight: 500,
+                        letterSpacing: '0.03em',
+                        fontSize: '0.92rem',
+                        color: '#2d3436',
+                        background: '#fff',
+                        height: '2.1rem',
+                      }}
+                    />
+                    {/* Icono dinámico según número */}
+                    {form.tarjeta && (
+                      <span style={{position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', fontSize:'1.3rem', opacity:0.85}}>
+                        {/* Visa */}
+                        {/^4/.test(form.tarjeta) && <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" style={{height:'1.2rem'}} />}
+                        {/* Mastercard */}
+                        {/^(5[1-5])/.test(form.tarjeta) && <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="Mastercard" style={{height:'1.2rem'}} />}
+                        {/* Diners */}
+                        {/^(36|38|30[0-5])/.test(form.tarjeta) && <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Diners_Club_Logo3.png" alt="Diners" style={{height:'1.2rem'}} />}
+                      </span>
+                    )}
+                  </div>
                 </label>
-                <label>CVV
-                  <input name="cvv" type="password" value={form.cvv} onChange={handleChange} required maxLength={4} />
+              )}
+              {form.metodo === 'bimo' && (
+                <label style={{width:'100%'}}>Celular BIMO
+                  <div style={{position:'relative', width:'100%'}}>
+                    <input
+                      name="tarjeta"
+                      type="text"
+                      value={form.tarjeta}
+                      onChange={handleChange}
+                      required
+                      maxLength={10}
+                      placeholder="Número de celular BIMO"
+                      style={{
+                        width:'100%',
+                        paddingRight:'2.2rem',
+                        fontFamily: 'Montserrat, sans-serif',
+                        fontWeight: 500,
+                        fontSize: '0.92rem',
+                        color: '#2d3436',
+                        background: '#fff',
+                        height: '2.1rem',
+                      }}
+                    />
+                    <span style={{position:'absolute', right:8, top:'50%', transform:'translateY(-50%)'}}>
+                      <img src="/img/paymethods/bimo.svg" alt="BIMO" style={{height:'1.5rem'}} />
+                    </span>
+                  </div>
                 </label>
-              </div>
+              )}
+              {form.metodo === 'payphone' && (
+                <label style={{width:'100%'}}>Celular PayPhone
+                  <div style={{position:'relative', width:'100%'}}>
+                    <input
+                      name="tarjeta"
+                      type="text"
+                      value={form.tarjeta}
+                      onChange={handleChange}
+                      required
+                      maxLength={10}
+                      placeholder="Número de celular PayPhone"
+                      style={{
+                        width:'100%',
+                        paddingRight:'2.2rem',
+                        fontFamily: 'Montserrat, sans-serif',
+                        fontWeight: 500,
+                        fontSize: '0.92rem',
+                        color: '#2d3436',
+                        background: '#fff',
+                        height: '2.1rem',
+                      }}
+                    />
+                    <span style={{position:'absolute', right:8, top:'50%', transform:'translateY(-50%)'}}>
+                      <img src="/img/paymethods/payphone.svg" alt="PayPhone" style={{height:'1.5rem'}} />
+                    </span>
+                  </div>
+                </label>
+              )}
+              {form.metodo === 'deuna' && (
+                <label style={{width:'100%'}}>Celular Deuna
+                  <div style={{position:'relative', width:'100%'}}>
+                    <input
+                      name="tarjeta"
+                      type="text"
+                      value={form.tarjeta}
+                      onChange={handleChange}
+                      required
+                      maxLength={10}
+                      placeholder="Número de celular Deuna"
+                      style={{
+                        width:'100%',
+                        paddingRight:'2.2rem',
+                        fontFamily: 'Montserrat, sans-serif',
+                        fontWeight: 500,
+                        fontSize: '0.92rem',
+                        color: '#2d3436',
+                        background: '#fff',
+                        height: '2.1rem',
+                      }}
+                    />
+                    <span style={{position:'absolute', right:8, top:'50%', transform:'translateY(-50%)'}}>
+                      <img src="/img/paymethods/deuna.svg" alt="Deuna" style={{height:'1.5rem'}} />
+                    </span>
+                  </div>
+                </label>
+              )}
+              {/* Solo para tarjeta: vencimiento y cvv */}
+              {form.metodo === 'tarjeta' && (
+                <div style={{display:'flex', gap:'1rem'}}>
+                  <label>Vencimiento
+                    <input name="vencimiento" type="text" value={form.vencimiento} onChange={handleChange} required placeholder="MM/AA" maxLength={5} />
+                  </label>
+                  <label>CVV
+                    <input name="cvv" type="password" value={form.cvv} onChange={handleChange} required maxLength={4} />
+                  </label>
+                </div>
+              )}
               <div className="payment-total">Total a pagar: <b>${total}</b></div>
               <button className="save-btn" type="submit">Pagar</button>
             </form>
