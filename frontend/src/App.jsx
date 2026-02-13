@@ -141,7 +141,7 @@ function HomePage({ platillos }) {
       <div className="hero" style={{textAlign:'center'}}>
         <img src="/The-One-icon.png" alt="Logo One To One" style={{width:'90px',height:'90px',marginBottom:'0.5rem',borderRadius:'22px',boxShadow:'0 4px 18px rgba(118,75,162,0.13)'}} />
         <h2 style={{marginBottom:'0.3rem'}}>One To One 🎉</h2>
-        <div style={{fontWeight:600, color:'#764ba2', fontSize:'1.1rem', marginBottom:'0.2rem'}}>los platos y One To One</div>
+        
         <p style={{marginBottom:'0.5rem'}}>Bienvenidos, descubre nuestros deliciosos menús diarios con platos típicos</p>
       </div>
       <div className="menu-container">
@@ -179,18 +179,24 @@ function MenuItem({ item, addToCart }) {
   const nutrition = getSelectedNutrition();
   const description = getSelectedDescription();
 
-  const handleAddToCart = () => {
-    const itemToAdd = selectedOption 
-      ? { 
-          ...item, 
-          id: item.id + '-' + selectedOption,
-          variante: selectedOption,
-          nombre: `${item.nombre} - ${selectedOption}`
-        }
-      : item;
-    addToCart(itemToAdd);
-    setSelectedOption(null);
+ const handleAddToCart = () => {
+  // Si NO hay opción seleccionada, no hacer nada
+  if (!selectedOption) {
+    alert('Por favor selecciona una opción del plato');  // Mensaje amigable
+    return;  // ← IMPORTANTE: Salir de la función sin añadir
+  }
+
+  // Si llegamos aquí, SÍ hay opción seleccionada
+  const itemToAdd = { 
+    ...item, 
+    id: item.id + '-' + selectedOption,
+    variante: selectedOption,
+    nombre: `${item.nombre} - ${selectedOption}`
   };
+  
+  addToCart(itemToAdd);
+  setSelectedOption(null);  // Limpiar selección después de añadir
+};
 
   // Imagen por defecto según el nombre del plato (puedes personalizar las rutas)
   const imageMap = {
@@ -243,10 +249,11 @@ function MenuItem({ item, addToCart }) {
               ? `$${item.precio.toFixed(2)}`
               : '$0.00'
           }</span>
-          <button className="add-btn-small" onClick={handleAddToCart} title="Añadir al carrito">
+          
+          <button className="add-btn-small" onClick={handleAddToCart} title="Añadir al carrito"> Añadir
             <span role="img" aria-label="One To One" style={{fontSize: '1.3rem', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', filter: 'drop-shadow(0 1px 2px #764ba2aa)'}}>
               🍽️
-            </span>
+            </span>            
           </button>
         </div>
       </div>

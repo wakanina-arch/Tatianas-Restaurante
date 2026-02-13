@@ -21,7 +21,7 @@ export default function ManageItemsDrawer({ open, onClose, menuItems, onSaveMenu
   return (
     <div className="drawer-backdrop">
       <div className="drawer">
-        <button className="close-btn" onClick={onClose}>✕</button>
+        <button className="close-btn" onClick={onClose}>Cerrar</button>
         <h2>📦 Gestión de Inventario</h2>
         <form onSubmit={handleSubmit} className="edit-item-block">
           <input placeholder="Nombre del plato" value={newItem.nombre} onChange={e => setNewItem({...newItem, nombre: e.target.value})} required />

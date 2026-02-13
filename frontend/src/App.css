@@ -210,30 +210,83 @@ body {
 }
 
 /* Botón flotante sutil para añadir */
+/* Botón pequeño con texto + icono */
+/* Botón de añadir - VERSIÓN CORREGIDA CON TEXTO */
 .add-btn-small {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Color principal del frontend */
-  color: #fff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #FDB813; /* ← TU AMARILLO DEL LOGO */
   border: none;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: flex;
+  padding: 0.5rem 1.2rem;
+  /* Padding para el texto */
+  border-radius: 40px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(253, 160, 133, 0.18), 0 2px 8px rgba(246, 211, 101, 0.12);
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
   outline: none;
-  border: 1.5px solid #f6d36533;
-  opacity: 0.92;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  opacity: 0.95;
+  width: auto;
+  /* ← CLAVE: se ajusta al contenido */
+  min-width: 100px;
+  height: auto;
+}
+
+.add-btn-small span {
+  filter: drop-shadow(0 2px 4px #FDB813);
+  /* Sombra en amarillo */
+}
+.add-btn-small:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  opacity: 1;
+}
+
+/* El icono mantiene su color blanco original */
+.add-btn-small span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
 .add-btn-small:hover {
-  transform: scale(1.08) rotate(0deg);
-  filter: brightness(1.08);
+  transform: scale(1.05);
+  filter: brightness(1.1);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.28), 0 4px 16px rgba(118, 75, 162, 0.18);
   opacity: 1;
+}
+
+/* Estilo para el icono dentro del botón */
+.add-btn-small span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 1px 2px #764ba2aa);
+}
+
+.add-btn-small:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.28), 0 4px 16px rgba(118, 75, 162, 0.18);
+  opacity: 1;
+}
+
+/* El span que contiene el icono */
+.add-btn-small span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 1px 2px #764ba2aa);
 }
 /* Contenedor de la Tarjeta con Efecto LED Blanco */
 .food-card {
@@ -1179,4 +1232,147 @@ body {
   border: 1px dashed #ccc;
   padding: 20px;
   background: white;
+}
+/* BOTÓN DE CERRAR - VISIBLE EN TODOS LOS DRAWERS */
+/* ========================================= */
+/* CORRECCIONES DE UNIFORMIDAD - DRAWERS     */
+/* ========================================= */
+
+/* 1. BOTÓN DE CERRAR - ESTILO ÚNICO PARA TODOS */
+button.close-btn,
+button[class*="close"],
+button[aria-label*="Cerrar"],
+.drawer button:first-child,
+.drawer-header button:only-child {
+  position: absolute !important;
+  top: 1rem !important;
+  right: 1rem !important;
+  background: #ef5350 !important;
+  color: rgb(6, 6, 6) !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 1.5rem !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 9999 !important;
+  box-shadow: 0 2px 8px rgba(239, 83, 80, 0.3) !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+button.close-btn:hover,
+button[class*="close"]:hover,
+.drawer button:first-child:hover {
+  background: #d32f2f !important;
+  transform: scale(1.1) !important;
+}
+
+/* 2. HEADER MORADO PARA TODOS LOS DRAWERS */
+.drawer>div:first-child,
+.drawer-header {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+}
+
+.drawer>div:first-child h2,
+.drawer-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 1.3rem;
+}
+
+/* 3. UNIFORMIDAD DE INPUTS */
+.drawer input[type="text"],
+.drawer input[type="number"],
+.drawer textarea,
+.drawer select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 2px solid #e0e0e0 !important;
+  border-radius: 8px !important;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background: white;
+  margin-bottom: 0.5rem;
+  box-shadow: none !important;
+}
+
+.drawer input:focus,
+.drawer textarea:focus,
+.drawer select:focus {
+  border-color: #667eea !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+}
+
+/* 4. LABELS UNIFORMES */
+.drawer label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #667eea !important;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 5. TARJETAS DE EDICIÓN UNIFORMES */
+.drawer .edit-item-block,
+.drawer div[class*="item"] {
+  background: #f8f9ff;
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+/* 6. BOTONES UNIFORMES */
+.drawer button[type="submit"],
+.drawer .save-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.8rem 2rem !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+}
+
+.drawer button[type="submit"]:hover,
+.drawer .save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+}
+
+.drawer .cancel-btn,
+.drawer button[type="button"]:not(.close-btn) {
+  background: transparent !important;
+  border: 2px solid #f0f0f0 !important;
+  color: #666 !important;
+  padding: 0.8rem 2rem !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.drawer .cancel-btn:hover,
+.drawer button[type="button"]:not(.close-btn):hover {
+  border-color: #ef5350 !important;
+  color: #ef5350 !important;
+  background: #ffebee !important;
 }
