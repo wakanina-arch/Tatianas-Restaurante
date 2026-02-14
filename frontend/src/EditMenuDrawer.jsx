@@ -43,8 +43,8 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
         
         {/* CABECERA CON EL ICONO QUE TE GUSTA */}
         <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'2.5rem', borderBottom:'1px solid #eee', paddingBottom:'1rem'}}>
-          <h2 style={{color:'#764ba2', margin:0, fontSize:'1.5rem'}}>⚙️ Ajustes del Menú</h2>
-          <button onClick={onClose} style={{cursor:'pointer', border:'none', background:'#f5f5f5', width:'35px', height:'35px', borderRadius:'50%', fontSize:'1rem', color:'#666', display:'flex', alignItems:'center', justifyContent:'center'}}>✕</button>
+          <h2 style={{color:'#f2eff5', margin:0, fontSize:'1.5rem'}}>⚙️ Ajustes del Menú</h2>
+           <button className="close-btn" onClick={onClose}>Cerrar</button>
         </div>
 
         <form onSubmit={e => { e.preventDefault(); onSave(items); onClose(); }}>
@@ -76,14 +76,29 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
                     </label>
 
                     <label style={{fontSize:'0.85rem', color:'#666'}}>Precio Sugerido ($):
-                      <input 
-                        type="number" 
-                        step="0.1"
-                        style={{width:'100%', padding:'8px', borderRadius:'6px', border:'1px solid #ddd', marginTop:'4px'}}
-                        value={opt.precio || item.precio} 
-                        onChange={e => handleOptionChange(idx, oidx, 'precio', parseFloat(e.target.value))} 
-                      />
-                    </label>
+  <input 
+    type="number" 
+    step="0.01"
+    min="0"
+    style={{
+      width:'100%', 
+      padding:'8px', 
+      borderRadius:'6px', 
+      border:'1px solid #ddd', 
+      marginTop:'4px',
+      background: '#fff' // Asegura que se vea editable
+    }}
+    /* Si el precio no existe, ponemos 0.00 por defecto */
+    value={opt.precio !== undefined ? opt.precio : 0.00} 
+    /* Permitimos que el cambio fluya sin restricciones */
+    onChange={e => {
+      const val = e.target.value === '' ? 0 : parseFloat(e.target.value);
+      handleOptionChange(idx, oidx, 'precio', val);
+    }} 
+    placeholder="0.00"
+  />
+</label>
+
 
                     <label style={{fontSize:'0.85rem', color:'#666'}}>URL Multimedia (Foto/Video):
                       <input 
