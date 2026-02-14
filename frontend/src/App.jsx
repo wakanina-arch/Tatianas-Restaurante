@@ -24,46 +24,46 @@ function MainApp() {
       {
       id: 1,
       nombre: 'Primero',
-      precio: 5.50,
+      precio: 0.00,
       region: 'Andes',
       historia: 'Plato típico andino hecho con harina de maíz blanco molida. La arepa es un alimento básico en muchas culturas latinoamericanas.',
-      calorias: 380,
-      proteina: 12,
-      carbohidratos: 48,
+      calorias: 0,
+      proteina: 0,
+      carbohidratos: 0,
       opciones: [
-        { nombre: 'Menestra', calorias: 320, proteina: 8, carbohidratos: 45, descripcion: 'Mezcla de verduras frescas sauteadas con cebolla y especias. Ligera y nutritiva.' },
-        { nombre: 'Guatita', calorias: 380, proteina: 16, carbohidratos: 42, descripcion: 'Estómago de res cocinado en salsa cremosa con especias. Plato tradicional muy sabroso.' },
-        { nombre: 'Pollo', calorias: 420, proteina: 28, carbohidratos: 38, descripcion: 'Pechuga de pollo tierna marinada en especias andinas. Alto en proteína y delicioso.' }
+        { nombre: 'Menestra', calorias: 0, proteina: 8, carbohidratos: 0, descripcion: 'Mezcla de verduras frescas sauteadas con cebolla y especias. Ligera y nutritiva.' },
+        { nombre: 'Guatita', calorias: 0, proteina: 0, carbohidratos: 0, descripcion: 'Estómago de res cocinado en salsa cremosa con especias. Plato tradicional muy sabroso.' },
+        { nombre: 'Pollo', calorias: 0, proteina: 0, carbohidratos: 0, descripcion: 'Pechuga de pollo tierna marinada en especias andinas. Alto en proteína y delicioso.' }
       ]
     },
     {
       id: 2,
       nombre: 'Segundo',
-      precio: 8.00,
+      precio: 0.00,
       region: 'Costa',
       historia: 'Tradicional plato costero marinero con pescado fresco marinado en limón con cebolla roja, cilantro y ají.',
-      calorias: 250,
-      proteina: 32,
-      carbohidratos: 15,
+      calorias: 0,
+      proteina: 0,
+      carbohidratos: 0,
       opciones: [
-        { nombre: 'Pescado', calorias: 280, proteina: 35, carbohidratos: 12, descripcion: 'Filete de pescado blanco fresco marinado en limón. Suave y sabroso del mar.' },
-        { nombre: 'Camarón', calorias: 320, proteina: 38, carbohidratos: 10, descripcion: 'Camarones frescos al limón con cilantro. Delicadeza marina con sabor intenso.' },
-        { nombre: 'Mixto', calorias: 300, proteina: 36, carbohidratos: 11, descripcion: 'Combinación de pescado y camarón marinados juntos. Lo mejor de ambos mundos.' }
+        { nombre: 'Pescado', calorias: 0, proteina: 0, carbohidratos: 0, descripcion: 'Filete de pescado blanco fresco marinado en limón. Suave y sabroso del mar.' },
+        { nombre: 'Camarón', calorias: 0, proteina: 0, carbohidratos: 0, descripcion: 'Camarones frescos al limón con cilantro. Delicadeza marina con sabor intenso.' },
+        { nombre: 'Mixto', calorias: 0, proteina: 0, carbohidratos: 0, descripcion: 'Combinación de pescado y camarón marinados juntos. Lo mejor de ambos mundos.' }
       ]
     },
     {
       id: 3,
       nombre: 'Postre',
-      precio: 4.50,
+      precio: 0.00,
       region: 'Puno',
       historia: 'Superfood andino que fue alimento sagrado de los incas. Rico en proteína completa con todos los aminoácidos esenciales.',
-      calorias: 220,
-      proteina: 8,
-      carbohidratos: 38,
+      calorias: 0,
+      proteina: 0,
+      carbohidratos: 0,
       opciones: [
-        { nombre: 'Flan', calorias: 200, proteina: 4, carbohidratos: 32, descripcion: 'Flan cremoso con caramelo. Postre suave y delicado perfecto para terminar.' },
-        { nombre: 'Pudín', calorias: 240, proteina: 6, carbohidratos: 38, descripcion: 'Pudín espeso de chocolate. Indulgente y reconfortante para los amantes del chocolate.' },
-        { nombre: 'Helado', calorias: 280, proteina: 5, carbohidratos: 42, descripcion: 'Helado artesanal con frutas frescas. Refrescante y natural sin colorantes artificiales.' }
+        { nombre: 'Flan', calorias: 0, proteina: 0, carbohidratos: 0, descripcion: 'Flan cremoso con caramelo. Postre suave y delicado perfecto para terminar.' },
+        { nombre: 'Pudín', calorias: 0, proteina: 0, carbohidratos: 0, descripcion: 'Pudín espeso de chocolate. Indulgente y reconfortante para los amantes del chocolate.' },
+        { nombre: 'Helado', calorias: 0, proteina: 0, carbohidratos: 0, descripcion: 'Helado artesanal con frutas frescas. Refrescante y natural sin colorantes artificiales.' }
       ]
     }
     ];
@@ -160,123 +160,134 @@ function HomePage({ platillos }) {
 function MenuItem({ item, addToCart }) {
   const [selectedOption, setSelectedOption] = useState(null);
 
-  const getSelectedNutrition = () => {
-    if (selectedOption) {
-      const selected = item.opciones.find(o => o.nombre === selectedOption);
-      return selected || { calorias: item.calorias, proteina: item.proteina, carbohidratos: item.carbohidratos };
-    }
-    return { calorias: item.calorias, proteina: item.proteina, carbohidratos: item.carbohidratos };
-  };
+    // 1. Buscamos la opción con validación estricta
+  const selectedData = item.opciones?.find(o => o.nombre === selectedOption);
 
-  const getSelectedDescription = () => {
-    if (selectedOption) {
-      const selected = item.opciones.find(o => o.nombre === selectedOption);
-      return selected?.descripcion || item.historia;
-    }
-    return item.historia;
-  };
-
-  const nutrition = getSelectedNutrition();
-  const description = getSelectedDescription();
-
- const handleAddToCart = () => {
-  // Si NO hay opción seleccionada, no hacer nada
-  if (!selectedOption) {
-    alert('Por favor selecciona una opción del plato');  // Mensaje amigable
-    return;  // ← IMPORTANTE: Salir de la función sin añadir
-  }
-
-  // Si llegamos aquí, SÍ hay opción seleccionada
-  const itemToAdd = { 
-    ...item, 
-    id: item.id + '-' + selectedOption,
-    variante: selectedOption,
-    nombre: `${item.nombre} - ${selectedOption}`
-  };
-  
-  addToCart(itemToAdd);
-  setSelectedOption(null);  // Limpiar selección después de añadir
-};
-
-   // --- LÓGICA DE LA CAJA VISUAL INTELIGENTE ---
-  const renderVisualMedia = (url) => {
-    // Detecta si es video por la extensión
-    const isVideo = /\.(mp4|webm|mov|ogg)$/i.test(url);
+  // 2. LÓGICA DE PRECIO BLINDADA (Elimina el rastro del 5.50 histórico)
+  const currentPrice = (function() {
+    if (!selectedOption || !selectedData) return 0.00;
     
-    if (isVideo) {
-      return (
-        <video 
-          src={url} 
-          autoPlay loop muted playsInline 
-          style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '12px' }}
-        />
-      );
+    // Si la opción tiene su propio precio (aunque sea 0), lo usamos.
+    // Solo si la opción NO tiene precio (undefined/null), intentamos usar el del item.
+    const precioIndividual = selectedData.precio;
+    return (precioIndividual !== undefined && precioIndividual !== null) 
+      ? precioIndividual 
+      : (item.precio || 0.00);
+  })();
+
+  // 3. NUTRICIÓN BLINDADA
+  const nutrition = (selectedOption && selectedData) 
+    ? {
+        calorias: selectedData.calorias ?? 0,
+        proteina: selectedData.proteina ?? 0,
+        carbohidratos: selectedData.carbohidratos ?? 0
+      }
+    : { calorias: 0, proteina: 0, carbohidratos: 0 };
+
+
+  const description = selectedOption && selectedData 
+    ? (selectedData.descripcion || item.historia) 
+    : item.historia;
+
+  // 4. ENVÍO AL CARRITO BLINDADO
+  const handleAddToCart = () => {
+    if (!selectedOption) {
+      alert('Por favor selecciona una opción');
+      return;
     }
+
+    const itemToAdd = { 
+      ...item, 
+      id: `${item.id}-${selectedOption}`,
+      variante: selectedOption,
+      nombre: `${item.nombre} - ${selectedOption}`,
+      // FORZAMOS EL PRECIO INDIVIDUAL CALCULADO ARRIBA
+      precio: currentPrice, 
+      calorias: nutrition.calorias,
+      proteina: nutrition.proteina,
+      carbohidratos: nutrition.carbohidratos
+    };
+    
+    addToCart(itemToAdd);
+    setSelectedOption(null);
+  };
+
+  const renderVisualMedia = (url) => {
+    const isVideo = /\.(mp4|webm|mov|ogg)$/i.test(url);
+    const fallbackImg = "https://images.unsplash.com";
     return (
-      <img 
-        src={url || '/img/default-food.jpg'} 
-        alt={item.nombre} 
-        style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '12px' }} 
-      />
+      <div className="media-box" style={{ marginBottom: '0.8rem' }}>
+        {isVideo ? (
+          <video src={url} autoPlay loop muted playsInline style={{ width: '100%', height: '160px', objectFit: 'cover', borderRadius: '12px' }} />
+        ) : (
+          <img src={url || fallbackImg} alt={item.nombre} style={{ width: '100%', height: '160px', objectFit: 'cover', borderRadius: '12px' }} />
+        )}
+      </div>
     );
   };
 
   return (
-    <div className="food-card" style={{ border: '1px solid #eee', padding: '1rem', borderRadius: '15px', marginBottom: '1rem' }}>
-      
-      {/* 1. CAJA VISUAL INTELIGENTE */}
-      <div className="media-box" style={{ marginBottom: '1rem' }}>
-        {renderVisualMedia(item.imagen)}
+    <div className="food-card">
+      {renderVisualMedia(item.imagen)}
+
+      <div className="card-body" style={{ padding: '0 5px' }}>
+        <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.2rem' }}>{item.nombre}</h3>
+        <p style={{ fontSize: '0.82rem', color: '#666', marginBottom: '0.8rem', lineHeight: '1.3' }}>{description}</p>
+
+        <div className="options-container" style={{ marginBottom: '1rem' }}>
+  {item.opciones?.map((opt, idx) => (
+    <label key={idx} className="option-row">
+      <div className="option-info">
+        <input 
+          type="checkbox" 
+          checked={selectedOption === opt.nombre}
+          onChange={() => setSelectedOption(selectedOption === opt.nombre ? null : opt.nombre)}
+        />
+        <span>{opt.nombre}</span>
       </div>
-      <div className="food-info">
-        <h3>{item.nombre}</h3>
-        <p className="food-description">{description}</p>
+      
+      {/* AQUÍ RECUPERAMOS LA VISIBILIDAD DEL PRECIO INDIVIDUAL */}
+      <span className="option-price-tag" style={{
+  transform: selectedOption === opt.nombre ? 'scale(1.1)' : 'scale(1)',
+  transition: 'transform 0.2s ease'
+}}>
+  ${(opt.precio || item.precio || 0).toFixed(2)}
+</span>
 
-        {/* CHECKBOX DE OPCIONES */}
-        {Array.isArray(item.opciones) && item.opciones.length > 0 && (
-          <div className="opciones">
-            {item.opciones.slice(0, 3).map((op, idx) => (
-              <label className="opcion-label" key={op.nombre} style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:'1rem'}}>
-                <span style={{display:'flex', alignItems:'center', gap:'0.5rem'}}>
-                  <input
-                    type="checkbox"
-                    checked={selectedOption === op.nombre}
-                    onChange={() => setSelectedOption(selectedOption === op.nombre ? null : op.nombre)}
-                  />
-                  <span>{op.nombre}</span>
-                </span>
-                <span style={{marginLeft:'auto', fontWeight:600, color:'#667eea', minWidth:60, textAlign:'right'}}>
-                  ${op.precio ? Number(op.precio).toFixed(2) : item.precio.toFixed(2)}
-                </span>
-              </label>
-            ))}
-          </div>
-        )}
+    </label>
+  ))}
+</div>
 
-        {/* SECCIÓN NUTRICIONAL DINÁMICA */}
-        <div className="nutrition-container">
-          <div className="nutri-chip">{nutrition.calorias} Kcal</div>
-          <div className="nutri-chip">{nutrition.proteina}g Prot</div>
-          <div className="nutri-chip">{nutrition.carbohidratos}g Carbs</div>
+
+        <div style={{ 
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          background: 'rgba(118, 75, 162, 0.04)', padding: '6px 12px', 
+          borderRadius: '8px', border: '1px solid rgba(118, 75, 162, 0.08)',
+          marginBottom: '1rem', fontSize: '0.78rem'
+        }}>
+          <span>🔥 <strong>{nutrition.calorias}</strong> <small>kcal</small></span>
+          <span style={{color: '#ddd'}}>|</span>
+          <span>🧬 <strong>{nutrition.proteina}g</strong> <small>prot</small></span>
+          <span style={{color: '#ddd'}}>|</span>
+          <span>⚡ <strong>{nutrition.carbohidratos}g</strong> <small>carb</small></span>
         </div>
 
-        <div className="card-footer" style={{marginTop: '1.2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-          <span className="item-price">{
-            selectedOption
-              ? `$${item.precio.toFixed(2)}`
-              : '$0.00'
-          }</span>
-          
-          <button className="add-btn-small" onClick={handleAddToCart} title="Añadir al carrito"> Añadir
+        <div className="card-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: '#764ba2' }}>
+            ${currentPrice.toFixed(2)}
+          </span>
+          <button className="add-btn-small" onClick={handleAddToCart} title="Añadir al carrito"> 
+            Añadir
             <span role="img" aria-label="One To One" style={{fontSize: '1.3rem', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', filter: 'drop-shadow(0 1px 2px #764ba2aa)'}}>
               🍽️
-            </span>            
+            </span>
           </button>
         </div>
       </div>
     </div>
   );
 }
+
 
 import PaymentModal from './PaymentModal';
 
