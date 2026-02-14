@@ -198,18 +198,35 @@ function MenuItem({ item, addToCart }) {
   setSelectedOption(null);  // Limpiar selección después de añadir
 };
 
-  // Imagen por defecto según el nombre del plato (puedes personalizar las rutas)
-  const imageMap = {
-    'Primero': '/public/img/primero.jpg',
-    'Segundo': '/public/img/segundo.jpg',
-    'Postre': '/public/img/postre.jpg',
+   // --- LÓGICA DE LA CAJA VISUAL INTELIGENTE ---
+  const renderVisualMedia = (url) => {
+    // Detecta si es video por la extensión
+    const isVideo = /\.(mp4|webm|mov|ogg)$/i.test(url);
+    
+    if (isVideo) {
+      return (
+        <video 
+          src={url} 
+          autoPlay loop muted playsInline 
+          style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '12px' }}
+        />
+      );
+    }
+    return (
+      <img 
+        src={url || '/img/default-food.jpg'} 
+        alt={item.nombre} 
+        style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '12px' }} 
+      />
+    );
   };
-  const imageUrl = imageMap[item.nombre] || '/public/img/default-food.jpg';
 
   return (
-    <div className="food-card">
-      <div className="food-image-container">
-        <img src={imageUrl} alt={item.nombre} className="food-image" loading="lazy" />
+    <div className="food-card" style={{ border: '1px solid #eee', padding: '1rem', borderRadius: '15px', marginBottom: '1rem' }}>
+      
+      {/* 1. CAJA VISUAL INTELIGENTE */}
+      <div className="media-box" style={{ marginBottom: '1rem' }}>
+        {renderVisualMedia(item.imagen)}
       </div>
       <div className="food-info">
         <h3>{item.nombre}</h3>
@@ -490,4 +507,3 @@ function ProfilePage({ user, setUser }) {
     </section>
   );
 }
-

@@ -19,18 +19,19 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border: 1px solid rgba(255, 255, 255, 0.9);
-  
+
   /* El brillo LED blanco sutil */
-  box-shadow: 
+  box-shadow:
     0 0 8px rgba(255, 255, 255, 0.8),
     0 2px 5px rgba(0, 0, 0, 0.03);
-    
+
   transition: all 0.3s ease;
 }
 
 .nutri-chip:hover {
   transform: scale(1.1);
-  color: #d4a373; /* El color café/oro que usamos antes */
+  color: #d4a373;
+  /* El color café/oro que usamos antes */
   box-shadow: 0 0 12px rgba(255, 255, 255, 1);
 }
 
@@ -47,13 +48,15 @@
   filter: grayscale(0);
   opacity: 1;
 }
+
 /* Google Fonts import (agrega esto en tu index.html para que funcione) */
 /* <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"> */
 
 /* Aplicar a toda la app una base limpia */
 body {
   font-family: 'Montserrat', sans-serif;
-  background-color: #f8f9fa; /* Fondo grisáceo para que el LED resalte */
+  background-color: #f8f9fa;
+  /* Fondo grisáceo para que el LED resalte */
   color: #2d3436;
 }
 
@@ -70,7 +73,8 @@ body {
 /* Descripciones: Claridad y estilo */
 .food-description {
   font-family: 'Montserrat', sans-serif;
-  font-weight: 300; /* Peso ligero para que se vea sutil */
+  font-weight: 300;
+  /* Peso ligero para que se vea sutil */
   font-size: 0.9rem;
   line-height: 1.7;
   color: #636e72;
@@ -94,15 +98,18 @@ body {
 .item-price {
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  color: #d4a373; /* Tono dorado/café elegante */
+  color: #d4a373;
+  /* Tono dorado/café elegante */
   font-size: 1.1rem;
 }
 
 .food-description::first-letter {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #2d3436; /* Resalta un poquito el inicio de la descripción */
+  color: #2d3436;
+  /* Resalta un poquito el inicio de la descripción */
 }
+
 .food-description {
   opacity: 0.85;
   transition: opacity 0.3s ease;
@@ -110,26 +117,36 @@ body {
 
 .food-card:hover .food-description {
   opacity: 1;
-  color: #2f3542; /* Se oscurece un poco para leer mejor al hacer hover */
+  color: #2f3542;
+  /* Se oscurece un poco para leer mejor al hacer hover */
 }
+
 /* Estilo para la descripción detallada */
 .food-description {
-  font-size: 0.92rem;        /* Tamaño equilibrado */
-  line-height: 1.6;          /* Espacio entre líneas para facilitar la lectura */
-  color: #57606f;            /* Gris suave que no cansa la vista */
+  font-size: 0.92rem;
+  /* Tamaño equilibrado */
+  line-height: 1.6;
+  /* Espacio entre líneas para facilitar la lectura */
+  color: #57606f;
+  /* Gris suave que no cansa la vista */
   margin: 0.8rem 0;
   font-weight: 400;
-  text-align: justify;       /* Opcional: da un aspecto de menú de papel premium */
+  text-align: justify;
+  /* Opcional: da un aspecto de menú de papel premium */
   display: -webkit-box;
-  -webkit-line-clamp: 3;     /* Limita a 3 líneas para no romper la densidad */
-  line-clamp: 3;             /* Propiedad estándar para compatibilidad */
+  -webkit-line-clamp: 3;
+  /* Limita a 3 líneas para no romper la densidad */
+  line-clamp: 3;
+  /* Propiedad estándar para compatibilidad */
   -webkit-box-orient: vertical;
-  overflow: hidden;          /* Corta el texto si es muy largo con "..." */
+  overflow: hidden;
+  /* Corta el texto si es muy largo con "..." */
 }
 
 /* Título del plato más marcado */
 .food-info h3 {
-  font-family: 'Playfair Display', serif; /* Una fuente con serifa queda muy bien en comida */
+  font-family: 'Playfair Display', serif;
+  /* Una fuente con serifa queda muy bien en comida */
   font-size: 1.3rem;
   color: #2f3542;
   margin-bottom: 0.2rem;
@@ -150,11 +167,12 @@ body {
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.045), 0 0 16px rgba(255,255,255,0.7);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.045), 0 0 16px rgba(255, 255, 255, 0.7);
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  height: 94%; /* Sutilmente más compacto */
+  height: 94%;
+  /* Sutilmente más compacto */
 }
 
 /* Imagen con tamaño controlado */
@@ -171,7 +189,8 @@ body {
   font-size: 1.2rem;
   font-weight: 800;
   color: #1a1a1a;
-  margin: 1rem 1rem 0.2rem 1rem; /* Margen para que respire */
+  margin: 1rem 1rem 0.2rem 1rem;
+  /* Margen para que respire */
 }
 
 /* Descripción Nutricional y Detalle */
@@ -181,12 +200,14 @@ body {
   color: #636e72;
   margin: 0.5rem 1rem;
   line-height: 1.5;
-  flex-grow: 1; /* Empuja el botón hacia abajo */
+  flex-grow: 1;
+  /* Empuja el botón hacia abajo */
 }
 
 /* El Botón de Añadir (Recuperado y Potente) */
 .add-btn-premium {
-  background: var(--primary-gradient); /* Tu gradiente lila/azul o el dorado */
+  background: var(--primary-gradient);
+  /* Tu gradiente lila/azul o el dorado */
   color: white !important;
   border: none;
   padding: 0.8rem;
@@ -214,7 +235,8 @@ body {
 /* Botón de añadir - VERSIÓN CORREGIDA CON TEXTO */
 .add-btn-small {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #FDB813; /* ← TU AMARILLO DEL LOGO */
+  color: #FDB813;
+  /* ← TU AMARILLO DEL LOGO */
   border: none;
   padding: 0.5rem 1.2rem;
   /* Padding para el texto */
@@ -241,6 +263,7 @@ body {
   filter: drop-shadow(0 2px 4px #FDB813);
   /* Sombra en amarillo */
 }
+
 .add-btn-small:hover {
   transform: scale(1.05);
   filter: brightness(1.1);
@@ -288,28 +311,31 @@ body {
   font-size: 1.2rem;
   filter: drop-shadow(0 1px 2px #764ba2aa);
 }
+
 /* Contenedor de la Tarjeta con Efecto LED Blanco */
 .food-card {
   background: #ffffff;
   border-radius: 18px;
-  overflow: hidden; /* Para que la imagen no se salga de las esquinas redondeadas */
+  overflow: hidden;
+  /* Para que la imagen no se salga de las esquinas redondeadas */
   margin-bottom: 20px;
   border: 1px solid rgba(255, 255, 255, 0.9);
-  
+
   /* Efecto LED Blanco Suave (mucho más cálido y menos intenso) */
-  box-shadow: 
-    0 0 10px rgba(255, 240, 210, 0.08), 
+  box-shadow:
+    0 0 10px rgba(255, 240, 210, 0.08),
     0 0 20px rgba(255, 240, 210, 0.04),
-    0 10px 30px rgba(0, 0, 0, 0.08); /* Sombra base para dar profundidad */
-    
+    0 10px 30px rgba(0, 0, 0, 0.08);
+  /* Sombra base para dar profundidad */
+
   transition: all 0.3s ease-in-out;
 }
 
 .food-card:hover {
   transform: translateY(-8px);
   /* El LED se "ilumina" un poco más al pasar el ratón */
-  box-shadow: 
-    0 0 15px rgba(255, 255, 255, 1), 
+  box-shadow:
+    0 0 15px rgba(255, 255, 255, 1),
     0 0 30px rgba(255, 255, 255, 0.6),
     0 15px 40px rgba(0, 0, 0, 0.12);
 }
@@ -317,20 +343,24 @@ body {
 /* Contenedor de la Imagen */
 .food-image-container {
   width: 100%;
-  height: 180px; /* Altura fija para que todas las tarjetas midan lo mismo */
+  height: 180px;
+  /* Altura fija para que todas las tarjetas midan lo mismo */
   overflow: hidden;
-  background: #f0f0f0; /* Color de carga por si falla la imagen */
+  background: #f0f0f0;
+  /* Color de carga por si falla la imagen */
 }
 
 .food-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ajusta la imagen sin deformarla */
+  object-fit: cover;
+  /* Ajusta la imagen sin deformarla */
   transition: transform 0.5s ease;
 }
 
 .food-card:hover .food-image {
-  transform: scale(1.1); /* Efecto zoom suave al tocar la tarjeta */
+  transform: scale(1.1);
+  /* Efecto zoom suave al tocar la tarjeta */
 }
 
 /* Contenido de texto bajo la imagen */
@@ -349,11 +379,14 @@ body {
   font-size: 0.9rem;
   line-height: 1.4;
 }
+
 body {
-  background-color: #f0f2f5; /* Un gris muy clarito para que el blanco brille */
+  background-color: #f0f2f5;
+  /* Un gris muy clarito para que el blanco brille */
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
 }
+
 .app {
   min-height: 100vh;
   display: flex;
@@ -452,6 +485,7 @@ body {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -528,7 +562,8 @@ body {
   border-left: 4px solid var(--primary);
 }
 
-.region, .historia {
+.region,
+.historia {
   font-size: 0.9rem;
   color: #555;
   margin: 0.3rem 0;
@@ -1080,7 +1115,7 @@ body {
   cursor: pointer;
   font-weight: 900;
   font-size: 1.5rem;
-  box-shadow: 0 2px 8px rgba(239,83,80,0.18);
+  box-shadow: 0 2px 8px rgba(239, 83, 80, 0.18);
   transition: all 0.2s ease;
   position: absolute;
   top: 18px;
@@ -1158,12 +1193,13 @@ body {
     flex-wrap: wrap;
   }
 
-    .cart-item-controls {
-      order: 3;
-      width: 100%;
-      margin-top: 1rem;
-    }
+  .cart-item-controls {
+    order: 3;
+    width: 100%;
+    margin-top: 1rem;
   }
+}
+
 @keyframes bounceIn {
   0% {
     transform: scale(0.3);
@@ -1183,6 +1219,7 @@ body {
     transform: scale(1);
   }
 }
+
 /* CONFIGURACIÓN PARA IMPRESIÓN PROFESIONAL */
 @media print {
 
@@ -1233,6 +1270,7 @@ body {
   padding: 20px;
   background: white;
 }
+
 /* BOTÓN DE CERRAR - VISIBLE EN TODOS LOS DRAWERS */
 /* ========================================= */
 /* CORRECCIONES DE UNIFORMIDAD - DRAWERS     */
@@ -1375,4 +1413,35 @@ button[class*="close"]:hover,
   border-color: #ef5350 !important;
   color: #ef5350 !important;
   background: #ffebee !important;
+}
+/* =============================================
+   SOLO CAJA VISUAL INTELIGENTE (Smart Box)
+   ============================================= */
+
+/* Este contenedor reemplaza o envuelve a .food-image-container */
+.media-box {
+  width: 100%;
+  height: 160px;
+  /* Ajustado a tu diseño actual */
+  overflow: hidden;
+  position: relative;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Fuerza a que tanto la imagen como el video llenen el espacio sin deformarse */
+.media-box img,
+.media-box video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* LA CLAVE: mantiene la proporción y perspectiva */
+  display: block;
+}
+
+/* Efecto opcional: un brillo sutil al pasar el ratón sobre la imagen/video */
+.media-box:hover img,
+.media-box:hover video {
+  filter: brightness(1.05);
+  transition: filter 0.3s ease;
 }
