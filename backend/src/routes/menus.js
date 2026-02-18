@@ -1,15 +1,13 @@
-import express from 'express';
-import DailyMenu from '../models/DailyMenu.js';
-import { authMiddleware, adminMiddleware } from '../middleware/auth.js';
-
+const express = require('express');
 const router = express.Router();
+const { authMiddleware, adminMiddleware } = require('../middleware/auth');
+const DailyMenu = require('../models/DailyMenu');
 
 // Obtener menú del día
 router.get('/today', async (req, res) => {
   try {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
-    
     const mañana = new Date(hoy);
     mañana.setDate(mañana.getDate() + 1);
 
@@ -33,7 +31,6 @@ router.get('/:fecha', async (req, res) => {
   try {
     const fecha = new Date(req.params.fecha);
     fecha.setHours(0, 0, 0, 0);
-    
     const mañana = new Date(fecha);
     mañana.setDate(mañana.getDate() + 1);
 
@@ -76,7 +73,7 @@ router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
       req.body,
       { new: true }
     ).populate('platos.menuItemId');
-    
+
     res.json({
       mensaje: 'Menú actualizado exitosamente',
       menu
@@ -86,4 +83,5 @@ router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
+

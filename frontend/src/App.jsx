@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'; // Corregido: useEffect con doble 'f'
 import AdminPage from './AdminPage';
-import OrdersDrawer from './OrdersDrawer';
+import OrdersDrawer from './ComandasDrawer';
 import './App.css';
 import { CartProvider, useCart } from './CartContext';
 

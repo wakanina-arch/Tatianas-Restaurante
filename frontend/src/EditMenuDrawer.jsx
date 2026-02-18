@@ -67,50 +67,36 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
                   <p style={{fontWeight:'700', color:'#444', margin:'0 0 10px 0', fontSize:'0.95rem'}}>Opción {oidx + 1}</p>
                   
                   <div style={{display:'flex', flexDirection:'column', gap:'12px'}}>
-                    <label style={{fontSize:'0.85rem', color:'#666'}}>
-  URL Multimedia (Foto/Video):
+                    <label style={{fontSize:'0.85rem', color:'#666'}}>Nombre del plato:
+                      <input 
+                        style={{width:'100%', padding:'8px', borderRadius:'6px', border:'1px solid #ddd', marginTop:'4px'}}
+                        value={opt.nombre} 
+                        onChange={e => handleOptionChange(idx, oidx, 'nombre', e.target.value)} 
+                      />
+                    </label>
+
+                    <label style={{fontSize:'0.85rem', color:'#666'}}>Precio Sugerido ($):
   <input 
+    type="number" 
+    step="0.01"
+    min="0"
     style={{
       width:'100%', 
       padding:'8px', 
       borderRadius:'6px', 
       border:'1px solid #ddd', 
       marginTop:'4px',
-      fontFamily: 'monospace', // Para que se vea como código
-      fontSize: '0.9rem'
+      background: '#fff' // Asegura que se vea editable
     }}
-    value={opt.imagen || ''} 
-    onChange={e => handleOptionChange(idx, oidx, 'imagen', e.target.value)} 
-    placeholder="/img/The-One.png"
-                      />
-                    </label>
-
-                    <label style={{fontSize:'0.85rem', color:'#666'}}>
-  Precio Sugerido ($):
-  <div style={{position: 'relative', marginTop: '4px'}}>
-    
-    <input 
-      type="number" 
-      step="0.01"
-      min="0"
-      style={{
-        width:'100%', 
-        padding:'8px 8px 8px 25px', // Padding izquierdo extra para el $
-        borderRadius:'6px', 
-        border:'1px solid #ddd',
-        background: '#fff',
-        fontSize: '1rem'
-      }}
-      /* MAGIA: Si es 0, mostramos vacío para que se vea el placeholder */
-      value={opt.precio && opt.precio !== 0 ? opt.precio : ''}
-      onChange={e => {
-        const val = e.target.value === '' ? 0 : parseFloat(e.target.value);
-        handleOptionChange(idx, oidx, 'precio', val);
-      }} 
-      placeholder="0.00"
-    />
-  </div>
-  
+    /* Si el precio no existe, ponemos 0.00 por defecto */
+    value={opt.precio !== undefined ? opt.precio : 0.00} 
+    /* Permitimos que el cambio fluya sin restricciones */
+    onChange={e => {
+      const val = e.target.value === '' ? 0 : parseFloat(e.target.value);
+      handleOptionChange(idx, oidx, 'precio', val);
+    }} 
+    placeholder="0.00"
+  />
 </label>
 
 

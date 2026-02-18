@@ -2,8 +2,8 @@
   "name": "tianas-restaurant-backend",
   "version": "1.0.0",
   "description": "Backend API for Tatiana's Restaurant - Daily Menu Management System",
-  "main": "src/index.js",
   "type": "module",
+  "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",

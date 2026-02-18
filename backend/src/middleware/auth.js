@@ -1,30 +1,30 @@
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-export const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  
-  if (!token) {
-    return res.status(401).json({ 
-      error: 'Token no proporcionado' 
-    });
-  }
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
+
+// Middleware para verificar JWT y usuario autenticado
+const authMiddleware = async (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Token no proporcionado' });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = await User.findById(decoded.id).select('-password');
+    if (!req.user) return res.status(401).json({ error: 'Usuario no válido' });
     next();
   } catch (err) {
-    res.status(401).json({ 
-      error: 'Token inválido o expirado' 
-    });
+    return res.status(401).json({ error: 'Token inválido' });
   }
 };
 
-export const adminMiddleware = (req, res, next) => {
-  if (req.user?.rol !== 'admin_restaurante') {
-    return res.status(403).json({ 
-      error: 'Acceso denegado. Solo administradores' 
-    });
+// Middleware para verificar si el usuario es admin
+const adminMiddleware = (req, res, next) => {
+  if (req.user && req.user.rol === 'admin') {
+    next();
+  } else {
+    return res.status(403).json({ error: 'Acceso solo para administradores' });
   }
-  next();
 };
+
+module.exports = { authMiddleware, adminMiddleware };

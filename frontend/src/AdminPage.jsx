@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import QuickCheckout from './QuickCheckout';
 import EditMenuDrawer from './EditMenuDrawer';
-import OrdersDrawer from './OrdersDrawer';
-import OrdersLogDrawer from './OrdersLogDrawer';
+import OrdersDrawer from './ComandasDrawer';
+import OrdersLogDrawer from './components/OrdersLogDrawer';
 import ManageItemsDrawer from './ManageItemsDrawer'; 
 import './EditMenuDrawer.css';
 
