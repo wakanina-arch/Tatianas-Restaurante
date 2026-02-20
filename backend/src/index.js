@@ -1,11 +1,7 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const authRoutes = require('./routes/auth');
-// ... más requires (sin .js)
-
-// Importar rutas
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import itemsRoutes from './routes/items.js';
 import menusRoutes from './routes/menus.js';
@@ -48,9 +44,14 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
-// Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`🍽️  Servidor One To One corriendo en puerto ${PORT}`);
-  console.log(`📍 http://localhost:${PORT}`);
-  console.log(`🔗 API Health: http://localhost:${PORT}/api/health`);
-});
+// 👇 IMPORTANTE: ADAPTACIÓN PARA VERCEL
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🍽️  Servidor One To One corriendo en puerto ${PORT}`);
+    console.log(`📍 http://localhost:${PORT}`);
+    console.log(`🔗 API Health: http://localhost:${PORT}/api/health`);
+  });
+}
+
+// 👇 EXPORTAR PARA VERCEL (¡OBLIGATORIO!)
+export default app;
