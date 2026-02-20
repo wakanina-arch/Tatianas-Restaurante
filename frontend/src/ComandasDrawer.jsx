@@ -34,7 +34,7 @@ export default function OrdersDrawer({ open, onClose, pendingOrders, setPendingO
       <div className="drawer" style={kanbanDrawerStyle}>
         <div style={headerStyle}>
           <h2 style={{ color: "var(--selva-deep)", margin: 0, fontFamily: 'Fraunces' }}>👨‍🍳 Control de Comandas</h2>
-          <button onClick={onClose} style={closeXStyle}>✕</button>
+          <button className="close-btn" onClick={onClose}>×</button>
         </div>
 
         <div style={kanbanGridStyle}>

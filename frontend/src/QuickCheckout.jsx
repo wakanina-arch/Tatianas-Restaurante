@@ -44,28 +44,41 @@ export default function QuickCheckout({ finishedOrders = [], setFinishedOrders, 
         <p style={labelStyle}>PEDIDOS EN TAQUILLA</p>
       </div>
 
-      <div style={inputGroupStyle}>
-        <h3 style={{fontFamily: 'Fraunces', color: 'var(--selva-deep)', marginBottom: '1rem'}}>Validación de Entrega</h3>
-        
-        <div style={{position: 'relative', width: '100%'}}>
-          <input
-            type="text"
-            placeholder="Escanear QR o ID Manual"
-            value={manualId}
-            onChange={e => setManualId(e.target.value)}
-            style={inputStyle}
-            onKeyDown={e => e.key === 'Enter' && manualId && handleCheckout(manualId)}
-          />
-          <span style={qrIconPlaceholder}>📷</span>
-        </div>
+      /* --- BLOQUE DE INGRESO MANUAL CORREGIDO --- */
+<div style={inputGroupStyle}>
+  <h3 style={{fontFamily: 'Fraunces', color: 'var(--selva-deep)', marginBottom: '1rem'}}>
+    Validación de Entrega
+  </h3>
+  
+  <div style={{display: 'flex', flexDirection: 'column', gap: '10px', width: '100%'}}>
+    <div style={{position: 'relative', width: '100%'}}>
+      <input
+        type="text"
+        placeholder="Escanear QR o ID Manual"
+        value={manualId}
+        onChange={e => setManualId(e.target.value)}
+        style={inputStyle}
+        onKeyDown={e => e.key === 'Enter' && manualId && handleCheckout(manualId)}
+      />
+      <span style={qrIconPlaceholder}>📷</span>
+    </div>
 
-        <button
-          style={btnAceptarStyle}
-          onClick={() => manualId && handleCheckout(manualId)}
-        >
-          ACEPTAR Y ENTREGAR
-        </button>
-      </div>
+    {/* BOTÓN ACEPTAR AÑADIDO */}
+    <button
+      style={btnAceptarStyle}
+      onClick={() => {
+        if (manualId.trim()) {
+          handleCheckout(manualId);
+        } else {
+          setFeedback({ msg: '⚠️ Ingrese un código primero', type: 'error' });
+        }
+      }}
+    >
+      ACEPTAR Y ENTREGAR
+    </button>
+  </div>
+</div>
+
 
       {feedback.msg && (
         <div style={{

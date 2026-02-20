@@ -3,7 +3,7 @@ import QuickCheckout from './QuickCheckout';
 import EditMenuDrawer from './EditMenuDrawer';
 import OrdersDrawer from './ComandasDrawer';
 import OrdersLogDrawer from './components/OrdersLogDrawer';
-import ManageItemsDrawer from './ManageItemsDrawer'; 
+import PromosDrawer from './PromosDrawer'; 
 import './EditMenuDrawer.css';
 
 export default function AdminPage({ menuItems, onSaveMenu, log, addLog, pendingOrders, setPendingOrders, finishedOrders, setFinishedOrders }) {
@@ -149,8 +149,8 @@ export default function AdminPage({ menuItems, onSaveMenu, log, addLog, pendingO
 
         {/* 5. GESTIONAR ÍTEMS */}
         <div className="admin-card">
-          <h3>Gestionar Ítems</h3>
-          <p>Añadir o quitar platillos del menú</p>
+          <h3>Promos y Descuentos</h3>
+          <p>Añadir o quitar promos al menú</p>
           <button className="admin-btn" onClick={() => setManageOpen(true)}>Gestionar</button>
         </div>
 
@@ -179,7 +179,7 @@ export default function AdminPage({ menuItems, onSaveMenu, log, addLog, pendingO
 
       <OrdersLogDrawer open={logOpen} onClose={() => setLogOpen(false)} log={log} />
 
-      <ManageItemsDrawer 
+      <PromosDrawer 
         open={manageOpen} 
         onClose={() => setManageOpen(false)} 
         menuItems={menuItems} 

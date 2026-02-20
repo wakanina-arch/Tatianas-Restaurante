@@ -163,17 +163,25 @@ function MenuItem({ item, addToCart }) {
     // 1. Buscamos la opción con validación estricta
   const selectedData = item.opciones?.find(o => o.nombre === selectedOption);
 
-  // 2. LÓGICA DE PRECIO BLINDADA (Elimina el rastro del 5.50 histórico)
+
+    // 2. LÓGICA DE PRECIO BLINDADA + INYECCIÓN DE PROMO
   const currentPrice = (function() {
     if (!selectedOption || !selectedData) return 0.00;
     
-    // Si la opción tiene su propio precio (aunque sea 0), lo usamos.
-    // Solo si la opción NO tiene precio (undefined/null), intentamos usar el del item.
-    const precioIndividual = selectedData.precio;
-    return (precioIndividual !== undefined && precioIndividual !== null) 
-      ? precioIndividual 
+    // 1. Calculamos el precio según tu lógica de opciones
+    const pBase = (selectedData.precio !== undefined && selectedData.precio !== null) 
+      ? selectedData.precio 
       : (item.precio || 0.00);
-  })();
+
+    // 2. LA MAGIA: Si el item tiene promo activa, aplicamos el tijeretazo
+    if (item.enOferta && item.descuentoAplicado) {
+      return pBase - (pBase * item.descuentoAplicado / 100);
+    }
+
+    return pBase;
+  })(); // <-- Importante: Verifica que estos paréntesis cierren la función
+
+  
 
   // 3. NUTRICIÓN BLINDADA
   const nutrition = (selectedOption && selectedData) 
@@ -231,7 +239,15 @@ function MenuItem({ item, addToCart }) {
       {renderVisualMedia(item.imagen)}
 
       <div className="card-body" style={{ padding: '0 5px' }}>
-        <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.2rem' }}>{item.nombre}</h3>
+        <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
+          <span>{item.nombre}</span>
+          {item.enOferta && (
+            <span className="badge" style={{ background: '#f02670', color: '#fff', fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', transform: 'rotate(-2deg)', // Toque One To One
+      boxShadow: '2px 2px 0 var(--selva-deep)' }}>
+              OFERTA
+            </span>
+          )}
+        </h3>
         <p style={{ fontSize: '0.82rem', color: '#666', marginBottom: '0.8rem', lineHeight: '1.3' }}>{description}</p>
 
         <div className="options-container" style={{ marginBottom: '1rem' }}>

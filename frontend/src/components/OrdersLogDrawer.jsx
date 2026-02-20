@@ -29,10 +29,10 @@ export default function OrdersLogDrawer({ open, onClose, orders = [] }) {
     <div style={backdropStyle}>
       <div style={drawerStyle}>
         {/* BOTÓN X SUPERIOR (SALIDA RÁPIDA) */}
-        <button onClick={onClose} style={closeXStyle}>✕</button>
+        <button className="close-btn" onClick={onClose}>×</button>
 
         <div style={headerStyle}>
-          <h2 style={{ color: "var(--selva-deep)", margin: 0, fontFamily: 'Fraunces' }}>📋 Repositorio de Auditoría</h2>
+          <h2 style={{ color: "var(--selva-deep)", margin: 0, fontFamily: 'Fraunces' }}>Repositorio de Auditoría</h2>
           <div style={searchContainerStyle}>
             <input 
               type="text"
