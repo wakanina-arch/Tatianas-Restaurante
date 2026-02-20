@@ -239,15 +239,22 @@ function MenuItem({ item, addToCart }) {
       {renderVisualMedia(item.imagen)}
 
       <div className="card-body" style={{ padding: '0 5px' }}>
-        <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
-          <span>{item.nombre}</span>
-          {item.enOferta && (
-            <span className="badge" style={{ background: '#f02670', color: '#fff', fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', transform: 'rotate(-2deg)', // Toque One To One
-      boxShadow: '2px 2px 0 var(--selva-deep)' }}>
-              OFERTA
-            </span>
-          )}
-        </h3>
+       <h3 style={{ margin: '0 0 0.3rem 0', fontSize: '1.2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
+  <span>{item.nombre}</span>
+  {item.enOferta && (
+    <span className="badge" style={{ 
+      background: '#f02670', 
+      color: '#fff', 
+      fontSize: '0.7rem', 
+      padding: '2px 6px', 
+      borderRadius: '4px', 
+      transform: 'rotate(-2deg)',
+      boxShadow: '2px 2px 0 var(--selva-deep)' 
+    }}>
+      {item.tagPromo || 'OFERTA'}  {/* ← AHORA MUESTRA LO QUE GUARDASTE */}
+    </span>
+  )}
+</h3>
         <p style={{ fontSize: '0.82rem', color: '#666', marginBottom: '0.8rem', lineHeight: '1.3' }}>{description}</p>
 
         <div className="options-container" style={{ marginBottom: '1rem' }}>

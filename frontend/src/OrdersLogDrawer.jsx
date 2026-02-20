@@ -61,7 +61,7 @@ export default function OrdersLogDrawer({ open, onClose, log }) {
     ))
   ) : (
     <tr>
-      <td colSpan="5" style={{ textAlign: 'center', padding: '20px', color: '#aaa' }}>
+      <td colSpan="5" style={{ textAlign: 'center', padding: '20px', color: '#cf0d0d' }}>
         No se encontraron registros
       </td>
     </tr>

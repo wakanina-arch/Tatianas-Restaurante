@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import QuickCheckout from './QuickCheckout';
+import EntregaPedido from './EntregaPedido';
 import EditMenuDrawer from './EditMenuDrawer';
 import OrdersDrawer from './ComandasDrawer';
 import OrdersLogDrawer from './components/OrdersLogDrawer';
@@ -84,7 +84,7 @@ export default function AdminPage({ menuItems, onSaveMenu, log, addLog, pendingO
               : `${finishedOrders.length} pendiente${finishedOrders.length > 1 ? 's' : ''}`}
           </button>
           {/* Checkout QR y manual */}
-          <QuickCheckout finishedOrders={finishedOrders} setFinishedOrders={setFinishedOrders} addLog={addLog} />
+          <EntregaPedido finishedOrders={finishedOrders} setFinishedOrders={setFinishedOrders} addLog={addLog} />
           {ordersOpen && pendingOrders.length > 0 && (
             <div style={{maxHeight: 320, overflowY: 'auto', marginBottom: 8, marginTop: 8}}>
               <table style={{width:'100%', fontSize:'0.98rem', borderCollapse:'collapse'}}>
