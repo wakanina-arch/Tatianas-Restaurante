@@ -1,6 +1,9 @@
+// La función más simple del mundo para Vercel
 export default function handler(req, res) {
+  // Vercel espera que el 'req' y 'res' sean como los de Express
+  console.log("🎯 ¡La función fue invocada!");
   res.status(200).json({ 
-    message: '✅ Backend funcionando',
-    timestamp: new Date().toISOString()
+    mensaje: '¡Conexión exitosa!', 
+    hora: new Date().toISOString() 
   });
 }
