@@ -289,8 +289,7 @@ const btnEliminarStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   boxShadow: '0 4px 10px rgba(255,71,87,0.3)',
-  transition: 'all 0.2s',
-  border: 'none'
+  transition: 'all 0.2s'
 };
 
 const tagBadgeStyle = {
