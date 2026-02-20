@@ -44,7 +44,7 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
-// 👇 IMPORTANTE: ADAPTACIÓN PARA VERCEL
+// Adaptación para Vercel
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`🍽️  Servidor One To One corriendo en puerto ${PORT}`);
@@ -53,5 +53,4 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// 👇 EXPORTAR PARA VERCEL (¡OBLIGATORIO!)
 export default app;
