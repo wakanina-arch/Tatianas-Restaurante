@@ -3,7 +3,8 @@ import EntregaPedido from './EntregaPedido';
 import EditMenuDrawer from './EditMenuDrawer';
 import OrdersDrawer from './ComandasDrawer';
 import OrdersLogDrawer from './components/OrdersLogDrawer';
-import PromosDrawer from './PromosDrawer'; 
+import PromosDrawer from './PromosDrawer';
+import ComandasKanban from './ComandasKanban';
 import './EditMenuDrawer.css';
 
 export default function AdminPage({ menuItems, onSaveMenu, log, addLog, pendingOrders, setPendingOrders, finishedOrders, setFinishedOrders }) {
@@ -128,17 +129,14 @@ export default function AdminPage({ menuItems, onSaveMenu, log, addLog, pendingO
           <button className="admin-btn" onClick={() => setDrawerOpen(true)}>Editar Menú</button>
         </div>
        
-        {/* 3. COMANDAS */}
-        <div className="admin-card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3>Ver Comandas</h3>
-            {pendingOrders.length > 0 && (
-              <span className="notification-badge">{pendingOrders.length}</span>
-            )}
-          </div>
-          <p>Visualiza pedidos en tiempo real</p>
-          <button className="admin-btn" onClick={() => setOrdersOpen(true)}>Ver Pedidos</button>
-        </div>
+        {/* 3. COMANDAS KANBAN */}
+<ComandasKanban 
+  pendingOrders={pendingOrders}
+  finishedOrders={finishedOrders}
+  setPendingOrders={setPendingOrders}
+  setFinishedOrders={setFinishedOrders}
+  addLog={addLog}
+/>
 
         {/* 4. REGISTRO */}
         <div className="admin-card">

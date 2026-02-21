@@ -4,7 +4,7 @@ export default function PromosDrawer({ open, onClose, menuItems, onSaveMenu }) {
   const [selectedItemId, setSelectedItemId] = useState('');
   const [promoData, setPromoData] = useState({
   descuento: 0,
-  tag: 'DESPIERTA' // ← Valor inicial por defecto
+  tag: '' // ← Valor inicial por defecto
 });
 
 // Resetear selección al cerrar - AHORA MANTIENE EL TAG
@@ -123,7 +123,7 @@ useEffect(() => {
           <input 
             type="text" 
             style={inputStyle} 
-            placeholder="Promos..."
+            placeholder="San Valentín, Día de la Madre, 2x1..."
             value={promoData.tag}
             onChange={(e) => setPromoData({...promoData, tag: e.target.value})}
           />

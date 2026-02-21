@@ -48,7 +48,7 @@ export default function EntregaPedido({ finishedOrders = [], setFinishedOrders, 
       {/* 🥘 CONTADOR CON SABOR ECUATORIANO */}
       <div style={counterStyle}>
         <span style={numberStyle}>{finishedOrders.length}</span>
-        <p style={labelStyle}>PEDIDOS LISTOS</p>
+        <p style={labelStyle}>📱 ESCANEAR QR</p>
         <span style={labelStyle}>(pa' llevar)</span>
       </div>
 
@@ -62,25 +62,29 @@ export default function EntregaPedido({ finishedOrders = [], setFinishedOrders, 
         <div style={formContainerStyle}>
           
           {/* CAMPO DE BÚSQUEDA CON ESTILO */}
-          <div style={searchBoxStyle}>
-            <span style={qrIconStyle}>📷</span>
-            <input
-              type="text"
-              placeholder="Ej: ORD-123 o escanear QR"
-              value={manualId}
-              onChange={e => setManualId(e.target.value)}
-              style={inputStyle}
-              onKeyDown={e => e.key === 'Enter' && manualId && handleCheckout(manualId)}
-            />
-            {manualId && (
-              <button 
-                style={clearButtonStyle}
-                onClick={() => setManualId('')}
-              >
-                ✕
-              </button>
-            )}
-          </div>
+         <div style={searchBoxStyle}>
+  <span style={qrIconStyle}>📝</span>
+  <input
+    type="text"
+    placeholder="ticket: #ORD-123"
+    value={manualId}
+    onChange={e => setManualId(e.target.value)}
+    style={{
+      ...inputStyle,
+      border: '2px solid #e86108',  // ← MARCO NARANJA SIEMPRE VISIBLE
+      outline: 'none'
+    }}
+    onKeyDown={e => e.key === 'Enter' && manualId && handleCheckout(manualId)}
+  />
+  {manualId && (
+    <button 
+      style={clearButtonStyle}
+      onClick={() => setManualId('')}
+    >
+      ✕
+    </button>
+  )}
+</div>
 
          {/* 🎯 BOTÓN MEJORADO - TONO #cd7006 */}
 {/* 🎯 BOTÓN CON ESTILO COMPLETO */}
@@ -147,7 +151,7 @@ export default function EntregaPedido({ finishedOrders = [], setFinishedOrders, 
     gap: '10px'
   }}>
     <span style={{fontSize: '1.2rem'}}>🚀</span>
-    <span>ACEPTAR Y ENTREGAR</span>
+    <span>ACEPTAR</span>
     {finishedOrders.length > 0 && manualId.trim() && (
       <span style={{
         background: 'rgba(255,255,255,0.3)',
