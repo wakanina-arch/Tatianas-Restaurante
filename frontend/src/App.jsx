@@ -139,10 +139,28 @@ function HomePage({ platillos }) {
   return (
     <section className="home-page">
       <div className="hero" style={{textAlign:'center'}}>
-        <img src="/The-One-icon.png" alt="Logo One To One" style={{width:'90px',height:'90px',marginBottom:'0.5rem',borderRadius:'22px',boxShadow:'0 4px 18px rgba(118,75,162,0.13)'}} />
+        <img 
+  src="/The-One-icon.png" 
+  alt="Logo One To One" 
+  style={{
+    width: '180px',           /* ← Antes 90px, ahora EL DOBLE */
+    height: '180px',          /* ← Antes 90px, ahora EL DOBLE */
+    marginBottom: '1rem',
+    borderRadius: '44px',     /* Un poco más de radio para que escale */
+    boxShadow: '0 8px 30px rgba(118,75,162,0.25)'  /* Sombra más grande */
+  }} 
+/>
         <h2 style={{marginBottom:'0.3rem'}}>One To One 🎉</h2>
         
-        <p style={{marginBottom:'0.5rem'}}>Bienvenidos, descubre nuestros deliciosos menús diarios con platos típicos</p>
+         {/* FRASE CON ESTILO "GRACIAS POR ELEGIRNOS" */}
+  <div style={{
+    fontSize: '1.1rem',
+    color: '#764ba2',
+          fontFamily: 'cursive',
+    fontWeight: '900'
+  }}>
+    ¡Descubre nuestros deliciosos menús con platos típicos!
+  </div>
       </div>
       <div className="menu-container">
         {platillos.map((platillo) => (
@@ -213,8 +231,10 @@ function MenuItem({ item, addToCart }) {
       precio: currentPrice, 
       calorias: nutrition.calorias,
       proteina: nutrition.proteina,
-      carbohidratos: nutrition.carbohidratos
+      carbohidratos: nutrition.carbohidratos,
+      cantidad: 1
     };
+    console.log("🛒 Añadiendo al carrito:", itemToAdd);
     
     addToCart(itemToAdd);
     setSelectedOption(null);
