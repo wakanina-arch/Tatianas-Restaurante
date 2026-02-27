@@ -246,7 +246,7 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
    {step === 2 && (
   <div style={{ padding: '0.5rem 0' }}>
     {/* Botón de Impresión */}
-    <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+    <div style={{ textAlign: 'left', marginBottom: '18px' }}>  {/* ← CAMBIO AQUÍ */}
       <button 
         onClick={() => window.print()} 
         style={{ background: '#f0f0f0', border: '1px solid #ccc', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }}

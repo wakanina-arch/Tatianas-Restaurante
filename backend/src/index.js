@@ -1,9 +1,54 @@
-// La función más simple del mundo para Vercel
-export default function handler(req, res) {
-  // Vercel espera que el 'req' y 'res' sean como los de Express
-  console.log("🎯 ¡La función fue invocada!");
-  res.status(200).json({ 
-    mensaje: '¡Conexión exitosa!', 
-    hora: new Date().toISOString() 
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+
+// Importar rutas
+import authRoutes from './routes/auth.js';
+import itemsRoutes from './routes/items.js';
+import menusRoutes from './routes/menus.js';
+import ordersRoutes from './routes/orders.js';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Middleware
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  credentials: true
+}));
+app.use(express.json());
+
+// Conectar a MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tianas_restaurant')
+  .then(() => console.log('✅ Conectado a MongoDB'))
+  .catch(err => console.error('❌ Error conectando a MongoDB:', err));
+
+// Rutas API
+app.use('/api/auth', authRoutes);
+app.use('/api/items', itemsRoutes);
+app.use('/api/menus', menusRoutes);
+app.use('/api/orders', ordersRoutes);
+
+// Ruta de salud
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'Backend de One To One está activo ✅',
+    version: '1.0.0',
+    timestamp: new Date().toISOString()
   });
-}
+});
+
+// Manejo de rutas no encontradas
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+// Iniciar servidor
+app.listen(PORT, () => {
+  console.log(`🍽️  Servidor One To One corriendo en puerto ${PORT}`);
+  console.log(`📍 http://localhost:${PORT}`);
+  console.log(`🔗 API Health: http://localhost:${PORT}/api/health`);
+});

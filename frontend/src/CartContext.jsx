@@ -28,31 +28,15 @@ export const CartProvider = ({ children }) => {
     const [orders, setOrders] = useState([]);
 
     // Función para agregar una orden
-   /* --- TRASPLANTE DE LÓGICA KANBAN --- */
-const addOrder = useCallback((order) => {
-  const orderConStatus = {
-    ...order,
-    // Generamos el ID si no existe para que el Repositorio de Auditoría lo rastree
-    id: order.id || `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
-    // 🟢 ESTADO INICIAL: Activa el botón verde en ComandasDrawer
-    estado: 'Recibido', 
-    // ⏱️ MARCA DE TIEMPO: Para el temporizador de cocina
-    hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    items: order.items || [],
-    total: parseFloat(order.total) || 0
-  };
-
-  setOrders((prevOrders) => [...prevOrders, orderConStatus]);
-  console.log("🚀 Orden teletransportada a cocina:", orderConStatus);
-}, []);
-
-// El resto sigue igual...
-const removeFromCart = useCallback((itemId) => {
-  setCartItems((prevItems) =>
-    prevItems.filter((i) => i.id !== itemId)
-  );
-}, []);
-
+    const addOrder = useCallback((order) => {
+      setOrders((prevOrders) => [...prevOrders, order]);
+    }, []);
+  // Eliminar item del carrito
+  const removeFromCart = useCallback((itemId) => {
+    setCartItems((prevItems) =>
+      prevItems.filter((i) => i.id !== itemId)
+    );
+  }, []);
 
   // Actualizar cantidad
   const updateQuantity = useCallback((itemId, newQuantity) => {
