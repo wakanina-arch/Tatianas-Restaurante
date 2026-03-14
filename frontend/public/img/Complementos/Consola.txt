@@ -1,0 +1,3 @@
+[Debug] [vite] connecting... (client, line 733)
+[Debug] [vite] connected. (client, line 827)
+[Error] Failed to load resource: the server responded with a status of 500 (Internal Server Error) (Complementos.jsx, line 0)

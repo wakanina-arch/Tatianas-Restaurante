@@ -1,0 +1,1192 @@
+/* ============================================
+   TATIANA'S RESTAURANT - ESTILOS UNIFICADOS
+   ============================================ */
+
+/* ---------- 1. RESET Y VARIABLES GLOBALES ---------- */
+/* Propósito: Establece la base del documento y variables de color reutilizables */
+/* ==================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Colores principales - Naranjas */
+  --naranja-papaya: #e86108;
+  --naranja-alegria: #f39c12;
+  --mango: #ffb347;
+  --maracuya: #ff6b35;
+
+  /* Colores principales - Verdes */
+  --verde-fluo: #6fff00;
+  --verde-papaya: #2ecc71;
+  --verde-selva: #01400e;
+
+  /* Colores principales - Morados */
+  --morado-primario: #667eea;
+  --morado-secundario: #764ba2;
+
+  /* Colores de fondo y bordes */
+  --crema-tropical: #fff9f5;
+  --borde-tropical: #ffe6d5;
+
+  /* Colores de alerta/cierre */
+  --rojo-cierre: #ef5350;
+  --rojo-hover: #d32f2f;
+
+  /* Colores de texto */
+  --gris-texto: #4a4a4a;
+  --gris-secundario: #6c757d;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #ffb347 0%, #ff9f1c 50%, #ff6b35 100%);
+  color: var(--gris-texto);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+/* ---------- 2. TIPOGRAFÍA ---------- */
+/* Propósito: Estilos base para textos y encabezados */
+/* ==================================================== */
+h1,
+h2,
+h3 {
+  color: var(--gris-texto);
+  margin-bottom: 1rem;
+}
+
+/* ---------- 3. COMPONENTES BASE ---------- */
+/* Propósito: Estilos fundamentales reutilizables */
+/* =============================================== */
+
+/* ----- 3.1 BOTONES BASE ----- */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ----- 3.2 INPUTS ----- */
+input,
+textarea,
+select {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  width: 100%;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--morado-primario);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* ---------- 4. BOTONES ESPECÍFICOS ---------- */
+/* Propósito: Variantes de botones con estilos particulares */
+/* ========================================================= */
+
+/* ----- 4.1 BOTONES ADMIN ----- */
+.admin-btn,
+.save-btn {
+  background: linear-gradient(135deg, var(--morado-primario) 0%, var(--morado-secundario) 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.admin-btn:hover,
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.save-btn {
+  padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+}
+
+/* ----- 4.2 BOTÓN DE CIERRE ----- */
+.close-btn {
+  position: absolute !important;
+  top: 1rem !important;
+  right: 1rem !important;
+  background: var(--rojo-cierre) !important;
+  color: rgb(6, 6, 6) !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 1.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 9999 !important;
+  box-shadow: 0 2px 8px rgba(239, 83, 80, 0.3) !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+.close-btn:hover {
+  background: var(--rojo-hover) !important;
+  transform: scale(1.1) !important;
+}
+
+/* ----- 4.3 BOTONES AÑADIR ----- */
+.add-btn {
+  background: linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%);
+  color: var(--verde-selva);
+  padding: 0.7rem 1.5rem;
+  border-radius: 40px;
+  font-weight: bold;
+}
+
+.add-btn:hover {
+  background: linear-gradient(135deg, var(--verde-selva) 0%, #296b35 100%);
+  color: var(--mango);
+  transform: scale(1.05);
+}
+
+.add-btn-small {
+  background: linear-gradient(135deg, #ff9f1c 0%, #ec4c2f 100%);
+  color: var(--verde-selva);
+  padding: 0.5rem 1.2rem;
+  border-radius: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+  width: auto;
+  min-width: 100px;
+}
+
+.add-btn-small:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* ---------- 5. LAYOUT Y ESTRUCTURA ---------- */
+/* Propósito: Componentes de estructura y navegación */
+/* ================================================== */
+
+/* ----- 5.1 NAVBAR ----- */
+.navbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.8rem;
+  background: linear-gradient(135deg, var(--morado-primario) 0%, var(--morado-secundario) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: bold;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-btn {
+  background: transparent;
+  color: #333;
+  border: 2px solid transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 1rem;
+  position: relative;
+}
+
+.nav-btn:hover {
+  background: #f5f5f5;
+  transform: none;
+}
+
+.nav-btn.active {
+  background: linear-gradient(135deg, var(--morado-primario) 0%, var(--morado-secundario) 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.cart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: var(--rojo-cierre);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: 2px solid white;
+}
+
+/* ----- 5.2 HERO SECTION ----- */
+.hero {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 3rem;
+  border-radius: 16px;
+  text-align: center;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--morado-primario) 0%, var(--morado-secundario) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ---------- 6. DRAWERS (CAJONES LATERALES) ---------- */
+/* Propósito: Paneles deslizantes laterales */
+/* ===================================================== */
+
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 2000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.drawer {
+  background: #fff;
+  width: 400px;
+  max-width: 100vw;
+  height: 100vh;
+  box-shadow: -2px 0 16px rgba(0, 0, 0, 0.15);
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
+  position: relative;
+  animation: slideInDrawer 0.3s cubic-bezier(.4, 0, .2, 1);
+}
+
+@keyframes slideInDrawer {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.drawer-header {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, var(--morado-primario) 0%, var(--morado-secundario) 100%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+}
+
+.drawer-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 1.3rem;
+}
+
+/* ---------- 7. COMPONENTES DE MENÚ ---------- */
+/* Propósito: Tarjetas de platos y elementos del menú */
+/* =================================================== */
+
+/* ----- 7.1 CONTENEDOR PRINCIPAL ----- */
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ----- 7.2 TARJETA DE PLATO ----- */
+.food-card {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-height: 500px;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.food-card:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--maracuya) 20%, var(--maracuya) 80%, transparent 100%);
+}
+
+/* ----- 7.3 ÁREA MULTIMEDIA ----- */
+.food-media {
+  width: 100%;
+  height: 280px !important;
+  overflow: hidden;
+  border-bottom: 4px solid var(--maracuya);
+  position: relative;
+}
+
+.food-media::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: var(--verde-selva);
+  border-radius: 2px;
+}
+
+/* ----- 7.4 INFORMACIÓN DEL PLATO ----- */
+.food-info {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: white;
+  flex: 1;
+  box-shadow: inset 0 8px 8px -8px rgba(0, 0, 0, 0.1);
+}
+
+.food-description {
+  font-size: 0.9rem;
+  color: var(--gris-texto);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* ----- 7.5 OPCIONES DEL PLATO ----- */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.option-card {
+  background: #f8f9fa;
+  border: 2px solid var(--mango);
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.option-card:hover {
+  border-color: var(--maracuya);
+  transform: translateY(-2px);
+}
+
+.option-card.selected {
+  background: linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%);
+  border-color: var(--verde-selva);
+  color: var(--verde-selva);
+}
+
+.option-card .option-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  color: var(--verde-selva);
+}
+
+.option-card .option-price {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--maracuya);
+}
+
+.option-card.selected .option-price {
+  color: var(--verde-selva);
+}
+
+.option-card input[type="checkbox"] {
+  display: none;
+}
+
+.option-row {
+  border-bottom: 1px dashed rgba(255, 107, 53, 0.3);
+  padding: 10px 0;
+}
+
+.option-row:last-child {
+  border-bottom: none;
+}
+
+/* ----- 7.6 INFORMACIÓN NUTRICIONAL ----- */
+.nutrition-info {
+  display: flex;
+  justify-content: space-around;
+  background: rgba(255, 179, 71, 0.1);
+  padding: 10px;
+  border-radius: 30px;
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.nutrition-info span {
+  font-size: 0.85rem;
+  color: var(--verde-selva);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nutrition-info strong {
+  color: var(--maracuya);
+  font-size: 1rem;
+}
+
+/* ----- 7.7 FOOTER DEL PLATO ----- */
+.food-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 2px solid var(--mango);
+}
+
+.current-price {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--maracuya);
+}
+
+/* ---------- 8. CARRUSEL MULTIMEDIA ---------- */
+/* Propósito: Componente de carrusel para imágenes/videos */
+/* ======================================================= */
+
+.media-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.carousel-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%);
+}
+
+.carousel-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(232, 97, 8, 0.7);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.carousel-arrow:hover {
+  background: var(--naranja-papaya);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-arrow.prev {
+  left: 10px;
+}
+
+.carousel-arrow.next {
+  right: 10px;
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot:hover {
+  background: white;
+  transform: scale(1.2);
+}
+
+.dot.active {
+  background: var(--verde-fluo);
+  width: 20px;
+  border-radius: 10px;
+}
+
+.carousel-play-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.carousel-play-btn:hover {
+  background: var(--naranja-papaya);
+  transform: scale(1.1);
+}
+
+.carrusel-container {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+}
+
+/* ---------- 9. CARRITO DE COMPRAS ---------- */
+/* Propósito: Página y componentes del carrito */
+/* ============================================ */
+
+.cart-page {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 2rem;
+}
+
+.cart-page h2 {
+  color: #275f32;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 2px 10px rgba(255, 107, 53, 0.3);
+}
+
+.cart-container {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.cart-items {
+  flex: 1;
+  background: #f7f6f5;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(41, 107, 53, 0.15);
+  border: 1px solid rgba(255, 179, 71, 0.3);
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--mango);
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.cart-item:hover {
+  background: rgba(255, 179, 71, 0.05);
+  border-radius: 12px;
+  padding-left: 2rem;
+}
+
+.cart-item-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--verde-selva);
+  font-size: 1.1rem;
+}
+
+.cart-item-info p {
+  color: var(--maracuya);
+  font-weight: bold;
+}
+
+.cart-summary {
+  width: 320px;
+  background: linear-gradient(135deg, #f7f6f5 0%, #f7f6f5);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(1, 64, 14, 0.3);
+  position: sticky;
+  top: 100px;
+  color: var(--verde-selva);
+}
+
+.cart-summary .summary-row {
+  color: var(--verde-selva);
+  border-bottom: 1px solid rgba(1, 64, 14, 0.2);
+}
+
+.cart-summary .total-amount {
+  color: var(--verde-selva);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.cart-summary button {
+  background: #275f32;
+  color: var(--mango);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.cart-summary button:hover {
+  background: var(--maracuya);
+  color: white;
+  transform: scale(1.02);
+}
+
+/* ----- 9.1 BOTONES DEL CARRITO ----- */
+.delete-btn {
+  background: rgba(255, 107, 53, 0.1);
+  border: 2px solid var(--maracuya);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--maracuya);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(255, 107, 53, 0.2);
+}
+
+.delete-btn:hover {
+  background: var(--maracuya);
+  color: white;
+  transform: scale(1.15) rotate(8deg);
+  box-shadow: 0 6px 15px rgba(255, 107, 53, 0.4);
+}
+
+.qty-btn {
+  background: linear-gradient(135deg, var(--mango) 0%, #ff9f1c 100%);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--verde-selva);
+  transition: all 0.3s ease;
+  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(1, 64, 14, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.qty-btn:hover {
+  background: linear-gradient(135deg, var(--maracuya) 0%, #ff4f2e 100%);
+  color: white;
+  transform: scale(1.15) rotate(3deg);
+  box-shadow: 0 6px 15px rgba(255, 107, 53, 0.4);
+}
+
+.qty-btn:active {
+  transform: scale(0.95);
+}
+
+/* ---------- 10. PANEL ADMIN ---------- */
+/* Propósito: Estilos para el panel de administración */
+/* =================================================== */
+
+.admin-page {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.admin-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.admin-card {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid var(--morado-primario);
+  text-align: center;
+}
+
+.admin-card h3 {
+  color: var(--morado-primario);
+  margin-bottom: 0.5rem;
+}
+
+.admin-card p {
+  color: #666;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+/* ---------- 11. WELCOME SCREEN (PANTALLA INICIAL) ---------- */
+/* Propósito: Estilos para la pantalla de bienvenida */
+/* ============================================================ */
+
+.welcome-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffb347 0%, #ff6b35 100%);
+  padding: 1rem;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.welcome-card {
+  background: white;
+  border-radius: 48px;
+  padding: 3rem 2rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.brand-section {
+  margin-bottom: 2rem;
+}
+
+.brand-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #01400e;
+  margin: 0;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.brand-subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin: 0.5rem 0 0 0;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.decorative-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffb347, #ff6b35, transparent);
+  margin: 2rem 0;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.category-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.cat-btn {
+  width: 100%;
+  padding: 1.2rem;
+  border: none;
+  border-radius: 60px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  border: 2px solid white;
+  letter-spacing: 1px;
+}
+
+.cat-btn.primeros {
+  background: #ffb347;
+  color: #01400e;
+}
+
+.cat-btn.segundos {
+  background: #667eea;
+  color: white;
+}
+
+.cat-btn.postres {
+  background: #2ecc71;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.cat-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.05);
+}
+
+.user-section {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+}
+
+.user-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #01400e;
+  border: 3px solid #ffb347;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  color: white;
+  font-size: 1.3rem;
+}
+
+.user-circle:hover {
+  transform: scale(1.1);
+  background: #ff6b35;
+  border-color: white;
+}
+
+.user-initial {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.user-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+/* ---------- 12. BANNERS ---------- */
+/* Propósito: Banners decorativos y de servicios */
+/* ============================================== */
+
+.banner-identidad {
+  background: linear-gradient(135deg, var(--morado-primario) 0%, var(--morado-secundario) 100%);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.banner-identidad img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  vertical-align: middle;
+}
+
+.banner-servicios {
+  background: white;
+  padding: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.banner-servicios button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.banner-servicios button:hover {
+  background: var(--morado-primario);
+  color: white;
+}
+
+/* ---------- 13. MODALES ---------- */
+/* Propósito: Ventanas modales y diálogos */
+/* ====================================== */
+
+.payment-modal {
+  padding: 2rem;
+}
+
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.payment-form label {
+  color: var(--morado-secundario);
+  font-weight: 500;
+}
+
+.payment-form input {
+  width: 100%;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 0.3rem;
+}
+
+/* ---------- 14. NOTIFICACIONES ---------- */
+/* Propósito: Badges y elementos de notificación */
+/* ============================================== */
+
+.notification-badge {
+  background-color: #ff4757;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 20px;
+  min-width: 20px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(255, 71, 87, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ---------- 15. UTILIDADES ---------- */
+/* Propósito: Clases auxiliares y componentes pequeños */
+/* ==================================================== */
+
+.print-ticket-btn {
+  background: rgb(240, 240, 240);
+  border: 1px solid rgb(204, 204, 204);
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.print-ticket-container {
+  text-align: left;
+  width: 100%;
+}
+
+.image-container {
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  margin-bottom: 25px;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ---------- 16. MEDIA QUERIES (RESPONSIVE) ---------- */
+/* Propósito: Ajustes para diferentes tamaños de pantalla */
+/* ======================================================= */
+
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+
+  .menu-container {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-container {
+    flex-direction: column;
+  }
+
+  .cart-summary {
+    width: 100%;
+    position: static;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .food-media {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .brand-title {
+    font-size: 2.5rem;
+  }
+
+  .cat-btn {
+    font-size: 1.5rem;
+    padding: 1rem;
+  }
+
+  .cat-btn.postres {
+    font-size: 1.3rem;
+  }
+
+  .user-circle {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+}
