@@ -1,0 +1,16 @@
+- [x] Crear estructura de carpetas MERN
+- [x] Configurar modelos MongoDB (User, MenuItem, DailyMenu, Order)
+- [x] Crear servidor Express básico
+- [x] Configurar React + Vite frontend
+- [x] Crear interfaz inicial con componentes
+- [x] Implementar estilos modernos y responsivos
+- [ ] Crear rutas backend (auth, menus, items, orders)
+- [ ] Implementar autenticación JWT
+- [ ] Conectar frontend con backend
+- [ ] Crear carrito de compras funcional
+- [ ] Sistema de búsqueda y filtros
+- [ ] Dashboard admin completo
+- [ ] Seguimiento de pedidos en tiempo real
+- [ ] Integración de base de datos
+- [ ] Testing
+- [ ] Deployment (Vercel/Railway)
