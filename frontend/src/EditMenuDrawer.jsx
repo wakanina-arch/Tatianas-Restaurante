@@ -25,34 +25,54 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     // Aquí cargarías las imágenes reales de cada carpeta
     // Por ahora simulamos con las que ya existen en tu proyecto
     setImagenesPorCategoria({
-      Primero: [
-        '/img/Complementos/Alitas1.png',
-        '/img/Complementos/Alitas2.png',
-        '/img/Complementos/Bistec convinado.png',
-        '/img/Complementos/Lomo salteado.jpg',
-        '/img/Complementos/Pollo al horno.jpg'
-      ],
-      Segundo: [
-        '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
-        '/img/Ensaladas/Ensalada Caprese.jpg',
-        '/img/Ensaladas/Ensalada César.jpg',
-        '/img/Ensaladas/Pescado frito.jpg',
-        '/img/Ensaladas/Camarones al ajillo.jpg'
-      ],
-      Postre: [
-        '/img/Bebidas/AguaMineral.jpg',
-        '/img/Bebidas/CervezaClub.jpg',
-        '/img/Bebidas/CervezaGuinness.jpg',
-        '/img/Bebidas/Tres leches.jpg',
-        '/img/Bebidas/Cheesecake.jpg'
-      ],
-      Otras: [
-        '/img/Otras/Entrada1.jpg',
-        '/img/Otras/Entrada2.jpg',
-        '/img/Otras/Bebida1.jpg',
-        '/img/Otras/Bebida2.jpg',
-        '/img/Otras/Extra1.jpg'
-      ]
+     'Primero': [
+    '/img/Complementos/Alitas1.png',
+    '/img/Complementos/Alitas2.png',
+    '/img/Complementos/Bistec convinado.png',
+    '/img/Complementos/Bowl Patatas fritas.png',
+    '/img/Complementos/Combos.png',
+    '/img/Complementos/Nachos con queso.png',
+    '/img/Complementos/Palomitas de maiz.png',
+    '/img/Complementos/Pincho de verduras.png',
+    '/img/Complementos/Pinchos morunos.png',
+    '/img/Complementos/Pollo broster.png',
+    '/img/Complementos/Tabla flamenca.png'
+  ],
+  'Segundo': [
+    '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
+    '/img/Ensaladas/Ensalada Caprese.jpg',
+    '/img/Ensaladas/Ensalada César.jpg',
+    '/img/Ensaladas/Coleslaw.jpg',
+    '/img/Ensaladas/Ensalada Griega.jpg',
+    '/img/Ensaladas/Ensalada Mimosa.jpg',
+    '/img/Ensaladas/Ensalada Nizarda.jpg',
+    '/img/Ensaladas/Ensalada Tabulé.jpg',
+    '/img/Ensaladas/Ensalada Waldorf.jpg',
+    '/img/Ensaladas/Ensalada Rusa.jpg'
+  ],
+  'Postre': [
+    '/img/Bebidas/AguaMineral.jpg',
+    '/img/Bebidas/CervezaClub.jpg',
+    '/img/Bebidas/CervezaGuinness.jpg',
+    '/img/Bebidas/CervezaHeineken.jpg',
+    '/img/Bebidas/CocaCola.jpg',
+    '/img/Bebidas/Fanta.jpg',
+    '/img/Bebidas/Guarana.jpg',
+    '/img/Bebidas/Pepsi.jpg',
+    '/img/Bebidas/ZumoDeFrutas.jpg',
+    '/img/Bebidas/ZumosVerdes.jpg'
+  ],
+  'Otras': [
+    '/img/Pizzas/Carbonara.jpg',
+    '/img/Pizzas/Champiñones.jpg',
+    '/img/Pizzas/Cuatro Quesos.jpg',  
+    '/img/Pizzas/Hawaiana.jpg',
+    '/img/Pizzas/Marguerita.jpg',
+    '/img/Pizzas/Marinera.jpg',
+    '/img/Pizzas/Napolitana.jpg',
+    '/img/Pizzas/Peperoni.jpg',
+    '/img/Pizzas/Rústica.jpg'
+  ]
     });
   }, []);
 
@@ -290,7 +310,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
                           e.stopPropagation();
                           handleCategoryChange(idx, e.target.value);
                         }} 
-                        placeholder="Ej: Primero, Segundo, Postre..."
+                        placeholder="Ej: Primero, Segundo, Postre, Otras..."
                         onClick={e => e.stopPropagation()}
                       />
                     </div>

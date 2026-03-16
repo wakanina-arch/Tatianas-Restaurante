@@ -48,15 +48,15 @@ const mockImages = {
     '/img/Bebidas/ZumosVerdes.jpg'
   ],
   'Otras': [
-    '/img/Otras/Pizzas/Carbonara.jpg',
-    '/img/Otras/Pizzas/Champiñones.jpg',
-    '/img/Otras/Pizzas/Cuatro Quesos.jpg',  
-    '/img/Otras/Pizzas/Hawaiana.jpg',
-    '/img/Otras/Pizzas/Marguerita.jpg',
-    '/img/Otras/Pizzas/Marinera.jpg',
-    '/img/Otras/Pizzas/Napolitana.jpg',
-    '/img/Otras/Pizzas/Peperoni.jpg',
-    '/img/Otras/Pizzas/Rústica.jpg'
+    '/img/Pizzas/Carbonara.jpg',
+    '/img/Pizzas/Champiñones.jpg',
+    '/img/Pizzas/Cuatro Quesos.jpg',  
+    '/img/Pizzas/Hawaiana.jpg',
+    '/img/Pizzas/Marguerita.jpg',
+    '/img/Pizzas/Marinera.jpg',
+    '/img/Pizzas/Napolitana.jpg',
+    '/img/Pizzas/Peperoni.jpg',
+    '/img/Pizzas/Rústica.jpg'
   ]
 };
 

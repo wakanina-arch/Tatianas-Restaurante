@@ -6,7 +6,7 @@ export default function MenuDesplegable({ abierto, onClose, onSelectCategoria })
   const categorias = [
     { id: 'Primero', label: 'PRIMEROS', icono: '🍖', elemento: 'fuego' },
     { id: 'Segundo', label: 'SEGUNDOS', icono: '🥘', elemento: 'tierra' },
-    { id: 'Postres', label: 'BEBIDAS', icono: '🍵', elemento: 'agua' },
+    { id: 'Postre', label: 'BEBIDAS', icono: '🍵', elemento: 'agua' },
     { id: 'Otras', label: 'OTRAS', icono: '🔥', elemento: 'metal' },
     { id: 'welcome', label: 'ORIGEN', icono: '✨', elemento: 'aire' },
   ];

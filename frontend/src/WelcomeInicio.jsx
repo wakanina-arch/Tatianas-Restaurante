@@ -106,6 +106,7 @@ export default function WelcomeInicio({ onSelectCategory }) {
     { id: 'Primero', label: 'PRIMEROS', icon: '🍖' },
     { id: 'Segundo', label: 'SEGUNDOS', icon: '🥘' },
     { id: 'Postre', label: 'POSTRES', icon: '🍯' },
+    { id: 'Otras', label: 'OTRAS', icon: '🔥' },
     { id: null, label: 'VER TODO', icon: '🔥' }
   ];
 
