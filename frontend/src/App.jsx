@@ -23,8 +23,8 @@ const DEFAULT_MENU_ITEMS = [
     nombre: 'Primero',
     imagenes: [
       '/img/Complementos/Alitas1.png',
-      '/img/Complementos/Alitas2.png',
-      '/img/Complementos/Bistec convinado.png',
+    '/img/Complementos/Alitas2.png',
+    '/img/Complementos/Bistec convinado.png',
     ],
     video: null,
     precio: 0.00,
@@ -44,8 +44,8 @@ const DEFAULT_MENU_ITEMS = [
     nombre: 'Segundo',
     imagenes: [
       '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
-      '/img/Ensaladas/Ensalada Caprese.jpg',
-      '/img/Ensaladas/Ensalada César.jpg',
+    '/img/Ensaladas/Ensalada Caprese.jpg',
+    '/img/Ensaladas/Ensalada César.jpg',
     ],
     video: null,
     precio: 0.00,
@@ -65,8 +65,9 @@ const DEFAULT_MENU_ITEMS = [
     nombre: 'Postre',
     imagenes: [
       '/img/Bebidas/AguaMineral.jpg',
-      '/img/Bebidas/CervezaClub.jpg',
-      '/img/Bebidas/CervezaGuinness.jpg',
+    '/img/Bebidas/CervezaClub.jpg',
+    '/img/Bebidas/CervezaGuinness.jpg',
+    '/img/Bebidas/CervezaHeineken.jpg',
     ],
     video: null,
     precio: 0.00,
