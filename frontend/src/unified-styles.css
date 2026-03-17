@@ -374,12 +374,18 @@ select:focus {
   display: flex;
   flex-direction: column;
   height: auto;
-  min-height: 500px;
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  min-height: auto;
+  /* 👈 Quitamos el mínimo para que no se estire */
+  background: transparent;
+  /* 👈 TRANSPARENTE para que las piezas floten */
+  border-radius: 24px;
+  overflow: visible;
+  /* 👈 CLAVE: Permite que la galleta respire */
+  box-shadow: none;
+  /* Quitamos la sombra de la caja grande */
   position: relative;
+  margin-bottom: 4rem;
+  /* Espacio entre platos */
 }
 
 .food-card:not(:last-child)::after {
@@ -395,22 +401,23 @@ select:focus {
 /* ----- 7.3 ÁREA MULTIMEDIA ----- */
 .food-media {
   width: 100%;
-  height: 280px !important;
+  max-width: 320px;
+  /* Medida compacta para iPhone */
+  aspect-ratio: 1 / 1;
+  /* Cuadrado perfecto como tu captura */
+  margin: 0 auto 35px auto;
+  /* 👈 ESPACIO: Abre el hueco con la galleta */
   overflow: hidden;
-  border-bottom: 4px solid var(--maracuya);
+  border-radius: 24px;
+  /* Bordes redondeados independientes */
+  border: none !important;
+  /* 👈 ELIMINA la unión naranja */
   position: relative;
-}
-
-.food-media::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 4px;
-  background: var(--verde-selva);
-  border-radius: 2px;
+  background: #1a1a1a;
+  /* Fondo negro nítido */
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  /* Sombra elegante */
+  z-index: 1;
 }
 
 /* ----- 7.4 INFORMACIÓN DEL PLATO ----- */

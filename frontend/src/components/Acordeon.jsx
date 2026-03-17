@@ -51,8 +51,14 @@ export default function Acordeon({
   icon: '📝',
   badge: menuItems.length,
   badgeColor: 'var(--morado-primario)',
-  content: null,          // 👈 Quitamos el paso intermedio
-  onClick: onOpenDrawer   // 👈 Esta es la función que abre el editor de menú
+  content: (
+        <>
+          <p style={styles.cardDescription}>Configura Menú Diario y agrega precios e imagens </p>
+          <button className="admin-btn" onClick={onOpenDrawer} style={styles.actionBtn}>
+            🚀 Editar Menú
+          </button>
+        </>
+      )
 },
 
     {

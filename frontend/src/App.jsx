@@ -928,27 +928,26 @@ style.textContent = `
 
 const styles = {
   foodCard: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: 'auto',
-    background: 'white',
-    borderRadius: '20px',
-    overflow: 'hidden',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-    marginBottom: '2rem',
-    maxWidth: '600px',
-    margin: '0 auto 2rem auto'
-  },
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',     // Centra todo verticalmente
+  background: 'transparent',
+  overflow: 'visible',
+  marginBottom: '3.5rem',
+  padding: '0 20px'         // Margen lateral para el iPhone
+},
   foodMedia: {
-    width: '100%',
-    height: '0',
-    paddingBottom: '61.8%',
-    position: 'relative',
-    overflow: 'visible',
-    backgroundColor: 'var(--crema-tropical)',
-    borderRadius: '16px 16px 0 0',
-    zIndex: 1
-  },
+  width: '100%',
+  aspectRatio: '1 / 1',      // 👈 Forzamos el formato cuadrado de tu captura
+  maxWidth: '320px',        // 👈 Medida ideal para iPhone (ni muy grande ni muy pequeña)
+  margin: '0 auto 25px auto', // Centrado y con separación de la galleta
+  position: 'relative',
+  overflow: 'hidden',
+  backgroundColor: '#1a1a1a',
+  borderRadius: '20px',     // Bordes suaves como el anuncio de Asus
+  zIndex: 1,
+  boxShadow: '0 12px 30px rgba(0,0,0,0.2)'
+},
   foodImage: {
     position: 'absolute',
     top: 0,
@@ -969,16 +968,20 @@ const styles = {
     fontSize: '1.5rem'
   },
   foodInfo: {
-    padding: '1.2rem 1.2rem',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.8rem',
-    background: 'white',
-    flex: 1,
-    minHeight: '200px',
-    maxHeight: '350px',
-    overflowY: 'auto'
-  },
+  width: '100%',
+  maxWidth: '320px',        // 👈 MISMA MEDIDA que el carrusel para simetría
+  margin: '0 auto',         // Centrada con el carrusel
+  padding: '1.2rem',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.8rem',
+  background: 'white',
+  borderRadius: '20px',
+  boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
+  zIndex: 2,
+  minHeight: 'auto',        // Deja que crezca según el texto
+  maxHeight: 'none'         // Quitamos el scroll interno para que sea una "galleta" real
+},
   categoryHeader: {
     marginBottom: '0.5rem'
   },

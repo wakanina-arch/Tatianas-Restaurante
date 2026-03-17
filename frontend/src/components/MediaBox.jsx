@@ -1,99 +1,35 @@
-// src/components/MediaBox.jsx
-import React, { useState } from 'react';
-
-// ============================================
-// MEDIA BOX - Caja multimedia individual
-// Integrado con el sistema de estilos One To One
-// ============================================
-
-export default function MediaBox({ imagen, video, nombre }) {
-  const [error, setError] = useState(false);
-
-  const handleError = () => {
-    setError(true);
-  };
-
-  // Si hay video y no hay error
-  if (video && !error) {
-    return (
-      <div className="media-box" style={styles.mediaBox}>
-        <video 
-          src={video}
-          controls={false}
-          autoPlay
-          loop
-          muted
-          playsInline
-          onError={handleError}
-          style={styles.mediaVideo}
-        />
-      </div>
-    );
-  }
-
-  // Si hay imagen y no hay error
-  if (imagen && !error) {
-    return (
-      <div className="media-box" style={styles.mediaBox}>
-        <img 
-          src={imagen} 
-          alt={nombre}
-          onError={handleError}
-          style={styles.mediaImage}
-        />
-      </div>
-    );
-  }
-
-  // Placeholder (cuando no hay media o hubo error)
+// He simplificado para que sea la "Galleta" que acompaña, no que la pise
+export default function MediaBox({ nombre, precio, descripcion }) {
   return (
-    <div className="media-box" style={styles.mediaBox}>
-      <div style={styles.mediaPlaceholder}>
-        <span style={styles.placeholderIcon}>🍽️</span>
-        <span style={styles.placeholderText}>{nombre || 'Plato'}</span>
+    <div style={styles.galletaContainer}>
+      <div style={styles.galletaHeader}>
+        <h3 style={styles.platoNombre}>{nombre || 'Nombre del Plato'}</h3>
+        <span style={styles.platoPrecio}>${precio?.toFixed(2) || '0.00'}</span>
       </div>
+      <p style={styles.platoDesc}>
+        {descripcion || 'Sabores auténticos seleccionados especialmente para tu menú de hoy.'}
+      </p>
+      <div style={styles.tag}>✨ Sugerencia del Chef</div>
     </div>
   );
 }
 
-// ============================================
-// ESTILOS
-// ============================================
 const styles = {
-  mediaBox: {
-    width: '100%',
-    height: '100%',
+  galletaContainer: {
+    width: '90%', // Un poco más estrecha que el carrusel para el efecto "flotante"
+    margin: '0 auto',
+    padding: '1.5rem',
+    background: '#fff',
+    borderRadius: '20px',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+    border: '1px solid var(--borde-tropical)',
     position: 'relative',
-    overflow: 'hidden',
-    backgroundColor: 'var(--crema-tropical)'
+    zIndex: 2,
+    marginTop: '-20px' // ESTO HACE QUE MONTE UN POCO SOBRE EL CARRUSEL ESTILO MODERNO
   },
-  mediaVideo: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover'
-  },
-  mediaImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    transition: 'transform 0.3s ease'
-  },
-  mediaPlaceholder: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
-    color: 'var(--verde-selva)',
-    gap: '0.5rem'
-  },
-  placeholderIcon: {
-    fontSize: '2rem'
-  },
-  placeholderText: {
-    fontSize: '0.9rem',
-    fontWeight: '600'
-  }
+  galletaHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' },
+  platoNombre: { fontSize: '1.4rem', fontWeight: 'bold', color: 'var(--verde-selva)', margin: 0 },
+  platoPrecio: { fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--mango)' },
+  platoDesc: { fontSize: '0.95rem', color: '#666', lineHeight: '1.4' },
+  tag: { display: 'inline-block', marginTop: '1rem', fontSize: '0.75rem', background: 'var(--crema-tropical)', padding: '4px 10px', borderRadius: '10px', color: 'var(--maracuya)', fontWeight: 'bold' }
 };
