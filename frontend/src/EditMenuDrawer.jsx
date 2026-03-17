@@ -18,48 +18,47 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
   });
   
   // ============================================
-  // CATÁLOGO DE IMÁGENES POR CATEGORÍA
+  // CATÁLOGO DE IMÁGENES POR CATEGORÍA - CORREGIDO
   // ============================================
  useEffect(() => {
   setImagenesPorCategoria({
     Primero: [
       '/img/Complementos/Alitas1.png',
       '/img/Complementos/Alitas2.png',
-      '/img/Complementos/Bistec-convinado.png',
-      '/img/Complementos/Lomo-salteado.jpg',
-      '/img/Complementos/Pollo-al-horno.jpg'
+      '/img/Complementos/Bistec%20convinado.png', // CORREGIDO: espacio como %20
+      '/img/Complementos/Lomo%20salteado.jpg', // CORREGIDO
+      '/img/Complementos/Pollo%20al%20horno.jpg' // CORREGIDO
     ],
     Segundo: [
-      '/img/Ensaladas/Ensalada-Alemana-de-Patata.jpg',
-      '/img/Ensaladas/Ensalada-Caprese.jpg',
-      '/img/Ensaladas/Ensalada-Cesar.jpg',
-      '/img/Ensaladas/Pescado-frito.jpg',
-      '/img/Ensaladas/Camarones-al-ajillo.jpg'
+      '/img/Ensaladas/Ensalada%20Alemana%20de%20Patata.jpg', // CORREGIDO
+      '/img/Ensaladas/Ensalada%20Caprese.jpg', // CORREGIDO
+      '/img/Ensaladas/Ensalada%20César.jpg', // CORREGIDO: mantiene tilde
+      '/img/Ensaladas/Pescado%20frito.jpg', // CORREGIDO
+      '/img/Ensaladas/Camarones%20al%20ajillo.jpg' // CORREGIDO
     ],
     Postre: [
       '/img/Bebidas/AguaMineral.jpg',
       '/img/Bebidas/CervezaClub.jpg',
-      '/img/Bebidas/Tres-leches.jpg',
+      '/img/Bebidas/Tres%20leches.jpg', // CORREGIDO
       '/img/Bebidas/Cheesecake.jpg'
     ],
     Otras: [
       '/img/Otras/Carbonara.jpg',
-      '/img/Otras/Champinones.jpg', // Sin Ñ
-      '/img/Otras/Cuatro-Quesos.jpg', // Con guion
+      '/img/Otras/Champinones.jpg',
+      '/img/Otras/Cuatro%20Quesos.jpg', // CORREGIDO
       '/img/Otras/Hawaiana.jpg',
       '/img/Otras/Marguerita.jpg',
-      '/img/Otras/Rustica.jpg' // Sin tilde
+      '/img/Otras/Rustica.jpg'
     ]
   });
 }, []);
-
 
   // Inicializar expansión de categorías
   useEffect(() => {
     if (items.length > 0) {
       const expandidas = {};
       items.forEach((item, idx) => {
-        expandidas[idx] = true; // Por defecto todas expandidas
+        expandidas[idx] = true;
       });
       setCategoriasExpandidas(expandidas);
     }
@@ -96,14 +95,19 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     setItems(updated);
   };
 
+  // Función para decodificar URL y obtener nombre legible
+  const getNombreDesdeUrl = (url) => {
+    try {
+      const nombreArchivo = decodeURIComponent(url.split('/').pop().split('.')[0]);
+      return nombreArchivo.replace(/[-_]/g, ' ');
+    } catch (e) {
+      return '';
+    }
+  };
+
   // Nueva función: seleccionar nombre desde catálogo de imágenes
   const handleSelectNombreDesdeImagen = (itemIdx, optIdx, imagenUrl, categoria) => {
-    // Extraer nombre del archivo de la URL
-    const nombreArchivo = imagenUrl.split('/').pop().split('.')[0];
-    // Limpiar nombre (quitar guiones, underscores, etc.)
-    const nombreLimpio = nombreArchivo
-      .replace(/[-_]/g, ' ')
-      .replace(/\.[^/.]+$/, '');
+    const nombreLimpio = getNombreDesdeUrl(imagenUrl);
     
     handleOptionChange(itemIdx, optIdx, 'nombre', nombreLimpio);
     handleOptionChange(itemIdx, optIdx, 'imagen', imagenUrl);
@@ -119,7 +123,6 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     });
     setItems(updated);
     
-    // Expandir la categoría automáticamente
     setCategoriasExpandidas(prev => ({
       ...prev,
       [itemIdx]: true
@@ -149,7 +152,6 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
       }
     ]);
     
-    // Expandir la nueva categoría
     setCategoriasExpandidas(prev => ({
       ...prev,
       [items.length]: true
@@ -160,7 +162,6 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     if (window.confirm('¿Estás seguro de eliminar esta categoría?')) {
       setItems(items.filter((_, i) => i !== idx));
       
-      // Limpiar expansión de la categoría eliminada
       const newExpandidas = { ...categoriasExpandidas };
       delete newExpandidas[idx];
       setCategoriasExpandidas(newExpandidas);
@@ -187,7 +188,20 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
           style={styles.previewMedia} 
           onError={(e) => {
             e.target.style.display = 'none';
-            e.target.parentElement.innerHTML = '<div style="padding:0.5rem; text-align:center; color:#999; font-size:0.8rem">❌ Error al cargar</div>';
+            const parent = e.target.parentElement;
+            parent.innerHTML = `
+              <div style="
+                padding: 1rem; 
+                text-align: center; 
+                color: #ff3b30; 
+                font-size: 0.8rem;
+                background: rgba(255, 59, 48, 0.05);
+                border-radius: 12px;
+              ">
+                ❌ No se pudo cargar la imagen<br>
+                <span style="font-size: 0.7rem; color: #999;">${url.substring(0, 30)}...</span>
+              </div>
+            `;
           }} 
         />
       </div>
@@ -208,13 +222,14 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
         <label style={styles.label}>Seleccionar de catálogo:</label>
         <div style={styles.imageGrid}>
           {imagenes.map((img, idx) => {
-            const nombreArchivo = img.split('/').pop().split('.')[0];
+            const nombreArchivo = getNombreDesdeUrl(img);
             return (
               <div
                 key={idx}
                 style={styles.imageOption}
                 onClick={() => handleSelectNombreDesdeImagen(itemIdx, optIdx, img, categoria)}
                 title={nombreArchivo}
+                className="image-option"
               >
                 <img src={img} alt={nombreArchivo} style={styles.imageOptionThumb} />
                 <span style={styles.imageOptionName}>
@@ -261,6 +276,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
               type="button"
               onClick={handleAddCategory}
               style={styles.addCategoryBtn}
+              className="add-category-btn"
             >
               <span style={styles.addCategoryIcon}>➕</span>
               Añadir Categoría
@@ -274,7 +290,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
               return (
                 <div key={item.id || idx} style={styles.categoryCard}>
                   
-                  {/* Header de categoría (clickeable para expandir/colapsar) */}
+                  {/* Header de categoría */}
                   <div 
                     style={styles.categoryHeader}
                     onClick={() => toggleCategoria(idx)}
@@ -310,7 +326,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
                     </div>
                   </div>
 
-                  {/* Contenido de la categoría (se muestra solo si está expandida) */}
+                  {/* Contenido de la categoría */}
                   {isExpanded && (
                     <div style={styles.optionsSection}>
                       <div style={styles.optionsHeader}>
@@ -350,7 +366,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
                             {/* Campos de opción */}
                             <div style={styles.optionFields}>
                               
-                              {/* Nombre del plato (con selector de imágenes) */}
+                              {/* Nombre del plato */}
                               <div style={styles.fieldGroup}>
                                 <label style={styles.label}>Nombre del plato:</label>
                                 <input 
@@ -381,7 +397,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
                                 />
                               </div>
 
-                              {/* URL de imagen/video (personalizada) */}
+                              {/* URL de imagen/video */}
                               <div style={styles.fieldGroup}>
                                 <label style={styles.label}>URL personalizada:</label>
                                 <input 
@@ -431,7 +447,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
 }
 
 // ============================================
-// ESTILOS INTEGRADOS (actualizados)
+// ESTILOS ACTUALIZADOS CON ESTÉTICA IPHONE 16
 // ============================================
 const styles = {
   backdrop: {
@@ -440,35 +456,41 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(0,0,0,0.6)',
+    background: 'rgba(0, 0, 0, 0.3)',
     zIndex: 3000,
     display: 'flex',
     justifyContent: 'flex-end',
-    backdropFilter: 'blur(4px)'
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)'
   },
   drawer: {
-    width: '500px',
-    background: 'white',
+    width: '520px',
+    background: 'rgba(255, 255, 255, 0.9)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
     height: '100%',
     overflowY: 'auto',
-    boxShadow: '-10px 0 30px rgba(0,0,0,0.2)',
+    boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    borderLeft: '1px solid rgba(255, 255, 255, 0.3)'
   },
   header: {
     padding: '1.5rem',
-    background: 'linear-gradient(135deg, var(--morado-primario) 0%, var(--morado-secundario) 100%)',
+    background: 'linear-gradient(135deg, var(--morado-primario) 0%, #8b5cf6 100%)',
     color: 'white',
     position: 'sticky',
     top: 0,
-    zIndex: 10
+    zIndex: 10,
+    borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
   },
   headerTitle: {
     margin: 0,
     fontSize: '1.3rem',
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem'
+    gap: '0.5rem',
+    fontWeight: '600'
   },
   headerIcon: {
     fontSize: '1.5rem'
@@ -477,9 +499,9 @@ const styles = {
     position: 'absolute',
     top: '1rem',
     right: '1rem',
-    background: 'var(--rojo-cierre)',
+    background: 'rgba(255, 255, 255, 0.2)',
     border: 'none',
-    borderRadius: '50%',
+    borderRadius: '30px',
     width: '36px',
     height: '36px',
     color: 'white',
@@ -487,7 +509,9 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'background 0.2s ease',
+    backdropFilter: 'blur(4px)'
   },
   content: {
     padding: '1.5rem',
@@ -500,8 +524,8 @@ const styles = {
     background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
     color: 'var(--verde-selva)',
     border: 'none',
-    borderRadius: '12px',
-    fontWeight: 'bold',
+    borderRadius: '30px',
+    fontWeight: '600',
     fontSize: '1rem',
     cursor: 'pointer',
     marginBottom: '2rem',
@@ -509,7 +533,8 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     gap: '0.5rem',
-    transition: 'all 0.3s ease'
+    transition: 'all 0.2s ease',
+    boxShadow: '0 4px 12px rgba(255, 179, 71, 0.3)'
   },
   addCategoryIcon: {
     fontSize: '1.2rem'
@@ -517,9 +542,12 @@ const styles = {
   categoryCard: {
     marginBottom: '2rem',
     padding: '1.2rem',
-    border: '2px solid var(--borde-tropical)',
-    borderRadius: '16px',
-    background: 'white'
+    background: 'rgba(255, 255, 255, 0.7)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    borderRadius: '24px',
+    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.03)',
+    border: '1px solid rgba(255, 255, 255, 0.5)'
   },
   categoryHeader: {
     display: 'flex',
@@ -539,18 +567,20 @@ const styles = {
     background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
     color: 'var(--verde-selva)',
     padding: '0.3rem 0.8rem',
-    borderRadius: '20px',
+    borderRadius: '30px',
     fontSize: '0.7rem',
-    fontWeight: 'bold',
+    fontWeight: '700',
     whiteSpace: 'nowrap'
   },
   categoryInput: {
     flex: 1,
-    padding: '0.5rem',
-    borderRadius: '8px',
-    border: '2px solid var(--borde-tropical)',
+    padding: '0.6rem 1rem',
+    borderRadius: '20px',
+    border: '1px solid rgba(0, 0, 0, 0.1)',
     fontSize: '0.95rem',
-    fontWeight: '600'
+    fontWeight: '500',
+    background: 'rgba(255, 255, 255, 0.8)',
+    transition: 'all 0.2s ease'
   },
   categoryActions: {
     display: 'flex',
@@ -558,22 +588,28 @@ const styles = {
     gap: '0.5rem'
   },
   removeCategoryBtn: {
-    background: 'none',
+    background: 'rgba(0, 0, 0, 0.05)',
     border: 'none',
-    fontSize: '1.1rem',
+    fontSize: '1rem',
     cursor: 'pointer',
-    color: '#999',
+    color: '#666',
     padding: '0.3rem',
-    borderRadius: '50%'
+    borderRadius: '20px',
+    width: '30px',
+    height: '30px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s ease'
   },
   expandIcon: {
-    fontSize: '0.9rem',
+    fontSize: '0.8rem',
     color: 'var(--maracuya)',
     width: '24px',
     textAlign: 'center'
   },
   optionsSection: {
-    borderTop: '2px dashed var(--borde-tropical)',
+    borderTop: '1px solid rgba(0, 0, 0, 0.05)',
     paddingTop: '1.2rem',
     marginTop: '0.5rem'
   },
@@ -585,25 +621,27 @@ const styles = {
   },
   optionsTitle: {
     fontSize: '0.95rem',
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: 'var(--verde-selva)'
   },
   addOptionBtn: {
-    background: 'var(--crema-tropical)',
-    border: '2px solid var(--mango)',
+    background: 'rgba(255, 255, 255, 0.5)',
+    border: '1px solid rgba(255, 179, 71, 0.3)',
     color: 'var(--verde-selva)',
-    padding: '0.3rem 0.8rem',
-    borderRadius: '20px',
+    padding: '0.3rem 1rem',
+    borderRadius: '30px',
     fontSize: '0.75rem',
-    fontWeight: 'bold',
-    cursor: 'pointer'
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease'
   },
   optionCard: {
     marginBottom: '1.2rem',
     padding: '1rem',
-    background: 'var(--crema-tropical)',
-    borderRadius: '12px',
-    border: '2px solid var(--borde-tropical)'
+    background: 'white',
+    borderRadius: '20px',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)',
+    border: '1px solid rgba(255, 179, 71, 0.2)'
   },
   optionHeader: {
     display: 'flex',
@@ -614,19 +652,20 @@ const styles = {
   optionBadge: {
     background: 'var(--maracuya)',
     color: 'white',
-    padding: '0.2rem 0.6rem',
-    borderRadius: '20px',
+    padding: '0.2rem 0.8rem',
+    borderRadius: '30px',
     fontSize: '0.65rem',
-    fontWeight: 'bold'
+    fontWeight: '600'
   },
   removeOptionBtn: {
-    background: 'none',
+    background: 'rgba(0, 0, 0, 0.05)',
     border: 'none',
-    color: '#999',
-    fontSize: '0.9rem',
+    color: '#666',
+    fontSize: '0.8rem',
     cursor: 'pointer',
-    width: '20px',
-    height: '20px',
+    width: '24px',
+    height: '24px',
+    borderRadius: '12px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
@@ -641,25 +680,28 @@ const styles = {
   },
   label: {
     display: 'block',
-    fontSize: '0.8rem',
+    fontSize: '0.75rem',
     color: 'var(--gris-texto)',
-    marginBottom: '0.2rem',
-    fontWeight: '600'
+    marginBottom: '0.3rem',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
   },
   input: {
     width: '100%',
-    padding: '0.7rem',
-    borderRadius: '8px',
-    border: '2px solid var(--borde-tropical)',
+    padding: '0.7rem 1rem',
+    borderRadius: '20px',
+    border: '1px solid rgba(0, 0, 0, 0.1)',
     fontSize: '0.9rem',
-    background: 'white'
+    background: 'rgba(255, 255, 255, 0.9)',
+    transition: 'all 0.2s ease'
   },
   imageSelector: {
     marginBottom: '1rem',
-    padding: '0.8rem',
-    background: 'white',
-    borderRadius: '8px',
-    border: '2px solid var(--borde-tropical)'
+    padding: '1rem',
+    background: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: '16px',
+    border: '1px solid rgba(255, 179, 71, 0.2)'
   },
   imageGrid: {
     display: 'grid',
@@ -669,20 +711,16 @@ const styles = {
   },
   imageOption: {
     cursor: 'pointer',
-    borderRadius: '6px',
+    borderRadius: '12px',
     overflow: 'hidden',
-    border: '2px solid transparent',
+    border: '1px solid transparent',
     transition: 'all 0.2s ease',
-    ':hover': {
-      borderColor: 'var(--maracuya)',
-      transform: 'scale(1.05)'
-    }
+    background: 'white'
   },
   imageOptionThumb: {
     width: '100%',
     height: '50px',
-    objectFit: 'cover',
-    borderRadius: '4px'
+    objectFit: 'cover'
   },
   imageOptionName: {
     display: 'block',
@@ -693,10 +731,10 @@ const styles = {
   },
   noOptions: {
     textAlign: 'center',
-    padding: '1rem',
-    background: 'rgba(0,0,0,0.02)',
-    borderRadius: '8px',
-    color: 'var(--gris-secundario)',
+    padding: '1.5rem',
+    background: 'rgba(0, 0, 0, 0.02)',
+    borderRadius: '16px',
+    color: '#999',
     fontSize: '0.85rem',
     fontStyle: 'italic'
   },
@@ -707,20 +745,20 @@ const styles = {
     width: '100%',
     height: '100px',
     objectFit: 'cover',
-    borderRadius: '8px',
-    border: '2px solid var(--maracuya)'
+    borderRadius: '16px',
+    border: '1px solid var(--maracuya)'
   },
   previewPlaceholder: {
     height: '60px',
-    background: '#f0f0f0',
-    borderRadius: '8px',
-    border: '2px dashed var(--borde-tropical)',
+    background: 'rgba(0, 0, 0, 0.02)',
+    borderRadius: '16px',
+    border: '1px dashed rgba(0, 0, 0, 0.1)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '0.5rem',
     fontSize: '0.75rem',
-    color: 'var(--gris-secundario)',
+    color: '#999',
     margin: '0.5rem 0'
   },
   previewPlaceholderIcon: {
@@ -729,18 +767,19 @@ const styles = {
   saveBtn: {
     width: '100%',
     padding: '1rem',
-    background: 'linear-gradient(135deg, var(--verde-selva) 0%, #296b35 100%)',
+    background: 'linear-gradient(135deg, var(--verde-selva) 0%, #2a6b2f 100%)',
     color: 'white',
     border: 'none',
-    borderRadius: '12px',
-    fontWeight: 'bold',
+    borderRadius: '30px',
+    fontWeight: '600',
     fontSize: '1rem',
     cursor: 'pointer',
-    boxShadow: '0 10px 20px rgba(1, 64, 14, 0.3)',
-    marginTop: '1.5rem'
+    boxShadow: '0 4px 12px rgba(1, 64, 14, 0.2)',
+    marginTop: '1.5rem',
+    transition: 'all 0.2s ease'
   },
   saveBtnDisabled: {
-    opacity: 0.6,
+    opacity: 0.5,
     cursor: 'not-allowed'
   },
   saveText: {
@@ -774,18 +813,38 @@ styleSheet.textContent = `
   
   .add-category-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 6px 16px rgba(255, 179, 71, 0.4) !important;
   }
   
   input:focus {
     border-color: var(--maracuya) !important;
-    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.1) !important;
+    outline: none;
   }
   
   .image-option:hover {
     border-color: var(--maracuya) !important;
-    transform: scale(1.05);
-    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 179, 71, 0.2);
+  }
+  
+  .close-btn:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+  }
+  
+  .remove-category-btn:hover {
+    background: rgba(255, 59, 48, 0.1) !important;
+    color: #ff3b30 !important;
+  }
+  
+  .add-option-btn:hover {
+    background: rgba(255, 179, 71, 0.1) !important;
+    border-color: var(--maracuya) !important;
+  }
+  
+  .save-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(1, 64, 14, 0.3) !important;
   }
 `;
 document.head.appendChild(styleSheet);

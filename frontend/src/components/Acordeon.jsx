@@ -45,22 +45,20 @@ export default function Acordeon({
       )
     },
     {
-      
-  id: 'menu',
-  title: '📝 Menú del Día',
-  icon: '📝',
-  badge: menuItems.length,
-  badgeColor: 'var(--morado-primario)',
-  content: (
+      id: 'menu',
+      title: '📝 Menú del Día',
+      icon: '📝',
+      badge: menuItems.length,
+      badgeColor: 'var(--morado-primario)',
+      content: (
         <>
-          <p style={styles.cardDescription}>Configura Menú Diario y agrega precios e imagens </p>
+          <p style={styles.cardDescription}>Configura Menú Diario y agrega precios e imágenes</p>
           <button className="admin-btn" onClick={onOpenDrawer} style={styles.actionBtn}>
             🚀 Editar Menú
           </button>
         </>
       )
-},
-
+    },
     {
       id: 'promos',
       title: '🏷️ Promociones',
@@ -76,17 +74,14 @@ export default function Acordeon({
         </>
       )
     },
-    // ============================================
-    // ✅ SECCIÓN COMANDAS CORREGIDA - abre directamente el drawer
-    // ============================================
     {
       id: 'comandas',
       title: '👨‍🍳 Comandas',
       icon: '👨‍🍳',
       badge: pendingOrders.length || null,
       badgeColor: 'var(--maracuya)',
-      content: null, // Sin contenido visible
-      onClick: onOpenOrders // Al hacer clic, abre el drawer
+      content: null,
+      onClick: onOpenOrders
     },
     {
       id: 'registro',
@@ -131,21 +126,20 @@ export default function Acordeon({
   ];
 
   return (
-    <div className="admin-accordion" style={styles.accordion}>
+    <div className="admin-accordion" style={styles.acordeonContainer}>
       {sections.map((section) => (
-        <div key={section.id} className="accordion-item" style={styles.accordionItem}>
+        <div key={section.id} className="accordion-item" style={styles.itemAcordeon}>
           <button
             className="accordion-header"
             onClick={() => {
               if (section.onClick) {
-                // ✅ CASO ESPECIAL: Comandas abre drawer directamente
                 section.onClick();
               } else {
-                // ✅ CASO NORMAL: expandir/colapsar
                 setOpenSection(openSection === section.id ? null : section.id);
               }
             }}
-            style={styles.accordionHeader(openSection === section.id)}
+            // ✅ CORREGIDO: Usar acordeonHeader (con 'e') como función
+            style={styles.acordeonHeader(openSection === section.id)}
           >
             <div style={styles.headerLeft}>
               <span style={styles.headerIcon}>{section.icon}</span>
@@ -158,16 +152,16 @@ export default function Acordeon({
                   {section.badge}
                 </span>
               )}
-              {/* ✅ Mostrar chevron solo si NO tiene onClick (expandible) */}
-              
+              {/* ✅ Mostrar chevron solo si es expandible */}
+              {!section.onClick && (
                 <span style={styles.chevron}>
                   {openSection === section.id ? '▼' : '▶'}
                 </span>
-              
+              )}
             </div>
           </button>
 
-          {/* ✅ Contenido solo si existe y está abierto */}
+          {/* ✅ Contenido solo si existe, está abierto y es expandible */}
           {!section.onClick && openSection === section.id && section.content && (
             <div className="accordion-content" style={styles.accordionContent}>
               {section.content}
@@ -180,33 +174,39 @@ export default function Acordeon({
 }
 
 // ============================================
-// ESTILOS
+// ESTILOS CORREGIDOS Y ALINEADOS CON IPHONE 16
 // ============================================
 const styles = {
   acordeonContainer: {
-    width: '95%',
-    maxWidth: '350px', // 👈 Reducción: Más estrecho para iPhone
+    width: '100%',
+    maxWidth: '400px',
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px' // Espacio entre pestañas
+    gap: '12px',
+    padding: '1rem'
   },
-   itemAcordeon: {
-    background: 'white',
-    borderRadius: '16px', // Bordes suaves tipo iOS
+  itemAcordeon: {
+    background: 'rgba(255, 255, 255, 0.7)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    borderRadius: '24px',
     overflow: 'hidden',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.06)',
-    border: '1px solid #f0f0f0'
+    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.03)',
+    border: '1px solid rgba(255, 255, 255, 0.5)',
+    transition: 'all 0.2s ease'
   },
+  // ✅ CORREGIDO: Nombre consistente (acordeonHeader, no accordionHeader)
   acordeonHeader: (isOpen) => ({
-   width: '100%',
-    padding: '0.9rem 1.2rem', // 👈 Relleno reducido: Menos altura
-    background: isOpen? '#fdfdfd' : 'white',
+    width: '100%',
+    padding: '1rem 1.2rem',
+    background: isOpen ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
     border: 'none',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'background 0.2s ease'
   }),
   headerLeft: {
     display: 'flex',
@@ -214,95 +214,117 @@ const styles = {
     gap: '12px'
   },
   headerIcon: {
-    fontSize: '1.2rem'
+    fontSize: '1.3rem',
+    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
   },
   headerTitle: {
-    fontSize: '0.95rem', fontWeight: '600', color: '#333'
+    fontSize: '1rem',
+    fontWeight: '600',
+    color: 'var(--verde-selva)',
+    letterSpacing: '0.3px'
   },
   headerRight: {
-     display: 'flex', alignItems: 'center', gap: '10px' 
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px'
   },
   badge: (color) => ({
     background: color,
     color: 'white',
-    padding: '2px 8px',
-    borderRadius: '12px',
-    fontSize: '0.75rem',
-    fontWeight: 'bold'
+    padding: '4px 10px',
+    borderRadius: '30px',
+    fontSize: '0.7rem',
+    fontWeight: '700',
+    minWidth: '24px',
+    textAlign: 'center',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
   }),
   chevron: {
-    fontSize: '0.8rem', color: '#999'
+    fontSize: '0.8rem',
+    color: 'var(--maracuya)',
+    transition: 'transform 0.2s ease'
   },
   accordionContent: {
-    padding: '1.5rem',
-    background: 'white'
+    padding: '1.2rem 1.5rem 1.5rem',
+    background: 'rgba(255, 255, 255, 0.5)',
+    borderTop: '1px solid rgba(255, 179, 71, 0.1)'
   },
   totalDisplay: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '1rem',
-    background: 'rgba(255, 255, 255, 0.7)',
-    borderRadius: '12px',
+    background: 'white',
+    borderRadius: '20px',
     marginBottom: '1rem',
-    border: '2px solid var(--borde-tropical)'
+    border: '1px solid rgba(255, 179, 71, 0.2)',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
   },
   totalLabel: {
     color: 'var(--gris-texto)',
-    fontWeight: '600'
+    fontWeight: '600',
+    fontSize: '0.9rem'
   },
   totalAmount: {
     color: 'var(--verde-selva)',
-    fontSize: '1.5rem',
-    fontWeight: 'bold'
+    fontSize: '1.6rem',
+    fontWeight: '700',
+    lineHeight: 1
   },
   cardDescription: {
-    color: 'var(--gris-secundario)',
+    color: 'var(--gris-texto)',
     fontSize: '0.9rem',
     marginBottom: '1rem',
-    lineHeight: 1.4
+    lineHeight: 1.5,
+    opacity: 0.8
   },
   actionBtn: {
     width: '100%',
-    marginTop: '0.5rem',
     padding: '0.8rem 1.5rem',
-    borderRadius: '40px',
+    borderRadius: '30px',
     border: 'none',
     fontWeight: '600',
+    fontSize: '0.95rem',
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    background: 'var(--morado-primario)',
-    color: 'white'
+    transition: 'all 0.2s ease',
+    background: 'linear-gradient(135deg, var(--morado-primario) 0%, #8b5cf6 100%)',
+    color: 'white',
+    boxShadow: '0 4px 12px rgba(99, 102, 241, 0.2)'
   },
   sinPedidos: {
     textAlign: 'center',
-    color: 'var(--gris-secundario)',
-    padding: '2rem',
-    fontStyle: 'italic'
+    color: 'var(--gris-texto)',
+    padding: '1.5rem',
+    fontStyle: 'italic',
+    fontSize: '0.9rem',
+    opacity: 0.7
   },
   resumenVentas: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '0.5rem',
+    padding: '0.8rem 1rem',
     background: 'white',
-    borderRadius: '8px',
+    borderRadius: '16px',
     marginBottom: '1rem',
-    border: '1px solid var(--borde-tropical)'
+    border: '1px solid rgba(255, 179, 71, 0.2)'
   },
   ventasTotal: {
-    color: 'var(--rojo-cierre)',
-    fontSize: '1.1rem'
+    color: '#ff3b30',
+    fontSize: '1.1rem',
+    fontWeight: '700'
   },
   cierreBtn: {
-    background: 'var(--rojo-cierre)',
+    background: 'linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%)',
     color: 'white',
     width: '100%',
     padding: '0.8rem 1.5rem',
-    borderRadius: '40px',
+    borderRadius: '30px',
     border: 'none',
     fontWeight: '600',
+    fontSize: '0.95rem',
     cursor: 'pointer',
-    transition: 'all 0.3s ease'
+    transition: 'all 0.2s ease',
+    boxShadow: '0 4px 12px rgba(255, 59, 48, 0.2)'
   }
 };

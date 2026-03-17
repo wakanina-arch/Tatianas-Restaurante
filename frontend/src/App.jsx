@@ -1,3 +1,7 @@
+// ============================================
+// HEADER SUPERIOR FLOTANTE CON TÍTULO CENTRAL
+// ============================================
+
 import React, { useState, useEffect } from 'react';
 import AdminPage from './AdminPage';
 import ComandasDrawer from './ComandasDrawer';
@@ -23,8 +27,8 @@ const DEFAULT_MENU_ITEMS = [
     nombre: 'Primero',
     imagenes: [
       '/img/Complementos/Alitas1.png',
-    '/img/Complementos/Alitas2.png',
-    '/img/Complementos/Bistec convinado.png',
+      '/img/Complementos/Alitas2.png',
+      '/img/Complementos/Bistec convinado.png',
     ],
     video: null,
     precio: 0.00,
@@ -44,8 +48,8 @@ const DEFAULT_MENU_ITEMS = [
     nombre: 'Segundo',
     imagenes: [
       '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
-    '/img/Ensaladas/Ensalada Caprese.jpg',
-    '/img/Ensaladas/Ensalada César.jpg',
+      '/img/Ensaladas/Ensalada Caprese.jpg',
+      '/img/Ensaladas/Ensalada César.jpg',
     ],
     video: null,
     precio: 0.00,
@@ -65,9 +69,9 @@ const DEFAULT_MENU_ITEMS = [
     nombre: 'Postre',
     imagenes: [
       '/img/Bebidas/AguaMineral.jpg',
-    '/img/Bebidas/CervezaClub.jpg',
-    '/img/Bebidas/CervezaGuinness.jpg',
-    '/img/Bebidas/CervezaHeineken.jpg',
+      '/img/Bebidas/CervezaClub.jpg',
+      '/img/Bebidas/CervezaGuinness.jpg',
+      '/img/Bebidas/CervezaHeineken.jpg',
     ],
     video: null,
     precio: 0.00,
@@ -174,16 +178,16 @@ function MainApp() {
   const itemsToShow = menuItems.length > 0 ? menuItems : DEFAULT_MENU_ITEMS;
 
   const handleRegister = (userData, modo) => {
-  console.log('📝 RegisterModal - handleRegister:', { userData, modo });
-  
-  if (modo === 'logout') {
-    setUser(null);
-    localStorage.removeItem('oneToOneUser');
-  } else {
-    setUser(userData);
-    localStorage.setItem('oneToOneUser', JSON.stringify(userData));
-  }
-};
+    console.log('📝 RegisterModal - handleRegister:', { userData, modo });
+    
+    if (modo === 'logout') {
+      setUser(null);
+      localStorage.removeItem('oneToOneUser');
+    } else {
+      setUser(userData);
+      localStorage.setItem('oneToOneUser', JSON.stringify(userData));
+    }
+  };
 
   return (
     <div className="app">
@@ -192,29 +196,30 @@ function MainApp() {
       ) : (
         <>
           <NavBar
-  currentPage={currentPage} 
-  setCurrentPage={setCurrentPage} 
-  itemCount={itemCount}
-  onOpenMenu={() => setMenuAbierto(true)}
-  onOpenPerfil={() => {
-  console.log('🟢 MainApp: onOpenPerfil ejecutado');
-  setPerfilAbierto(true);
-}} // ← ¡ESTA LÍNEA ES CLAVE!
-  user={user}
-/>
+            currentPage={currentPage} 
+            setCurrentPage={setCurrentPage} 
+            itemCount={itemCount}
+            onOpenMenu={() => setMenuAbierto(true)}
+            onOpenPerfil={() => {
+              console.log('🟢 MainApp: onOpenPerfil ejecutado');
+              setPerfilAbierto(true);
+            }}
+            user={user}
+          />
           
           <MenuDesplegable 
             abierto={menuAbierto}
             onClose={() => setMenuAbierto(false)}
             onSelectCategoria={handleSelectCategory}
-            />
-            <RegisterModal 
-          open={perfilAbierto}
-          onClose={() => setPerfilAbierto(false)}
-          onRegister={handleRegister}
-          modo="editar"
-          usuario={user}
-        />
+          />
+          
+          <RegisterModal 
+            open={perfilAbierto}
+            onClose={() => setPerfilAbierto(false)}
+            onRegister={handleRegister}
+            modo="editar"
+            usuario={user}
+          />
           
           <main className="main-content" style={{ paddingTop: '100px' }}>
             {currentPage === 'home' && (
@@ -227,7 +232,8 @@ function MainApp() {
             {currentPage === 'carrito' && (
               <CartPage 
                 addLog={addLog} 
-                setPendingOrders={setPendingOrders} 
+                setPendingOrders={setPendingOrders}
+                user={user}
               />
             )}
             {currentPage === 'admin' && (
@@ -247,7 +253,7 @@ function MainApp() {
       )}
     </div>
   );
-} // ← ¡CIERRE DE MainApp!
+}
 
 // ============================================
 // HEADER SUPERIOR FLOTANTE CON TÍTULO CENTRAL
@@ -265,13 +271,11 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
       zIndex: 1000,
       width: '95%',
       maxWidth: 1200,
-      // Efecto vidrio nativo (ajustado para mayor transparencia):
       background: 'rgba(255, 255, 255, 0.7)',
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
       borderRadius: 60,
-      padding: '0.4rem 1.2rem', // Ligeramente más compacto
-      // Sombra tipo iPhone (más sutil):
+      padding: '0.4rem 1.2rem',
       boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
       border: '1px solid rgba(255, 255, 255, 0.4)',
       display: 'flex',
@@ -294,7 +298,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           background: 'transparent',
           border: 'none',
           borderRadius: 40,
-          padding: '0.5rem 0.8rem', // Padding horizontal reducido
+          padding: '0.5rem 0.8rem',
           cursor: 'pointer',
           display: 'flex',
           flexDirection: 'column',
@@ -367,7 +371,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               position: 'absolute',
               top: -3,
               right: -3,
-              background: '#ff3b30', // Rojo iOS
+              background: '#ff3b30',
               color: 'white',
               width: 18,
               height: 18,
@@ -416,7 +420,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               right: 0,
               width: 10,
               height: 10,
-              background: '#34c759', // Verde iOS
+              background: '#34c759',
               borderRadius: '50%',
               border: '2px solid white'
             }} />
@@ -435,7 +439,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             fontSize: '0.7rem',
             fontWeight: '600',
             letterSpacing: '0.5px',
-            color: '#8e8e93', // Gris iOS
+            color: '#8e8e93',
             transition: 'all 0.2s ease'
           }}
           onMouseEnter={(e) => {
@@ -453,6 +457,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
     </header>
   );
 }
+
 // ============================================
 // BOTÓN DE NAVEGACIÓN (reutilizable)
 // ============================================
@@ -464,7 +469,7 @@ function NavButton({ page, currentPage, setCurrentPage, children }) {
       onClick={() => setCurrentPage(page)}
       style={{
         background: isActive 
-          ? 'linear-gradient(135deg, var(--morado-primario) 0%, var(--morado-secundario) 100%)'
+          ? 'linear-gradient(135deg, var(--morado-primario) 0%, #8b5cf6 100%)'
           : 'transparent',
         border: 'none',
         borderRadius: '40px',
@@ -478,11 +483,11 @@ function NavButton({ page, currentPage, setCurrentPage, children }) {
         alignItems: 'center',
         gap: '0.3rem',
         position: 'relative',
-        boxShadow: isActive ? '0 4px 10px rgba(102, 126, 234, 0.3)' : 'none'
+        boxShadow: isActive ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none'
       }}
       onMouseEnter={(e) => {
         if (!isActive) {
-          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
+          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
         }
       }}
       onMouseLeave={(e) => {
@@ -503,8 +508,17 @@ function HomePage({ platillos }) {
   const { addToCart } = useCart();
   
   return (
-    <section className="home-page">
-      <div className="menu-container">
+    <section className="home-page" style={{
+      padding: '1rem',
+      maxWidth: 1200,
+      margin: '0 auto'
+    }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gap: '2rem',
+        justifyContent: 'center'
+      }}>
         {platillos.map((platillo) => (
           <MenuItem 
             key={platillo.id} 
@@ -534,8 +548,18 @@ function MenuItem({ item, addToCart }) {
   const OfertaBadge = () => {
     if (!item.enOferta) return null;
     return (
-      <span style={styles.ofertaBadge}>
-        🏷️ {item.tagPromo} -{item.descuentoAplicado}%
+      <span style={{
+        background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+        color: '#1a1a1a',
+        padding: '0.2rem 0.8rem',
+        borderRadius: 30,
+        fontSize: '0.8rem',
+        fontWeight: '700',
+        boxShadow: '0 2px 8px rgba(255, 215, 0, 0.3)',
+        display: 'inline-block',
+        marginLeft: '0.5rem'
+      }}>
+        🏷️ {item.tagPromo || 'Oferta'} -{item.descuentoAplicado || 0}%
       </span>
     );
   };
@@ -560,56 +584,172 @@ function MenuItem({ item, addToCart }) {
   };
 
   return (
-    <div className="food-card" style={styles.foodCard}>
-      <div className="food-media" style={styles.foodMedia}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      background: 'transparent',
+      marginBottom: '1rem'
+    }}>
+      {/* Carrusel cuadrado - 320px */}
+      <div style={{
+        width: '100%',
+        maxWidth: 320,
+        aspectRatio: '1/1',
+        margin: '0 auto 20px auto',
+        position: 'relative',
+        overflow: 'hidden',
+        backgroundColor: '#1a1a1a',
+        borderRadius: 24,
+        boxShadow: '0 12px 30px rgba(0,0,0,0.15)'
+      }}>
         {item.imagenes && item.imagenes[0] ? (
           <img 
             src={item.imagenes[0]} 
             alt={item.nombre}
-            className="food-image"
-            style={styles.foodImage}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transition: 'transform 0.3s ease'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
           />
         ) : (
-          <div style={styles.noImage}>
+          <div style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+            color: 'white',
+            fontSize: '2rem'
+          }}>
             🔱 {item.nombre}
           </div>
         )}
       </div>
 
-      <div className="food-info" style={styles.foodInfo}>
-        <div style={styles.categoryHeader}>
-          <h2 style={styles.categoryTitle}>
+      {/* Galleta informativa - 320px alineada */}
+      <div style={{
+        width: '100%',
+        maxWidth: 320,
+        margin: '0 auto',
+        padding: '1.2rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.8rem',
+        background: 'rgba(255, 255, 255, 0.9)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        borderRadius: 24,
+        boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
+        border: '1px solid rgba(255, 255, 255, 0.5)'
+      }}>
+        <div>
+          <h2 style={{
+            fontSize: '1.8rem',
+            fontWeight: '700',
+            color: 'var(--verde-selva)',
+            margin: '0 0 0.5rem 0',
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '0.5rem'
+          }}>
             {item.nombre}
             <OfertaBadge />
           </h2>
         </div>
         
-        <p style={styles.categoryDescription}>{description}</p>
+        <p style={{
+          fontSize: '0.9rem',
+          color: 'var(--gris-texto)',
+          lineHeight: 1.6,
+          margin: 0,
+          fontStyle: 'italic'
+        }}>
+          {description}
+        </p>
 
-        <div style={styles.optionsContainer}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.5rem',
+          margin: '0.5rem 0'
+        }}>
           {item.opciones?.map((opt, idx) => {
             const tieneOferta = item.enOferta && opt.precioOriginal;
             const precioOriginal = tieneOferta ? opt.precioOriginal : null;
             const precioActual = opt.precio || 0;
             
             return (
-              <label key={idx} style={styles.optionRow}>
-                <div style={styles.optionLeft}>
+              <label
+                key={idx}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '0.5rem 1rem',
+                  background: selectedOption === opt.nombre ? 'rgba(255, 215, 0, 0.1)' : 'rgba(0, 0, 0, 0.02)',
+                  borderRadius: 16,
+                  border: selectedOption === opt.nombre 
+                    ? '1px solid var(--maracuya)' 
+                    : '1px solid rgba(0, 0, 0, 0.05)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (selectedOption !== opt.nombre) {
+                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedOption !== opt.nombre) {
+                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';
+                  }
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                   <input 
                     type="checkbox"
                     checked={selectedOption === opt.nombre}
                     onChange={() => setSelectedOption(selectedOption === opt.nombre ? null : opt.nombre)}
-                    style={styles.checkbox}
+                    style={{
+                      width: 18,
+                      height: 18,
+                      cursor: 'pointer',
+                      accentColor: 'var(--maracuya)'
+                    }}
                   />
-                  <span style={styles.optionName}>{opt.nombre}</span>
+                  <span style={{
+                    fontSize: '0.95rem',
+                    fontWeight: '500',
+                    color: 'var(--gris-texto)'
+                  }}>
+                    {opt.nombre}
+                  </span>
                 </div>
-                <div style={styles.optionRight}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   {tieneOferta && (
-                    <span style={styles.precioOriginal}>
+                    <span style={{
+                      fontSize: '0.8rem',
+                      color: '#999',
+                      textDecoration: 'line-through'
+                    }}>
                       ${precioOriginal.toFixed(2)}
                     </span>
                   )}
-                  <span style={styles.precioActual}>
+                  <span style={{
+                    fontSize: '1rem',
+                    fontWeight: '700',
+                    color: 'var(--maracuya)'
+                  }}>
                     ${precioActual.toFixed(2)}
                   </span>
                 </div>
@@ -618,36 +758,83 @@ function MenuItem({ item, addToCart }) {
           })}
         </div>
 
-        <div style={styles.nutritionInfo}>
-          <span style={styles.nutritionItem}>
-            <span style={styles.nutritionIcon}>🥗</span>
-            <span style={styles.nutritionValue}>{nutrition.calorias}</span> kcal
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-around',
+          background: 'rgba(255, 215, 0, 0.05)',
+          padding: '0.5rem',
+          borderRadius: 20,
+          border: '1px solid rgba(255, 215, 0, 0.1)'
+        }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
+            <span style={{ fontSize: '1rem' }}>🥗</span>
+            <span style={{ fontWeight: '600', color: 'var(--verde-selva)' }}>{nutrition.calorias}</span> kcal
           </span>
-          <span style={styles.nutritionItem}>
-            <span style={styles.nutritionIcon}>🥩</span>
-            <span style={styles.nutritionValue}>{nutrition.proteina}</span>g prot
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
+            <span style={{ fontSize: '1rem' }}>🥩</span>
+            <span style={{ fontWeight: '600', color: 'var(--verde-selva)' }}>{nutrition.proteina}</span>g
           </span>
-          <span style={styles.nutritionItem}>
-            <span style={styles.nutritionIcon}>🍚</span>
-            <span style={styles.nutritionValue}>{nutrition.carbohidratos}</span>g carb
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
+            <span style={{ fontSize: '1rem' }}>🍚</span>
+            <span style={{ fontWeight: '600', color: 'var(--verde-selva)' }}>{nutrition.carbohidratos}</span>g
           </span>
         </div>
 
-        <div style={styles.footer}>
-          <div style={styles.precioContainer}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingTop: '0.8rem',
+          borderTop: '1px solid rgba(0, 0, 0, 0.05)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             {selectedOption && selectedData && item.enOferta && selectedData.precioOriginal && (
-              <span style={styles.precioOriginalGrande}>
+              <span style={{
+                fontSize: '0.9rem',
+                color: '#999',
+                textDecoration: 'line-through'
+              }}>
                 ${selectedData.precioOriginal.toFixed(2)}
               </span>
             )}
-            <span style={styles.precioFinal}>
+            <span style={{
+              fontSize: '1.8rem',
+              fontWeight: '700',
+              color: 'var(--maracuya)',
+              lineHeight: 1
+            }}>
               ${currentPrice.toFixed(2)}
             </span>
           </div>
           <button 
-            style={styles.addButton}
+            style={{
+              background: !selectedOption 
+                ? 'rgba(0, 0, 0, 0.1)' 
+                : 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
+              color: !selectedOption ? '#999' : 'var(--verde-selva)',
+              border: 'none',
+              padding: '0.6rem 1.2rem',
+              borderRadius: 30,
+              fontWeight: '600',
+              fontSize: '0.9rem',
+              cursor: !selectedOption ? 'not-allowed' : 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: !selectedOption ? 'none' : '0 4px 12px rgba(255, 215, 0, 0.3)'
+            }}
             onClick={handleAddToCart}
             disabled={!selectedOption}
+            onMouseEnter={(e) => {
+              if (selectedOption) {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(255, 215, 0, 0.4)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (selectedOption) {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 215, 0, 0.3)';
+              }
+            }}
           >
             Añadir
           </button>
@@ -682,27 +869,58 @@ function buildMediaItems(item) {
   return items;
 }
 
-function CartPage({ addLog, setPendingOrders }) {
+function CartPage({ addLog, setPendingOrders, user }) {
   const { cartItems, removeFromCart, updateQuantity, clearCart, calculateTotal } = useCart();
   const [payOpen, setPayOpen] = useState(false);
   const total = calculateTotal();
 
   if (cartItems.length === 0) {
     return (
-      <section className="cart-page">
-        <h2>Tu Carrito</h2>
-        <div className="empty-state">
-          <p>Tu carrito está vacío. ¡Agrega platos deliciosos! 🛒</p>
+      <section className="cart-page" style={{
+        maxWidth: 600,
+        margin: '0 auto',
+        padding: '2rem',
+        textAlign: 'center'
+      }}>
+        <h2 style={{ fontSize: '1.8rem', color: 'var(--verde-selva)', marginBottom: '1rem' }}>
+          Tu Carrito
+        </h2>
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: 48,
+          padding: '3rem',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+        }}>
+          <p style={{ fontSize: '1.2rem', color: 'var(--gris-texto)' }}>
+            Tu carrito está vacío. ¡Agrega platos deliciosos! 🛒
+          </p>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="cart-page">
-      <h2>Tu Carrito 🛒</h2>
-      <div className="cart-container">
-        <div className="cart-items">
+    <section className="cart-page" style={{
+      maxWidth: 800,
+      margin: '0 auto',
+      padding: '1rem'
+    }}>
+      <h2 style={{ fontSize: '1.8rem', color: 'var(--verde-selva)', marginBottom: '1.5rem' }}>
+        Tu Carrito 🛒
+      </h2>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 300px',
+        gap: '1.5rem'
+      }}>
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: 32,
+          padding: '1.5rem',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
+        }}>
           {cartItems.map((item) => (
             <CartItem
               key={item.id}
@@ -717,6 +935,7 @@ function CartPage({ addLog, setPendingOrders }) {
           total={total}
           onCheckout={() => setPayOpen(true)}
           onClear={clearCart}
+          user={user}
         />
       </div>
 
@@ -735,37 +954,82 @@ function CartItem({ item, onRemove, onUpdateQuantity }) {
   const cantidad = item.cantidad || 1;
 
   return (
-    <div className="cart-item">
-      <div className="cart-item-info">
-        <h4>{item.nombre}</h4>
-        <p className="item-price">${item.precio.toFixed(2)}</p>
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '1rem',
+      borderBottom: '1px solid rgba(0, 0, 0, 0.05)'
+    }}>
+      <div style={{ flex: 2 }}>
+        <h4 style={{ margin: '0 0 0.3rem 0', fontSize: '1rem', color: 'var(--verde-selva)' }}>
+          {item.nombre}
+        </h4>
+        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--gris-texto)' }}>
+          ${item.precio.toFixed(2)} c/u
+        </p>
       </div>
       
-      <div className="cart-item-controls">
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.8rem',
+        background: 'rgba(0, 0, 0, 0.02)',
+        padding: '0.3rem',
+        borderRadius: 30
+      }}>
         <button 
-          className="qty-btn"
           onClick={() => onUpdateQuantity(item.id, cantidad - 1)}
           disabled={cantidad <= 1}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            width: 30,
+            height: 30,
+            borderRadius: 15,
+            cursor: cantidad <= 1 ? 'not-allowed' : 'pointer',
+            fontSize: '1.2rem',
+            color: cantidad <= 1 ? '#ccc' : 'var(--maracuya)'
+          }}
         >
-          -
+          −
         </button>
-        <span className="qty">{cantidad}</span>
+        <span style={{ minWidth: 30, textAlign: 'center', fontWeight: '600' }}>
+          {cantidad}
+        </span>
         <button 
-          className="qty-btn"
           onClick={() => onUpdateQuantity(item.id, cantidad + 1)}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            width: 30,
+            height: 30,
+            borderRadius: 15,
+            cursor: 'pointer',
+            fontSize: '1.2rem',
+            color: 'var(--maracuya)'
+          }}
         >
           +
         </button>
       </div>
 
-      <div className="cart-item-total">
-        <p>${(item.precio * cantidad).toFixed(2)}</p>
+      <div style={{ fontWeight: '700', color: 'var(--maracuya)' }}>
+        ${(item.precio * cantidad).toFixed(2)}
       </div>
 
       <button 
-        className="delete-btn"
         onClick={() => onRemove(item.id)}
-        aria-label="Eliminar item"
+        style={{
+          background: 'transparent',
+          border: 'none',
+          fontSize: '1.2rem',
+          cursor: 'pointer',
+          opacity: 0.6,
+          transition: 'opacity 0.2s ease'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
+        onMouseLeave={(e) => e.currentTarget.style.opacity = 0.6}
       >
         🗑️
       </button>
@@ -775,43 +1039,72 @@ function CartItem({ item, onRemove, onUpdateQuantity }) {
 
 function CartSummary({ total, onCheckout, onClear, user }) {
   return (
-    <div className="cart-summary">
-      <div className="summary-row">
+    <div style={{
+      background: 'rgba(255, 255, 255, 0.7)',
+      backdropFilter: 'blur(10px)',
+      borderRadius: 32,
+      padding: '1.5rem',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+      position: 'sticky',
+      top: 100
+    }}>
+      <h3 style={{ margin: '0 0 1rem 0', color: 'var(--verde-selva)' }}>Resumen</h3>
+      
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: '0.8rem',
+        fontSize: '0.95rem',
+        color: 'var(--gris-texto)'
+      }}>
         <span>Subtotal:</span>
         <span>${total}</span>
       </div>
-      <div className="summary-row">
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: '1rem',
+        fontSize: '0.95rem',
+        color: 'var(--gris-texto)'
+      }}>
         <span>Envío:</span>
-        <span>Gratis</span>
+        <span style={{ color: '#34c759' }}>Gratis</span>
       </div>
       
       {/* Mensaje de descuento para no registrados */}
       {!user && (
         <div style={{
-          background: 'rgba(255, 215, 0, 0.1)',
-          borderRadius: '10px',
-          padding: '0.8rem',
+          background: 'rgba(255, 215, 0, 0.05)',
+          borderRadius: 20,
+          padding: '1rem',
           margin: '1rem 0',
           textAlign: 'center',
-          border: '1px dashed var(--mango)'
+          border: '1px dashed rgba(255, 215, 0, 0.3)'
         }}>
-          <p style={{ fontSize: '0.8rem', color: 'var(--gris-texto)', marginBottom: '0.3rem' }}>
+          <p style={{ fontSize: '0.8rem', color: 'var(--gris-texto)', margin: '0 0 0.5rem 0' }}>
             ✨ ¿Eres cliente frecuente?
           </p>
           <button
             onClick={() => {/* Abrir registro */}}
             style={{
               background: 'transparent',
-              border: '2px solid var(--mango)',
-              borderRadius: '20px',
-              padding: '0.3rem 1rem',
+              border: '1px solid var(--maracuya)',
+              borderRadius: 30,
+              padding: '0.4rem 1rem',
               fontSize: '0.8rem',
               color: 'var(--maracuya)',
-              fontWeight: 'bold',
-              cursor: 'pointer'
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 215, 0, 0.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
             }}
           >
-            Regístrate y obtén descuentos
+            Regístrate y obtén 10% OFF
           </button>
         </div>
       )}
@@ -819,28 +1112,82 @@ function CartSummary({ total, onCheckout, onClear, user }) {
       {/* Badge de descuento para registrados */}
       {user && (
         <div style={{
-          background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
-          borderRadius: '10px',
-          padding: '0.5rem',
+          background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%)',
+          borderRadius: 20,
+          padding: '0.8rem',
           margin: '1rem 0',
-          textAlign: 'center'
+          textAlign: 'center',
+          border: '1px solid rgba(255, 215, 0, 0.3)'
         }}>
-          <p style={{ fontSize: '0.8rem', color: 'var(--verde-selva)', fontWeight: 'bold' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--verde-selva)', fontWeight: '600', margin: 0 }}>
             🎉 10% de descuento para miembros
           </p>
         </div>
       )}
       
-      <div className="summary-row total">
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        margin: '1rem 0',
+        fontSize: '1.2rem',
+        fontWeight: '700',
+        color: 'var(--verde-selva)'
+      }}>
         <span>Total:</span>
         <span className="total-amount">${total}</span>
       </div>
       
-      <button className="checkout-btn" onClick={onCheckout}>
+      <button 
+        onClick={onCheckout}
+        style={{
+          width: '100%',
+          padding: '0.8rem',
+          marginBottom: '0.5rem',
+          background: 'linear-gradient(135deg, var(--verde-selva) 0%, #2a6b2f 100%)',
+          color: 'white',
+          border: 'none',
+          borderRadius: 40,
+          fontWeight: '600',
+          fontSize: '1rem',
+          cursor: 'pointer',
+          transition: 'all 0.2s ease',
+          boxShadow: '0 4px 12px rgba(1, 64, 14, 0.2)'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 6px 16px rgba(1, 64, 14, 0.3)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(1, 64, 14, 0.2)';
+        }}
+      >
         Proceder al Pago
       </button>
       
-      <button className="clear-btn" onClick={onClear}>
+      <button 
+        onClick={onClear}
+        style={{
+          width: '100%',
+          padding: '0.8rem',
+          background: 'transparent',
+          border: '2px solid rgba(255, 215, 0, 0.3)',
+          borderRadius: 40,
+          fontWeight: '600',
+          fontSize: '1rem',
+          color: 'var(--gris-texto)',
+          cursor: 'pointer',
+          transition: 'all 0.2s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'rgba(255, 215, 0, 0.05)';
+          e.currentTarget.style.borderColor = 'var(--maracuya)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'transparent';
+          e.currentTarget.style.borderColor = 'rgba(255, 215, 0, 0.3)';
+        }}
+      >
         Vaciar Carrito
       </button>
     </div>
@@ -852,297 +1199,42 @@ function CartSummary({ total, onCheckout, onClear, user }) {
 // ============================================
 const style = document.createElement('style');
 style.textContent = `
-  .carousel-fallback {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #ffb347 0%, #ff6b35 100%);
-    color: white;
-    font-size: 2rem;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
-  .cart-item-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+   background: "radial-gradient(circle at 30% 30%, #8B4513, #2C1810)"
   }
 
-  .qty {
-    min-width: 30px;
-    text-align: center;
-    font-weight: bold;
+  .app {
+    min-height: 100vh;
   }
 
-  .cart-item-total {
-    font-weight: bold;
-    color: var(--maracuya);
+  .main-content {
+    min-height: calc(100vh - 100px);
   }
 
-  .checkout-btn, .clear-btn {
-    width: 100%;
-    padding: 0.8rem;
-    margin-top: 0.5rem;
-    border-radius: 40px;
-    font-weight: bold;
-    transition: all 0.3s ease;
+  :root {
+    --verde-selva: #01400e;
+    --maracuya: #FFB347;
+    --mango: #FF8C42;
+    --morado-primario: #6366f1;
+    --gris-texto: #4a5568;
+    --borde-tropical: rgba(255, 179, 71, 0.2);
+    --crema-tropical: #fff9f0;
   }
 
-  .checkout-btn {
-    background: var(--verde-selva);
-    color: var(--mango);
-  }
-
-  .checkout-btn:hover {
-    background: var(--maracuya);
-    color: white;
-  }
-
-  .clear-btn {
-    background: #f8f9fa;
-    color: var(--gris-texto);
-    border: 2px solid var(--maracuya);
-  }
-
-  .clear-btn:hover {
-    background: var(--maracuya);
-    color: white;
-  }
-`;
-
-const styles = {
-  foodCard: {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',     // Centra todo verticalmente
-  background: 'transparent',
-  overflow: 'visible',
-  marginBottom: '3.5rem',
-  padding: '0 20px'         // Margen lateral para el iPhone
-},
-  foodMedia: {
-  width: '100%',
-  aspectRatio: '1 / 1',      // 👈 Forzamos el formato cuadrado de tu captura
-  maxWidth: '320px',        // 👈 Medida ideal para iPhone (ni muy grande ni muy pequeña)
-  margin: '0 auto 25px auto', // Centrado y con separación de la galleta
-  position: 'relative',
-  overflow: 'hidden',
-  backgroundColor: '#1a1a1a',
-  borderRadius: '20px',     // Bordes suaves como el anuncio de Asus
-  zIndex: 1,
-  boxShadow: '0 12px 30px rgba(0,0,0,0.2)'
-},
-  foodImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    transition: 'transform 0.3s ease',
-  },
-  noImage: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
-    color: 'white',
-    fontSize: '1.5rem'
-  },
-  foodInfo: {
-  width: '100%',
-  maxWidth: '320px',        // 👈 MISMA MEDIDA que el carrusel para simetría
-  margin: '0 auto',         // Centrada con el carrusel
-  padding: '1.2rem',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '0.8rem',
-  background: 'white',
-  borderRadius: '20px',
-  boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
-  zIndex: 2,
-  minHeight: 'auto',        // Deja que crezca según el texto
-  maxHeight: 'none'         // Quitamos el scroll interno para que sea una "galleta" real
-},
-  categoryHeader: {
-    marginBottom: '0.5rem'
-  },
-  categoryTitle: {
-    fontSize: '2.2rem',
-    fontWeight: '800',
-    color: 'var(--verde-selva)',
-    margin: '0 0 0.5rem 0',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.8rem',
-    flexWrap: 'wrap',
-    letterSpacing: '-0.5px'
-  },
-  ofertaBadge: {
-    background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
-    color: 'var(--verde-selva)',
-    padding: '0.3rem 0.8rem',
-    borderRadius: '30px',
-    fontSize: '0.9rem',
-    fontWeight: '700',
-    boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)',
-    display: 'inline-block'
-  },
-  categoryDescription: {
-    fontSize: '0.95rem',
-    color: 'var(--gris-texto)',
-    lineHeight: 1.7,
-    marginBottom: '1rem',
-    fontStyle: 'italic',
-    opacity: 0.9
-  },
-  optionsContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.1rem',
-    marginBottom: '1.5rem'
-  },
-  optionRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0.3rem 1rem',
-    background: 'var(--crema-tropical)',
-    borderRadius: '12px',
-    border: '2px solid var(--borde-tropical)',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    marginBottom: '0.5rem'
-  },
-  optionLeft: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.8rem'
-  },
-  checkbox: {
-    width: '18px',
-    height: '18px',
-    cursor: 'pointer',
-    accentColor: 'var(--maracuya)'
-  },
-  optionName: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: 'var(--gris-texto)'
-  },
-  optionRight: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.8rem'
-  },
-  precioOriginal: {
-    fontSize: '0.85rem',
-    color: '#999',
-    textDecoration: 'line-through'
-  },
-  precioActual: {
-    fontSize: '1.1rem',
-    fontWeight: '700',
-    color: 'var(--maracuya)'
-  },
-  nutritionInfo: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    background: 'rgba(255, 179, 71, 0.1)',
-    padding: '0.3rem 0.1rem',
-    borderRadius: '10px',
-    marginBottom: '0.8rem',
-    border: '1px solid var(--borde-tropical)',
-    fontSize: '0.8rem',
-    gap: '0.3rem'
-  },
-  nutritionItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-    fontSize: '0.9rem',
-    color: 'var(--gris-texto)'
-  },
-  nutritionIcon: {
-    fontSize: '1.1rem'
-  },
-  nutritionValue: {
-    fontWeight: '700',
-    color: 'var(--verde-selva)'
-  },
-  footer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: '1rem',
-    borderTop: '2px solid var(--mango)'
-  },
-  precioContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.8rem'
-  },
-  precioOriginalGrande: {
-    fontSize: '1rem',
-    color: '#999',
-    textDecoration: 'line-through'
-  },
-  precioFinal: {
-    fontSize: '2rem',
-    fontWeight: '800',
-    color: 'var(--maracuya)'
-  },
-  addButton: {
-    background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
-    color: 'var(--verde-selva)',
-    border: 'none',
-    padding: '0.8rem 1.5rem',
-    borderRadius: '40px',
-    fontWeight: '700',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease'
-  }
-};
-
-// ============================================
-// ESTILOS PARA HOVER Y TOOLTIPS
-// ============================================
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-  .option-row:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
-    border-color: var(--maracuya) !important;
-  }
-  
-  .add-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
-  }
-  
-  .add-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  /* Tooltip para admin */
-  .admin-tooltip {
-    opacity: 0 !important;
-    transition: opacity 0.2s ease !important;
-  }
-  
-  div:hover > .admin-tooltip {
-    opacity: 1 !important;
-  }
-  
-  /* Responsive */
   @media (max-width: 768px) {
     header {
       padding: 0.5rem 1rem !important;
+    }
+    
+    .cart-page > div {
+      grid-template-columns: 1fr !important;
     }
   }
   
@@ -1150,14 +1242,12 @@ styleSheet.textContent = `
     .logo-text {
       font-size: 1rem !important;
     }
-    .logo-subtitle {
-      display: none !important;
-    }
   }
 `;
 
 // ============================================
 // AGREGAR ESTILOS AL DOCUMENTO
 // ============================================
-document.head.appendChild(style);
-document.head.appendChild(styleSheet);
+if (typeof document !== 'undefined') {
+  document.head.appendChild(style);
+}
