@@ -142,9 +142,9 @@ export default function WelcomeInicio({ onSelectCategory }) {
       const card = document.getElementById('card-zensual');
       if (card) {
         card.style.transition = 'box-shadow 3s ease-in-out';
-        card.style.boxShadow = '0 20px 50px rgba(255,215,0,0.2)';
+        card.style.boxShadow = '0 20px 40px rgba(255,215,0,0.15)';
         setTimeout(() => {
-          card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.6)';
+          card.style.boxShadow = '0 30px 60px rgba(0,0,0,0.3)';
         }, 3000);
       }
     }, 6000);
@@ -152,12 +152,26 @@ export default function WelcomeInicio({ onSelectCategory }) {
     return () => clearInterval(interval);
   }, []);
 
+  // Determinar color del elemento para el oráculo
+  const getColorElemento = (elemento) => {
+    switch(elemento) {
+      case 'fuego': return '#FF4500';
+      case 'tierra': return '#CD7F32';
+      case 'agua': return '#4169E1';
+      case 'aire': return '#87CEEB';
+      case 'espiritu': return '#FFD700';
+      default: return '#FFD700';
+    }
+  };
+
   return (
     <div style={{
-      height: "100vh",
-      background: "radial-gradient(circle, #8B4513, #492b2b)",      
-      display: "flex", alignItems: "center", justifyContent: "center",
-      padding: "1rem", overflow: "hidden"
+      minHeight: "100vh",
+      background: "radial-gradient(circle at 30% 30%, #8B4513, #2C1810)",      
+      display: "flex", 
+      alignItems: "center", 
+      justifyContent: "center",
+      padding: "1rem"
     }}>
       <style>{`
         @keyframes girar { 
@@ -170,8 +184,13 @@ export default function WelcomeInicio({ onSelectCategory }) {
           cursor: pointer; 
           perspective: 1000px; 
           margin: 0 auto 15px; 
-          animation: girar 5s linear infinite; 
+          animation: girar 8s linear infinite; 
           transform-style: preserve-3d; 
+          transition: all 0.3s ease;
+        }
+        .moneda:hover {
+          transform: scale(1.05);
+          animation-play-state: paused;
         }
         .cara { 
           position: absolute; 
@@ -182,87 +201,101 @@ export default function WelcomeInicio({ onSelectCategory }) {
           align-items: center; 
           justify-content: center; 
           backface-visibility: hidden; 
-          border: 2px solid gold; 
+          border: 2px solid rgba(255, 215, 0, 0.5); 
           color: white; 
           font-size: 2rem; 
+          backdropFilter: 'blur(4px)';
+          boxShadow: '0 4px 15px rgba(0,0,0,0.3)';
         }
         .trasera { 
           transform: rotateY(180deg); 
-          background: #8B4513; 
+          background: rgba(139, 69, 19, 0.8); 
         }
         .frontal { 
-          background: #CD5C5C; 
+          background: rgba(205, 92, 92, 0.8); 
         }
         .categoria-btn {
           padding: 0.8rem;
-          background: rgba(0,0,0,0.4);
+          background: rgba(0, 0, 0, 0.3);
           color: white;
-          border: 1px solid rgba(255,255,255,0.2);
-          border-radius: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 24px;
           cursor: pointer;
           display: flex;
           flex-direction: column;
           align-items: center;
-          transition: all 0.3s ease;
+          transition: all 0.2s ease;
+          backdropFilter: 'blur(8px)';
         }
         .categoria-btn:hover {
-          background: rgba(255,215,0,0.3);
+          background: rgba(255, 215, 0, 0.15);
           transform: translateY(-2px);
-          border-color: gold;
+          border-color: rgba(255, 215, 0, 0.3);
         }
-        /* ===== ESTILO SIMPLIFICADO PARA EL ORÁCULO ===== */
         .oraculo-container {
           background: rgba(0, 0, 0, 0.2);
-          border-radius: 24px;
-          padding: 1.5rem 1rem;
-          margin: 1.5rem 0;
-          box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.5);
-          transition: all 0.4s ease;
+          backdropFilter: 'blur(12px)';
+          borderRadius: '32px';
+          padding: '1.5rem 1.2rem';
+          margin: '1.5rem 0';
+          boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.5)';
+          transition: 'all 0.3s ease';
+          border: '1px solid rgba(255, 255, 255, 0.1)';
         }
         .oraculo-container:hover {
-          box-shadow: 0 15px 35px -8px rgba(255, 215, 0, 0.3);
-          transform: translateY(-2px);
+          boxShadow: '0 20px 40px -12px rgba(255, 215, 0, 0.2)';
+          transform: 'translateY(-2px)';
+          borderColor: 'rgba(255, 215, 0, 0.2)';
         }
         .oraculo-iconos {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 1rem;
-          margin-bottom: 1rem;
-          font-size: 1.8rem;
+          display: 'flex';
+          alignItems: 'center';
+          justifyContent: 'center';
+          gap: '1rem';
+          marginBottom: '1rem';
+          fontSize: '1.8rem';
           opacity: 0.9;
         }
         .oraculo-icono-principal {
-          font-size: 2.2rem;
-          filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
+          fontSize: '2.4rem';
+          filter: 'drop-shadow(0 0 12px rgba(255, 215, 0, 0.2))';
+          transition: 'all 0.3s ease';
         }
         .oraculo-texto {
           margin: 0;
-          font-weight: 300;
-          text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-          color: white;
-          font-size: 0.95rem;
-          line-height: 1.6;
-          letter-spacing: 0.2px;
+          fontWeight: 300;
+          textShadow: '0 2px 4px rgba(0,0,0,0.3)';
+          color: 'rgba(255, 255, 255, 0.95)';
+          fontSize: '0.95rem';
+          lineHeight: 1.6;
+          letterSpacing: 0.2;
+          fontStyle: 'italic';
         }
       `}</style>
 
       <div id="card-zensual" style={{
-        background: "rgba(255, 255, 255, 0.15)",
-        backdropFilter: "blur(15px)",
-        borderRadius: "40px",
-        padding: "2rem 1.5rem",
-        maxWidth: "350px",
+        background: "rgba(30, 20, 15, 0.6)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderRadius: "48px",
+        padding: "2.5rem 1.8rem",
+        maxWidth: "360px",
         width: "100%",
         textAlign: "center",
-        boxShadow: "0 25px 50px rgba(0,0,0,0.4)",
-        border: "1px solid rgba(255,255,255,0.2)"
+        boxShadow: "0 30px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset",
+        border: "1px solid rgba(255, 255, 255, 0.05)"
       }}>
         
         {/* MONEDA: TRIDENTE */}
         <div className="moneda" onClick={() => setShowRegister(true)}>
-          <div className="cara frontal">🔱</div>
-          <div className="cara trasera">
+          <div className="cara frontal" style={{
+            background: "rgba(205, 92, 92, 0.7)",
+            backdropFilter: "blur(4px)"
+          }}>🔱</div>
+          <div className="cara trasera" style={{
+            background: "rgba(139, 69, 19, 0.7)",
+            backdropFilter: "blur(4px)"
+          }}>
             {user ? user.nombre?.charAt(0).toUpperCase() : '👤'}
           </div>
         </div>
@@ -270,30 +303,72 @@ export default function WelcomeInicio({ onSelectCategory }) {
         <h1 style={{ 
           color: "white", 
           fontSize: "2.2rem", 
-          margin: "0", 
-          fontFamily: "serif", 
-          letterSpacing: "2px" 
+          margin: "0.2rem 0 0.1rem", 
+          fontFamily: "'Cormorant Garamond', serif", 
+          fontWeight: "600",
+          letterSpacing: "1px",
+          textShadow: "0 2px 4px rgba(0,0,0,0.3)"
         }}>
           ONE TO ONE
         </h1>
         
         <p style={{ 
-          color: "#FFD700", 
+          color: "rgba(255, 215, 0, 0.8)", 
           fontSize: "0.8rem", 
-          marginBottom: "1.2rem", 
-          fontStyle: "italic" 
+          marginBottom: "1.5rem", 
+          fontStyle: "italic",
+          fontWeight: "300"
         }}>
           "El sabor de la brasa"
         </p>
 
         {/* ===== 🎭 ORÁCULO - VERSIÓN SIMPLIFICADA ===== */}
-        <div className="oraculo-container">
-          <div className="oraculo-iconos">
-            
-            <span className="oraculo-icono-principal">{fraseData.icono}</span>
-        
+        <div style={{
+          background: "rgba(0, 0, 0, 0.25)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          borderRadius: "32px",
+          padding: "1.5rem 1.2rem",
+          margin: "1.5rem 0",
+          boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.5)",
+          transition: "all 0.3s ease",
+          border: "1px solid rgba(255, 215, 0, 0.1)"
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = `0 20px 40px -12px ${getColorElemento(fraseData.elemento)}40`;
+          e.currentTarget.style.borderColor = `${getColorElemento(fraseData.elemento)}40`;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = "0 10px 30px -10px rgba(0, 0, 0, 0.5)";
+          e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.1)";
+        }}>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "1rem",
+            marginBottom: "1rem",
+            fontSize: "1.8rem",
+            opacity: 0.9
+          }}>
+            <span style={{
+              fontSize: "2.4rem",
+              filter: `drop-shadow(0 0 12px ${getColorElemento(fraseData.elemento)}40)`,
+              transition: "all 0.3s ease"
+            }}>
+              {fraseData.icono}
+            </span>
           </div>
-          <p className="oraculo-texto">
+          <p style={{
+            margin: 0,
+            fontWeight: 300,
+            textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+            color: "rgba(255, 255, 255, 0.95)",
+            fontSize: "0.95rem",
+            lineHeight: 1.6,
+            letterSpacing: "0.2px",
+            fontStyle: "italic"
+          }}>
             "{fraseData.texto}"
           </p>
         </div>
@@ -303,47 +378,79 @@ export default function WelcomeInicio({ onSelectCategory }) {
           display: "grid", 
           gridTemplateColumns: "repeat(2, 1fr)", 
           gap: "0.7rem", 
-          marginBottom: "1.2rem" 
+          marginBottom: "1.5rem" 
         }}>
           {categorias.map(cat => (
             <button 
               key={cat.id || 'todas'} 
               onClick={() => handleCategorySelect(cat.id)} 
-              className="categoria-btn"
+              style={{
+                padding: "0.8rem",
+                background: "rgba(0, 0, 0, 0.3)",
+                color: "white",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: "24px",
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                transition: "all 0.2s ease",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255, 215, 0, 0.15)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(0, 0, 0, 0.3)";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
+              }}
             >
-              <span style={{ fontSize: "1.4rem" }}>{cat.icon}</span>
-              <span style={{ fontSize: "0.7rem", fontWeight: "bold" }}>{cat.label}</span>
+              <span style={{ fontSize: "1.4rem", marginBottom: "0.2rem" }}>{cat.icon}</span>
+              <span style={{ fontSize: "0.7rem", fontWeight: "600", letterSpacing: "0.5px" }}>{cat.label}</span>
             </button>
           ))}
         </div>
 
-        {/* MENSAJE DE REGISTRO INTEGRADO */}
-       {/* MENSAJE DE REGISTRO OPCIONAL */}
-<p 
-  onClick={() => setShowRegister(true)} 
-  style={{ 
-    color: "white", 
-    fontSize: "0.75rem", 
-    marginBottom: "1.5rem", 
-    cursor: "pointer", 
-    textDecoration: "underline",
-    opacity: 0.8,
-    transition: "opacity 0.3s ease"
-  }}
-  onMouseEnter={(e) => e.target.style.opacity = "1"}
-  onMouseLeave={(e) => e.target.style.opacity = "0.8"}
->
-  ✨ Regístrate para obtener descuentos exclusivos (opcional)
-</p>
+        {/* MENSAJE DE REGISTRO OPCIONAL */}
+        <p 
+          onClick={() => setShowRegister(true)} 
+          style={{ 
+            color: "rgba(255, 255, 255, 0.6)", 
+            fontSize: "0.75rem", 
+            marginBottom: "1.5rem", 
+            cursor: "pointer", 
+            textDecoration: "none",
+            borderBottom: "1px dotted rgba(255, 215, 0, 0.3)",
+            paddingBottom: "0.2rem",
+            display: "inline-block",
+            transition: "all 0.2s ease"
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.color = "rgba(255, 215, 0, 0.8)";
+            e.target.style.borderBottomColor = "rgba(255, 215, 0, 0.6)";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.color = "rgba(255, 255, 255, 0.6)";
+            e.target.style.borderBottomColor = "rgba(255, 215, 0, 0.3)";
+          }}
+        >
+          ✨ Regístrate para obtener descuentos exclusivos
+        </p>
 
         <p style={{ 
-          fontSize: "0.7rem", 
+          fontSize: "0.65rem", 
           color: "#FF4500", 
-          fontWeight: "bold", 
+          fontWeight: "600", 
           textTransform: "uppercase", 
-          letterSpacing: "1px" 
+          letterSpacing: "2px",
+          margin: 0,
+          opacity: 0.8
         }}>
-          🔥 EL SABOR DE LA TIERRA 🔥
+          EL SABOR DE LA TIERRA
         </p>
       </div>
 

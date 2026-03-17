@@ -183,62 +183,55 @@ export default function Acordeon({
 // ESTILOS
 // ============================================
 const styles = {
-  accordion: {
+  acordeonContainer: {
+    width: '95%',
+    maxWidth: '350px', // 👈 Reducción: Más estrecho para iPhone
+    margin: '0 auto',
     display: 'flex',
     flexDirection: 'column',
-    gap: '1rem',
-    maxWidth: '800px',
-    margin: '0 auto'
+    gap: '10px' // Espacio entre pestañas
   },
-  accordionItem: {
+   itemAcordeon: {
     background: 'white',
-    borderRadius: '16px',
+    borderRadius: '16px', // Bordes suaves tipo iOS
     overflow: 'hidden',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-    border: '1px solid var(--borde-tropical)',
-    transition: 'all 0.3s ease'
+    boxShadow: '0 4px 15px rgba(0,0,0,0.06)',
+    border: '1px solid #f0f0f0'
   },
-  accordionHeader: (isOpen) => ({
-    width: '100%',
-    padding: '1.2rem 1.5rem',
-    background: isOpen ? 'var(--crema-tropical)' : 'white',
+  acordeonHeader: (isOpen) => ({
+   width: '100%',
+    padding: '0.9rem 1.2rem', // 👈 Relleno reducido: Menos altura
+    background: isOpen? '#fdfdfd' : 'white',
     border: 'none',
-    borderBottom: isOpen ? '2px solid var(--mango)' : 'none',
-    cursor: 'pointer',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    transition: 'all 0.3s ease'
+    cursor: 'pointer'
   }),
   headerLeft: {
     display: 'flex',
     alignItems: 'center',
-    gap: '1rem'
+    gap: '12px'
   },
   headerIcon: {
-    fontSize: '1.5rem'
+    fontSize: '1.2rem'
   },
   headerTitle: {
-    fontSize: '1.2rem',
-    fontWeight: '600',
-    color: 'var(--verde-selva)'
+    fontSize: '0.95rem', fontWeight: '600', color: '#333'
   },
   headerRight: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem'
+     display: 'flex', alignItems: 'center', gap: '10px' 
   },
   badge: (color) => ({
     background: color,
     color: 'white',
-    padding: '0.2rem 0.8rem',
-    borderRadius: '20px',
-    fontSize: '0.8rem',
+    padding: '2px 8px',
+    borderRadius: '12px',
+    fontSize: '0.75rem',
     fontWeight: 'bold'
   }),
   chevron: {
-    fontSize: '0.9rem',
-    color: 'var(--maracuya)'
+    fontSize: '0.8rem', color: '#999'
   },
   accordionContent: {
     padding: '1.5rem',

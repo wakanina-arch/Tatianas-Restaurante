@@ -1197,3 +1197,13 @@ select:focus {
     font-size: 1.1rem;
   }
 }
+.admin-acordeon {
+  width: 100%;
+  max-width: 400px;
+  /* 👈 Reducción: Más estrecho para que respire en el iPhone */
+  margin: 0 auto 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* 👈 Espacio entre "sándwiches" */
+}

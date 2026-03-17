@@ -253,23 +253,27 @@ function MainApp() {
 // HEADER SUPERIOR FLOTANTE CON TÍTULO CENTRAL
 // ============================================
 function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerfil, user }) {
-   console.log('🔵 NavBar - onOpenPerfil es una función:', typeof onOpenPerfil === 'function');
+  console.log('🔵 NavBar - onOpenPerfil es una función:', typeof onOpenPerfil === 'function');
   console.log('🔵 NavBar - user existe:', !!user);
+  
   return (
     <header style={{
       position: 'fixed',
-      top: '20px',
+      top: 20,
       left: '50%',
       transform: 'translateX(-50%)',
       zIndex: 1000,
       width: '95%',
-      maxWidth: '1200px',
-      background: 'rgba(255, 255, 255, 0.85)',
-      backdropFilter: 'blur(15px)',
-      borderRadius: '60px',
-      padding: '0.5rem 1.5rem',
-      boxShadow: '0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.5) inset',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
+      maxWidth: 1200,
+      // Efecto vidrio nativo (ajustado para mayor transparencia):
+      background: 'rgba(255, 255, 255, 0.7)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+      borderRadius: 60,
+      padding: '0.4rem 1.2rem', // Ligeramente más compacto
+      // Sombra tipo iPhone (más sutil):
+      boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
+      border: '1px solid rgba(255, 255, 255, 0.4)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between'
@@ -277,197 +281,178 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
       
       {/* ===== IZQUIERDA - MENÚ HAMBURGUESA ===== */}
       <button
-  onClick={() => {
-    console.log('🟢 Click en botón menu');
-    if (onOpenMenu) {
-      console.log('🟢 ');
-      onOpenMenu();
-    } else {
-      console.log('🔴 ERROR: onOpenMenu no está definido');
-    }
-  }} 
+        onClick={() => {
+          console.log('🟢 Click en botón menu');
+          if (onOpenMenu) {
+            console.log('🟢 Abriendo menú');
+            onOpenMenu();
+          } else {
+            console.log('🔴 ERROR: onOpenMenu no está definido');
+          }
+        }} 
         style={{  
           background: 'transparent',
           border: 'none',
-          borderRadius: '40px',
-          padding: '0.5rem 1rem',
+          borderRadius: 40,
+          padding: '0.5rem 0.8rem', // Padding horizontal reducido
           cursor: 'pointer',
           display: 'flex',
           flexDirection: 'column',
-          gap: '6px',
+          gap: 5,
           alignItems: 'center',
           justifyContent: 'center',
-          transition: 'all 0.3s ease'
+          transition: 'background 0.2s ease'
         }}  
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
+          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.background = 'transparent';
         }}
       >
-        <div style={{ width: '24px', height: '3px', background: 'var(--verde-selva)', borderRadius: '3px' }} />
-        <div style={{ width: '24px', height: '3px', background: 'var(--maracuya)', borderRadius: '3px' }} />
-        <div style={{ width: '24px', height: '3px', background: 'var(--morado-primario)', borderRadius: '3px' }} />
+        <div style={{ width: 22, height: 2, background: 'var(--verde-selva)', borderRadius: 2 }} />
+        <div style={{ width: 22, height: 2, background: 'var(--maracuya)', borderRadius: 2 }} />
+        <div style={{ width: 22, height: 2, background: 'var(--morado-primario)', borderRadius: 2 }} />
       </button>
 
       {/* ===== CENTRO - LOGO ONE TO ONE ===== */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '0.8rem',
+        gap: 10,
         cursor: 'pointer',
         padding: '0.3rem 1rem',
-        borderRadius: '40px',
-        background: 'rgba(255, 255, 255, 0.3)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-        transition: 'all 0.3s ease'
+        borderRadius: 40,
+        transition: 'background 0.2s ease'
       }}
       onClick={() => setCurrentPage('home')}
-      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.5)'}
-      onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)'}
+      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
+      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
       >
         <span style={{
-          fontSize: '1.8rem',
-          filter: 'drop-shadow(0 2px 5px rgba(255, 107, 53, 0.3))'
+          fontSize: '1.6rem',
+          filter: 'drop-shadow(0 2px 4px rgba(1, 64, 14, 0.2))'
         }}>
           🔱
         </span>
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          lineHeight: 1.2
+          lineHeight: 1.1
         }}>
           <span style={{
-            fontSize: '1.3rem',
-            fontWeight: '900',
-            background: 'linear-gradient(135deg, #01400e 0%, var(--verde-selva) 100%)',
+            fontSize: '1.2rem',
+            fontWeight: '700',
+            background: 'linear-gradient(135deg, #01400e 0%, #2a6b2f 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            letterSpacing: '2px'
+            letterSpacing: '0.5px'
           }}>
             ONE TO ONE
-          </span>
-          <span style={{
-            fontSize: '0.65rem',
-            color: 'var(--maracuya)',
-            fontWeight: '600',
-            textTransform: 'uppercase'
-          }}>
-          
           </span>
         </div>
       </div>
 
-{/* ===== DERECHA - ACCIONES ===== */}
-<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-  {/* Carrito */}
-  <NavButton 
-    page="carrito" 
-    currentPage={currentPage} 
-    setCurrentPage={setCurrentPage}
-  >
-    <span style={{ fontSize: '1.2rem' }}>🛒</span>
-    {itemCount > 0 && (
-      <span style={{
-        position: 'absolute',
-        top: '-5px',
-        right: '-5px',
-        background: 'linear-gradient(135deg, var(--rojo-cierre) 0%, #ff4757 100%)',
-        color: 'white',
-        width: '20px',
-        height: '20px',
-        borderRadius: '50%',
-        fontSize: '0.7rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        border: '2px solid white',
-        fontWeight: 'bold'
-      }}>
-        {itemCount}
-      </span>
-    )}
-  </NavButton>
+      {/* ===== DERECHA - ACCIONES ===== */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        {/* Carrito */}
+        <NavButton 
+          page="carrito" 
+          currentPage={currentPage} 
+          setCurrentPage={setCurrentPage}
+        >
+          <span style={{ fontSize: '1.2rem', opacity: 0.9 }}>🛒</span>
+          {itemCount > 0 && (
+            <span style={{
+              position: 'absolute',
+              top: -3,
+              right: -3,
+              background: '#ff3b30', // Rojo iOS
+              color: 'white',
+              width: 18,
+              height: 18,
+              borderRadius: '50%',
+              fontSize: '0.65rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1.5px solid white',
+              fontWeight: '600'
+            }}>
+              {itemCount}
+            </span>
+          )}
+        </NavButton>
 
-  {/* Perfil de Usuario - abre PerfilModal */}
- <button
-  onClick={onOpenPerfil}
-  style={{
-    background: 'transparent',
-    border: 'none',
-    borderRadius: '40px',
-    padding: '0.5rem 0.8rem',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '1.2rem',
-    transition: 'all 0.3s ease',
-    position: 'relative'
-  }}
-  onMouseEnter={(e) => {
-    if (!user) {
-      e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
-    }
-  }}
-  onMouseLeave={(e) => {
-    if (!user) {
-      e.currentTarget.style.background = 'transparent';
-    }
-  }}
->
-  👤
-  {user && (
-    <span style={{
-      position: 'absolute',
-      bottom: '-2px',
-      right: '-2px',
-      width: '10px',
-      height: '10px',
-      background: '#2ecc71',
-      borderRadius: '50%',
-      border: '2px solid white'
-    }} />
-  )}
-</button>
+        {/* Perfil de Usuario */}
+        <button
+          onClick={onOpenPerfil}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            borderRadius: 40,
+            padding: '0.5rem 0.7rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.2rem',
+            transition: 'background 0.2s ease',
+            position: 'relative',
+            opacity: 0.9
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent';
+          }}
+        >
+          👤
+          {user && (
+            <span style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              width: 10,
+              height: 10,
+              background: '#34c759', // Verde iOS
+              borderRadius: '50%',
+              border: '2px solid white'
+            }} />
+          )}
+        </button>
 
-  {/* Dashboard - Solo visible para admin (texto DSH) */}
-  <button
-    onClick={() => setCurrentPage('admin')}
-    style={{
-      background: 'transparent',
-      border: 'none',
-      borderRadius: '20px',
-      padding: '0.3rem 0.6rem',
-      cursor: 'pointer',
-      fontSize: '0.7rem',
-      fontWeight: '700',
-      letterSpacing: '1px',
-      color: 'var(--morado-primario)',
-      transition: 'all 0.3s ease',
-      //border: '1px solid var(--morado-primario)',
-      opacity: 0.7
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.background = 'var(--morado-primario)';
-      e.currentTarget.style.color = 'white';
-      e.currentTarget.style.opacity = '1';
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.background = 'transparent';
-      e.currentTarget.style.color = 'var(--morado-primario)';
-      e.currentTarget.style.opacity = '0.7';
-    }}
-  >
-    DSH
-  </button>
-</div>
+        {/* Dashboard - Solo admin */}
+        <button
+          onClick={() => setCurrentPage('admin')}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            borderRadius: 30,
+            padding: '0.3rem 0.7rem',
+            cursor: 'pointer',
+            fontSize: '0.7rem',
+            fontWeight: '600',
+            letterSpacing: '0.5px',
+            color: '#8e8e93', // Gris iOS
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(142, 142, 147, 0.1)';
+            e.currentTarget.style.color = '#6366f1';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.color = '#8e8e93';
+          }}
+        >
+          DSH
+        </button>
+      </div>
     </header>
   );
 }
-
 // ============================================
 // BOTÓN DE NAVEGACIÓN (reutilizable)
 // ============================================
