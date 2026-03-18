@@ -308,9 +308,10 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
   return (
     <header style={{
       position: 'fixed',
-      top: 0, // 👈 Cambiado a 0 para que empiece desde arriba
-      left: 0, // 👈 Cambiado a 0 para que llegue al borde izquierdo
-      right: 0, // 👈 Añadido right:0 para que llegue al borde derecho
+      top: 20, // 👈 Cambiado a 0 para que empiece desde arriba
+      left: 20, // 👈 Cambiado a 0 para que llegue al borde izquierdo
+      right: 20, // 👈 Añadido right:0 para que llegue al borde derecho
+      width: 'auto', // 👈 Cambiado a auto para que se ajuste al espacio disponible
       zIndex: 1000,
       background: 'rgba(255, 255, 255, 0.7)',
       backdropFilter: 'blur(20px)',
@@ -326,7 +327,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
       <div style={{
         width: '100%',
         maxWidth: 1200,
-        padding: '0.4rem 1.2rem',
+        padding: '0.1rem 1rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -348,11 +349,11 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             background: 'transparent',
             border: 'none',
             borderRadius: 40,
-            padding: '0.5rem 0.8rem',
+            padding: '0.2rem 0.5rem',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
-            gap: 5,
+            gap: 3,
             alignItems: 'center',
             justifyContent: 'center',
             transition: 'background 0.2s ease'
@@ -373,37 +374,64 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 10,
+          gap: 13,
           cursor: 'pointer',
-          padding: '0.3rem 1rem',
+          padding: '0.1rem 0.5rem',
           borderRadius: 40,
-          transition: 'background 0.2s ease'
+          transition: 'background 0.2s ease',
+          filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
         }}
         onClick={() => setCurrentPage('home')}
         onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
         >
           <span style={{
-            fontSize: '1.6rem',
-            filter: 'drop-shadow(0 2px 4px rgba(1, 64, 14, 0.2))'
-          }}>
-            🔱
-          </span>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            lineHeight: 1.1
-          }}>
-            <span style={{
-              fontSize: '1.2rem',
-              fontWeight: '700',
-              background: 'linear-gradient(135deg, #01400e 0%, #2a6b2f 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              letterSpacing: '0.5px'
-            }}>
-              ONE TO ONE
-            </span>
+  fontSize: '1.4rem',
+  filter: 'drop-shadow(0 2px 4px rgba(1, 64, 14, 0.2))',
+  animation: 'brilloMistico 3s infinite alternate',
+  position: 'relative',
+  zIndex: 2
+}}>
+  🔱
+  {/* Brillo místico alrededor del tridente */}
+  <span style={{
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '30px',
+    height: '30px',
+    background: 'radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%)',
+    
+    borderRadius: '50%',
+    zIndex: -1,
+    animation: 'pulso 2s infinite'
+  }} />
+</span>
+
+<div style={{
+  display: 'flex',
+  flexDirection: 'column',
+  lineHeight: 1.1,
+  position: 'relative'
+}}>
+  <span style={{
+    fontSize: '1.2rem',
+    fontWeight: '700',
+    background: 'linear-gradient(135deg, #0a1f0a 0%, #1a3b1a 50%, #2d4f2a 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    letterSpacing: '0.5px',
+    textShadow: '0 0 2px rgba(2, 30, 1, 0.8), 0 0 15px rgba(255, 215, 0, 0.3)',
+    animation: 'brilloTexto 2.5s infinite alternate',
+    position: 'relative',
+    
+  }}>
+    ONE TO ONE
+   
+  </span> 
+  
+
           </div>
         </div>
 
