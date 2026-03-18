@@ -24,7 +24,7 @@ const STORAGE_KEYS = {
 const DEFAULT_MENU_ITEMS = [
   {
     id: 1,
-    nombre: 'Primero',
+    nombre: 'Primeros',
     imagenes: [
       '/img/Complementos/Alitas1.png',
       '/img/Complementos/Alitas2.png',
@@ -45,7 +45,7 @@ const DEFAULT_MENU_ITEMS = [
   },
   {
     id: 2,
-    nombre: 'Segundo',
+    nombre: 'Segundos',
     imagenes: [
       '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
       '/img/Ensaladas/Ensalada Caprese.jpg',
@@ -66,7 +66,7 @@ const DEFAULT_MENU_ITEMS = [
   },
   {
     id: 3,
-    nombre: 'Postre',
+    nombre: 'Bebidas',
     imagenes: [
       '/img/Bebidas/AguaMineral.jpg',
       '/img/Bebidas/CervezaClub.jpg',
@@ -85,7 +85,30 @@ const DEFAULT_MENU_ITEMS = [
       { nombre: 'Pudín', precio: 0.00, calorias: 320, proteina: 5, carbohidratos: 48, descripcion: '...' },
       { nombre: 'Helado', precio: 0.00, calorias: 180, proteina: 3, carbohidratos: 25, descripcion: '...' }
     ]
-  }
+  },
+  {
+  id: 4,
+  nombre: 'Pizzas', // 👈 Debe coincidir con el id
+  imagenes: [
+    '/img/Pizzas/Carbonara.jpg',
+    '/img/Pizzas/Champinones.jpg',
+    '/img/Pizzas/Cuatro-Quesos.jpg',
+    '/img/Pizzas/Hawaiana.jpg',
+    '/img/Pizzas/Margherita.jpg',
+  ],
+  video: null,
+    precio: 0.00,
+    region: 'Mundo',
+    historia: 'Superfood del mundo...',
+    proteina: 0,
+    calorias: 0,
+    carbohidratos: 0,
+    opciones: [
+      { nombre: 'Pizza', precio: 0.00, calorias: 250, proteina: 6, carbohidratos: 40, descripcion: '...' },
+      { nombre: 'Hamburguesa', precio: 0.00, calorias: 320, proteina: 5, carbohidratos: 48, descripcion: '...' },
+      { nombre: 'HotDog', precio: 0.00, calorias: 180, proteina: 3, carbohidratos: 25, descripcion: '...' }
+  ]
+}
 ];
 
 // ============================================
@@ -221,56 +244,24 @@ function MainApp() {
             usuario={user}
           />
           
-          <main className="main-content" style={{ paddingTop: '100px' }}>
+        <main className="main-content" style={{ paddingTop: '100px' }}>
   {currentPage === 'home' && (
-    <HomePage 
-      platillos={itemsToShow.filter(item => {
-        // Si no hay categoría seleccionada, mostrar todos
-        if (!selectedCategory) return true;
-        
-        // Normalizar: minúsculas y sin espacios
-        const itemNombre = item.nombre?.toLowerCase().trim() || '';
-        const catNombre = selectedCategory?.toLowerCase().trim() || '';
-        
-        // MAPEO COMPLETO de todas las variantes posibles
-        const categoriaMap = {
-          // PRIMEROS
-          'primero': 'primero',
-          'primeros': 'primero',
-          
-          // SEGUNDOS
-          'segundo': 'segundo',
-          'segundos': 'segundo',
-          
-          // POSTRES
-          'postre': 'postre',
-          'postres': 'postre',
-          
-          // OTRAS CATEGORÍAS
-          'otras': 'otras',
-          'otros': 'otras'
-        };
-        
-        // Normalizar ambas usando el mapa
-        const itemNorm = categoriaMap[itemNombre] || itemNombre;
-        const catNorm = categoriaMap[catNombre] || catNombre;
-        
-        // Log para depuración (solo para SEGUNDOS)
-        if (selectedCategory === 'Segundo' || selectedCategory === 'Segundos' || catNombre === 'segundo') {
-          console.log('🔵 DEBUG SEGUNDOS:', {
-            itemOriginal: item.nombre,
-            itemNormalizado: itemNorm,
-            categoriaOriginal: selectedCategory,
-            categoriaNormalizada: catNorm,
-            coincide: itemNorm === catNorm
-          });
-        }
-        
-        return itemNorm === catNorm;
-      })} 
-    />
-  
-            )}
+  <HomePage 
+    platillos={menuItems.filter(item => {
+      // 1. Si no hay categoría seleccionada, mostramos todo
+      if (!selectedCategory) return true;
+
+      // 2. Limpiamos espacios y comparamos
+      const itemNombre = item.nombre?.trim().toLowerCase();
+      const catSeleccionada = selectedCategory?.trim().toLowerCase();
+      console.log("Categoría activa:", selectedCategory);
+console.log("Nombres disponibles:", menuItems.map(i => i.nombre));
+
+      return itemNombre === catSeleccionada;
+    })} 
+  />
+)}
+
             {currentPage === 'carrito' && (
               <CartPage 
                 addLog={addLog} 

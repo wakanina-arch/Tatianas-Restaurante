@@ -2,15 +2,15 @@
 
 // Mapeo de categorías a rutas de carpetas
 const categoryPaths = {
-  'Primero': '/img/Complementos/',
-  'Segundo': '/img/Ensaladas/',
+  'Primeros': '/img/Complementos/',
+  'Segundos': '/img/Ensaladas/',
   'Postre': '/img/Bebidas/',
   'Otras': '/img/Otras/'
 };
 
 // Mock de imágenes para desarrollo (sin backend)
 const mockImages = {
-  'Primero': [
+  'Primeros': [
     '/img/Complementos/Alitas1.png',
     '/img/Complementos/Alitas2.png',
     '/img/Complementos/Bistec convinado.png',
@@ -23,7 +23,7 @@ const mockImages = {
     '/img/Complementos/Pollo broster.png',
     '/img/Complementos/Tabla flamenca.png'
   ],
-  'Segundo': [
+  'Segundos': [
     '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
     '/img/Ensaladas/Ensalada Caprese.jpg',
     '/img/Ensaladas/Ensalada César.jpg',

@@ -103,17 +103,17 @@ export default function WelcomeInicio({ onSelectCategory }) {
   });
 
   const categorias = [
-    { id: 'Primero', label: 'PRIMEROS', icon: '🍖' },
-    { id: 'Segundo', label: 'SEGUNDOS', icon: '🥘' },
-    { id: 'Postre', label: 'POSTRES', icon: '🍯' },
-    { id: null, label: 'VER TODO', icon: '🔥' }
-  ];
+  { id: 'Primeros', label: 'COMPLEMENTOS', icon: '🍟' },
+  { id: 'Segundos', label: 'ENSALADAS', icon: '🥗' },
+  { id: 'Postre', label: 'BEBIDAS', icon: '🥤' },
+  { id: 'Otras', label: 'PIZZAS', icon: '🍕' }
+];
+
 
   const handleCategorySelect = (categoryId) => {
-    if (onSelectCategory) {
-      onSelectCategory(categoryId, false);
-    }
-  };
+  console.log('🔵 Welcome enviando:', categoryId); // <-- Debe mostrar 'Primero'
+  onSelectCategory(categoryId, false);
+};
 
   // Cargar usuario guardado
   useEffect(() => {
@@ -273,7 +273,7 @@ export default function WelcomeInicio({ onSelectCategory }) {
           ONE TO ONE
         </h1>
         
-        <p style={{ 
+        <div style={{ 
   color: "rgba(255, 215, 0, 0.7)",
   fontSize: "0.75rem",
   marginBottom: "1.2rem",
@@ -365,7 +365,7 @@ export default function WelcomeInicio({ onSelectCategory }) {
     textShadow: "0 0 5px rgba(255, 69, 0, 0.3)" // Brillo naranja sutil
     }}>Servi</span>
   </div>
-</p>
+</div>
 
         {/* ===== 🎭 ORÁCULO - VERSIÓN SIMPLIFICADA ===== */}
         <div style={{

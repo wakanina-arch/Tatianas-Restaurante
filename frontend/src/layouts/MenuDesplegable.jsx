@@ -4,8 +4,8 @@ export default function MenuDesplegable({ abierto, onClose, onSelectCategoria })
   if (!abierto) return null;
 
   const categorias = [
-    { id: 'Primero', label: 'PRIMEROS', icono: '🍖', elemento: 'fuego' },
-    { id: 'Segundo', label: 'SEGUNDOS', icono: '🥘', elemento: 'tierra' },
+    { id: 'Primeros', label: 'PRIMEROS', icono: '🍖', elemento: 'fuego' },
+    { id: 'Segundos', label: 'SEGUNDOS', icono: '🥘', elemento: 'tierra' },
     { id: 'Postre', label: 'POSTRES', icono: '🍯', elemento: 'agua' },
     { id: 'Otras', label: 'OTRAS', icono: '🔥', elemento: 'metal' },
     { id: 'welcome', label: 'ORIGEN', icono: '✨', elemento: 'aire' },
