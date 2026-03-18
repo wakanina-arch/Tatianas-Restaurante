@@ -274,14 +274,98 @@ export default function WelcomeInicio({ onSelectCategory }) {
         </h1>
         
         <p style={{ 
-          color: "rgba(255, 215, 0, 0.7)", // Más sutil
-          fontSize: "0.75rem", // Más pequeño
-          marginBottom: "1.2rem", // Menos margen
-          fontStyle: "italic",
-          fontWeight: "300"
-        }}>
-          "El sabor de la brasa"
-        </p>
+  color: "rgba(255, 215, 0, 0.7)",
+  fontSize: "0.75rem",
+  marginBottom: "1.2rem",
+  fontStyle: "italic",
+  fontWeight: "300"
+}}>
+  <div style={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "3px",
+    fontFamily: "'Segoe UI', sans-serif",
+    marginTop: "-0.8rem",
+    marginBottom: "1rem",
+    //width: "100%"
+  }}>
+    <span style={{
+    fontSize: "0.8rem",
+    color: "#FF4500", 
+    fontWeight: "600", 
+    letterSpacing: "1px",
+    margin: 0,
+    opacity: 0.7,
+    textShadow: "0 0 5px rgba(255, 69, 0, 0.3)" // Brillo naranja sutil
+    }}>Rapi</span>
+    
+   <svg width="70" height="30" viewBox="0 0 70 30">
+  
+  <defs>
+    <linearGradient id="aceroBrillante" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stopColor="#4A4A4A" />
+      <stop offset="30%" stopColor="#9E9E9E" />
+      <stop offset="50%" stopColor="#FFFFFF" />
+      <stop offset="70%" stopColor="#9E9E9E" />
+      <stop offset="100%" stopColor="#4A4A4A" />
+    </linearGradient>
+    
+    <filter id="destello">
+      <feGaussianBlur stdDeviation="1.2" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  
+  {/* CAPA 1: Base sólida oscura (garantiza que se vea) */}
+  <line 
+     x1="20" y1="15" x2="45" y2="15" 
+    stroke="#3f3e3e" 
+    strokeWidth="4" 
+    strokeLinecap="round"
+  />
+  
+  {/* CAPA 2: Arte con brillo (el efecto bonito) */}
+  <line 
+    x1="20" y1="15" x2="45" y2="15" 
+    stroke="url(#aceroBrillante)" 
+    strokeWidth="3.5" 
+    strokeLinecap="round"
+    filter="url(#destello)"
+  />
+  
+  {/* Punta: base oscura */}
+  <polygon 
+    points="58,10 65,15 58,20" 
+    fill="#333333"
+  />
+  
+  {/* Punta: arte brillante */}
+  <polygon 
+    points="58,10 65,15 58,20" 
+    fill="url(#aceroBrillante)"
+    filter="url(#destello)"
+  />
+  
+  {/* Círculo decorativo */}
+  <circle cx="8" cy="15" r="3" fill="url(#aceroBrillante)" filter="url(#destello)" />
+  
+</svg>
+    
+    <span style={{
+    fontSize: "0.8rem",
+    color: "#FF4500", 
+    fontWeight: "600", 
+    letterSpacing: "1px",
+    margin: 0,
+    opacity: 0.7,
+    textShadow: "0 0 5px rgba(255, 69, 0, 0.3)" // Brillo naranja sutil
+    }}>Servi</span>
+  </div>
+</p>
 
         {/* ===== 🎭 ORÁCULO - VERSIÓN SIMPLIFICADA ===== */}
         <div style={{

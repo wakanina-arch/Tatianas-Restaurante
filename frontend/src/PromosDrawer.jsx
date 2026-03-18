@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 
 // ============================================
 // PROMOS DRAWER - GESTIÓN DE OFERTAS
-// Integrado con el sistema de estilos del restaurante
+// Con efecto vidrio iPhone 16
 // ============================================
 
 export default function PromosDrawer({ open, onClose, menuItems, onSaveMenu }) {
+  
   const [selectedItemId, setSelectedItemId] = useState('');
   const [promoData, setPromoData] = useState({
-    descuento: 0,
-    tag: 'DESPIERTA' // Tag por defecto
+    descuento: '',
+    tag: ''
   });
 
   // Resetear al cerrar el drawer
@@ -41,26 +42,21 @@ export default function PromosDrawer({ open, onClose, menuItems, onSaveMenu }) {
     
     const nuevoMenu = menuItems.map(item => {
       if (item.id === parseInt(selectedItemId)) {
-        // Aplicar descuento a CADA OPCIÓN del plato
-      const opcionesConDescuento = item.opciones.map(opt => {
-        const precioOriginal = opt.precio || 0;
-        const precioConDescuento = precioOriginal * (1 - descuento / 100);
-        console.log(`💰 Opción ${opt.nombre}: ${precioOriginal} → ${precioConDescuento} (${descuento}% descuento)`);
-        return {
- 
-          ...opt,
-          precioOriginal,
-          precio: precioConDescuento
-        };
-      });
+        const opcionesConDescuento = item.opciones.map(opt => {
+          const precioOriginal = opt.precio || 0;
+          const precioConDescuento = precioOriginal * (1 - descuento / 100);
+          return {
+            ...opt,
+            precioOriginal,
+            precio: precioConDescuento
+          };
+        });
         return {
           ...item,
           enOferta: true,
           descuentoAplicado: descuento,
           tagPromo: promoData.tag.toUpperCase(),
           opciones: opcionesConDescuento
-          //precioOriginal: item.precioOriginal || item.precio,
-          //precio: item.precio * (1 - descuento / 100)
         };
       }
       return item;
@@ -69,7 +65,6 @@ export default function PromosDrawer({ open, onClose, menuItems, onSaveMenu }) {
     onSaveMenu(nuevoMenu);
     alert(`✅ ¡Promoción activada en ${itemSeleccionado?.nombre}! 🚀`);
     
-    // Limpiar formulario
     setSelectedItemId('');
     setPromoData(prev => ({ ...prev, descuento: 0 }));
   };
@@ -82,20 +77,17 @@ export default function PromosDrawer({ open, onClose, menuItems, onSaveMenu }) {
     
     const nuevoMenu = menuItems.map(item => {
       if (item.id === id) {
-        // Restaurar precios originales de CADA OPCIÓN
-      const opcionesRestauradas = item.opciones.map(opt => ({
-        ...opt,
-        precio: opt.precioOriginal || opt.precio,
-        precioOriginal: undefined
-      }));
+        const opcionesRestauradas = item.opciones.map(opt => ({
+          ...opt,
+          precio: opt.precioOriginal || opt.precio,
+          precioOriginal: undefined
+        }));
         return {
           ...item,
           enOferta: false,
           descuentoAplicado: 0,
           tagPromo: '',
           opciones: opcionesRestauradas
-          //precio: item.precioOriginal || item.precio,
-          //precioOriginal: undefined
         };
       }
       return item;
@@ -105,118 +97,121 @@ export default function PromosDrawer({ open, onClose, menuItems, onSaveMenu }) {
     alert(`✅ Promoción eliminada de ${itemEliminado?.nombre}`);
   };
 
-  // Filtrar items con promoción activa
   const itemsConPromo = menuItems.filter(i => i.enOferta);
 
   return (
-    <div className="drawer-backdrop">
-      <div className="drawer">
-        {/* Header del drawer (estilo consistente) */}
-        <div className="drawer-header">
-          <h2>🏷️ Configurador de Ofertas</h2>
-          <button className="close-btn" onClick={onClose}>×</button>
+    <div style={styles.overlay} onClick={onClose}>
+      <div style={styles.drawer} onClick={e => e.stopPropagation()}>
+        
+        {/* Header */}
+        <div style={styles.header}>
+          <h2 style={styles.title}>
+            <span style={styles.titleIcon}>🏷️</span>
+            Configurador de Ofertas
+          </h2>
+          <button onClick={onClose} style={styles.closeBtn}>✕</button>
         </div>
 
         {/* Formulario de promoción */}
-        <div style={styles.formContainer}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Seleccionar Plato:</label>
-            <select 
-  style={styles.select}
-  value={selectedItemId} 
-  onChange={(e) => setSelectedItemId(e.target.value)}
->
-  <option value="">-- Elige un plato --</option>
-  {menuItems.map(item => (
-    <option key={item.id} value={item.id}>
-      {item.nombre} {item.enOferta ? '🔥' : ''} 
-    </option>
-  ))}
-</select>
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Descuento (%):</label>
-            <input 
-              type="number" 
-              min="1"
-              max="100"
-              style={styles.input}
-              value={promoData.descuento}
-              onChange={(e) => setPromoData({...promoData, descuento: e.target.value})}
-              placeholder="Ej: 20"
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Etiqueta de Oferta:</label>
-            <input 
-              type="text" 
-              style={styles.input}
-              placeholder="Ej: OFERTA, 2x1, ESPECIAL"
-              value={promoData.tag}
-              onChange={(e) => setPromoData({...promoData, tag: e.target.value})}
-            />
-          </div>
-
-          <button 
-            onClick={handleGuardarPromo}
-            className="add-btn"
-            style={styles.activateBtn}
-          >
-            🚀 Activar Promoción
-          </button>
-        </div>
-
-        {/* Separador */}
-        <hr style={styles.divider} />
-
-        {/* Lista de promociones activas */}
-        <div style={styles.promosList}>
-          <h3 style={styles.promosTitle}>
-            Promociones Activas {itemsConPromo.length > 0 && `(${itemsConPromo.length})`}
-          </h3>
-          
-          {itemsConPromo.length > 0 ? (
-            itemsConPromo.map(item => (
-              <div key={item.id} style={styles.promoCard}>
-                <div style={styles.promoInfo}>
-                  <span style={styles.promoName}>{item.nombre}</span>
-                  <div style={styles.promoTags}>
-                    <span style={styles.tagBadge}>
-                      🏷️ {item.tagPromo}
-                    </span>
-                    <span style={styles.discountBadge}>
-                      -{item.descuentoAplicado}%
-                    </span>
-                    <span style={styles.priceInfo}>
-                      ${(item.precioOriginal || item.precio)?.toFixed(2)} → 
-                      <strong style={styles.newPrice}> ${item.precio?.toFixed(2)}</strong>
-                    </span>
-                  </div>
-                </div>
-                <button
-                  onClick={() => handleEliminarPromo(item.id)}
-                  style={styles.deleteBtn}
-                  className="delete-btn"
-                  title="Eliminar promoción"
-                >
-                  🗑️
-                </button>
-              </div>
-            ))
-          ) : (
-            <div style={styles.emptyState}>
-              <p>No hay promociones activas</p>
-              <span style={styles.emptyIcon}>🏷️</span>
+        <div style={styles.content}>
+          <div style={styles.formContainer}>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Seleccionar Plato:</label>
+              <select 
+                style={styles.select}
+                value={selectedItemId} 
+                onChange={(e) => setSelectedItemId(e.target.value)}
+              >
+                <option value="">-- Elige un plato --</option>
+                {menuItems.map(item => (
+                  <option key={item.id} value={item.id}>
+                    {item.nombre} {item.enOferta ? '🔥' : ''} 
+                  </option>
+                ))}
+              </select>
             </div>
-          )}
-        </div>
 
-        {/* Nota informativa */}
-        <div style={styles.footerNote}>
-          <span style={styles.noteIcon}>🔥</span>
-          <span>Las promociones aparecerán junto al nombre del plato en el menú</span>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Descuento (%):</label>
+              <input 
+                type="number" 
+                min="1"
+                max="100"
+                style={styles.input}
+                value={promoData.descuento}
+                onChange={(e) => setPromoData({...promoData, descuento: e.target.value})}
+                placeholder="0,00"
+              />
+            </div>
+
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Etiqueta de Oferta:</label>
+              <input 
+                type="text" 
+                style={styles.input}
+                placeholder="Especifica la Promoción"
+                value={promoData.tag}
+                onChange={(e) => setPromoData({...promoData, tag: e.target.value})}
+              />
+            </div>
+
+            <button 
+              onClick={handleGuardarPromo}
+              style={styles.activateBtn}
+            >
+              🚀 Activar Promoción
+            </button>
+          </div>
+
+          {/* Separador */}
+          <hr style={styles.divider} />
+
+          {/* Lista de promociones activas */}
+          <div style={styles.promosList}>
+            <h3 style={styles.promosTitle}>
+              Promociones Activas {itemsConPromo.length > 0 && `(${itemsConPromo.length})`}
+            </h3>
+            
+            {itemsConPromo.length > 0 ? (
+              itemsConPromo.map(item => (
+                <div key={item.id} style={styles.promoCard}>
+                  <div style={styles.promoInfo}>
+                    <span style={styles.promoName}>{item.nombre}</span>
+                    <div style={styles.promoTags}>
+                      <span style={styles.tagBadge}>
+                        🏷️ {item.tagPromo}
+                      </span>
+                      <span style={styles.discountBadge}>
+                        -{item.descuentoAplicado}%
+                      </span>
+                      <span style={styles.priceInfo}>
+                        ${(item.precioOriginal || item.precio)?.toFixed(2)} → 
+                        <strong style={styles.newPrice}> ${item.precio?.toFixed(2)}</strong>
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleEliminarPromo(item.id)}
+                    style={styles.deleteBtn}
+                    title="Eliminar promoción"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              ))
+            ) : (
+              <div style={styles.emptyState}>
+                <p>No hay promociones activas</p>
+                <span style={styles.emptyIcon}>🏷️</span>
+              </div>
+            )}
+          </div>
+
+          {/* Nota informativa */}
+          <div style={styles.footerNote}>
+            <span style={styles.noteIcon}>🔥</span>
+            <span>Las promociones aparecerán junto al nombre del plato en el menú</span>
+          </div>
         </div>
       </div>
     </div>
@@ -224,11 +219,79 @@ export default function PromosDrawer({ open, onClose, menuItems, onSaveMenu }) {
 }
 
 // ============================================
-// ESTILOS INTEGRADOS (Usando variables del CSS)
+// ESTILOS CON EFECTO VIDRIO (EL QUE BUSCAS)
 // ============================================
 const styles = {
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'rgba(0, 0, 0, 0.2)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
+    zIndex: 2000,
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  drawer: {
+    width: '500px',
+    maxWidth: '90%',
+    height: '100%',
+    background: 'rgba(255, 255, 255, 0.85)', // 👈 Fondo blanco cristalizado
+    backdropFilter: 'blur(20px)', // 👈 Efecto niebla
+    WebkitBackdropFilter: 'blur(20px)',
+    boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    borderLeft: '1px solid rgba(255, 255, 255, 0.5)',
+    animation: 'slideIn 0.3s ease-out'
+  },
+  header: {
+    padding: '1.5rem',
+    background: 'rgba(255, 255, 255, 0.3)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'sticky',
+    top: 0,
+    zIndex: 10
+  },
+  title: {
+    margin: 0,
+    fontSize: '1.3rem',
+    fontWeight: '600',
+    color: 'var(--verde-selva)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem'
+  },
+  titleIcon: {
+    fontSize: '1.5rem'
+  },
+  closeBtn: {
+    background: 'rgba(0, 0, 0, 0.05)',
+    border: 'none',
+    width: '36px',
+    height: '36px',
+    borderRadius: '50%',
+    fontSize: '1.2rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    color: '#666',
+    transition: 'all 0.2s ease'
+  },
+  content: {
+    flex: 1,
+    padding: '1.5rem',
+    overflowY: 'auto'
+  },
   formContainer: {
-    padding: '1.5rem 0'
+    padding: '0 0 1rem 0'
   },
   formGroup: {
     marginBottom: '1.2rem',
@@ -239,36 +302,47 @@ const styles = {
   label: {
     fontWeight: '600',
     color: 'var(--gris-texto)',
-    fontSize: '0.95rem'
+    fontSize: '0.9rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
   },
   select: {
-    padding: '0.75rem',
-    borderRadius: '8px',
-    border: '1px solid #ddd',
+    padding: '0.75rem 1rem',
+    borderRadius: '20px',
+    border: '1px solid rgba(0, 0, 0, 0.1)',
     fontSize: '0.95rem',
     outline: 'none',
-    transition: 'border 0.3s',
+    transition: 'all 0.2s ease',
+    background: 'rgba(255, 255, 255, 0.8)',
     cursor: 'pointer'
   },
   input: {
-    padding: '0.75rem',
-    borderRadius: '8px',
-    border: '1px solid #ddd',
+    padding: '0.75rem 1rem',
+    borderRadius: '20px',
+    border: '1px solid rgba(0, 0, 0, 0.1)',
     fontSize: '0.95rem',
     outline: 'none',
-    transition: 'border 0.3s'
+    transition: 'all 0.2s ease',
+    background: 'rgba(255, 255, 255, 0.8)'
   },
   activateBtn: {
     width: '100%',
     marginTop: '0.5rem',
+    padding: '0.8rem',
     background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
     color: 'var(--verde-selva)',
-    fontWeight: 'bold'
+    border: 'none',
+    borderRadius: '30px',
+    fontWeight: '600',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    boxShadow: '0 4px 12px rgba(255, 179, 71, 0.2)'
   },
   divider: {
     margin: '1.5rem 0',
     border: 'none',
-    borderTop: '2px dashed var(--borde-tropical)'
+    borderTop: '1px solid rgba(0, 0, 0, 0.05)'
   },
   promosList: {
     flex: 1,
@@ -277,30 +351,31 @@ const styles = {
     marginBottom: '1rem'
   },
   promosTitle: {
-    fontSize: '1.1rem',
-    color: 'var(--gris-texto)',
+    fontSize: '1rem',
+    color: 'var(--verde-selva)',
     marginBottom: '1rem',
     paddingBottom: '0.5rem',
-    borderBottom: '2px solid var(--mango)'
+    borderBottom: '1px solid rgba(255, 179, 71, 0.3)',
+    fontWeight: '600'
   },
   promoCard: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '1rem',
-    background: 'var(--crema-tropical)',
-    borderRadius: '12px',
+    background: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: '20px',
     marginBottom: '0.8rem',
-    border: '2px solid var(--borde-tropical)',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
     transition: 'all 0.3s ease'
   },
   promoInfo: {
     flex: 1
   },
   promoName: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: 'var(--verde-selva)',
-    fontSize: '1rem',
+    fontSize: '0.95rem',
     marginBottom: '0.3rem',
     display: 'block'
   },
@@ -313,40 +388,48 @@ const styles = {
   tagBadge: {
     background: 'linear-gradient(135deg, var(--mango) 0%, #ff9f1c 100%)',
     color: 'var(--verde-selva)',
-    padding: '0.3rem 0.6rem',
-    borderRadius: '20px',
-    fontSize: '0.75rem',
-    fontWeight: '600',
-    boxShadow: '0 2px 8px rgba(255, 179, 71, 0.3)'
+    padding: '0.3rem 0.8rem',
+    borderRadius: '30px',
+    fontSize: '0.7rem',
+    fontWeight: '600'
   },
   discountBadge: {
     background: 'var(--maracuya)',
     color: 'white',
-    padding: '0.3rem 0.6rem',
-    borderRadius: '20px',
-    fontSize: '0.75rem',
-    fontWeight: '600',
-    boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)'
+    padding: '0.3rem 0.8rem',
+    borderRadius: '30px',
+    fontSize: '0.7rem',
+    fontWeight: '600'
   },
   priceInfo: {
-    fontSize: '0.8rem',
-    color: 'var(--gris-secundario)'
+    fontSize: '0.75rem',
+    color: 'var(--gris-texto)'
   },
   newPrice: {
     color: 'var(--verde-selva)',
-    fontSize: '0.9rem'
+    fontSize: '0.85rem'
   },
   deleteBtn: {
-    minWidth: '40px',
-    height: '40px'
+    background: 'rgba(255, 255, 255, 0.3)',
+    border: 'none',
+    width: '40px',
+    height: '40px',
+    borderRadius: '30px',
+    fontSize: '1.2rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#666'
   },
   emptyState: {
     textAlign: 'center',
     padding: '2rem',
-    color: 'var(--gris-secundario)',
-    background: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: '12px',
-    border: '2px dashed var(--borde-tropical)'
+    color: 'var(--gris-texto)',
+    background: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: '24px',
+    border: '1px solid rgba(255, 255, 255, 0.3)'
   },
   emptyIcon: {
     display: 'block',
@@ -357,41 +440,63 @@ const styles = {
   footerNote: {
     marginTop: '1.5rem',
     padding: '1rem',
-    background: 'linear-gradient(135deg, rgba(255, 179, 71, 0.1) 0%, rgba(255, 107, 53, 0.1) 100%)',
-    borderRadius: '8px',
-    fontSize: '0.85rem',
+    background: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: '20px',
+    fontSize: '0.8rem',
     color: 'var(--gris-texto)',
     display: 'flex',
     alignItems: 'center',
     gap: '0.5rem',
-    border: '1px solid var(--borde-tropical)'
+    border: '1px solid rgba(255, 255, 255, 0.3)'
   },
   noteIcon: {
-    fontSize: '1.2rem'
+    fontSize: '1.1rem'
   }
 };
 
-// Estilos en CSS para hover effects (se agregarán al head)
+// Animación y hover effects
 const styleSheet = document.createElement('style');
 styleSheet.textContent = `
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  
+  .close-btn:hover {
+    background: rgba(0, 0, 0, 0.1) !important;
+  }
+  
   .promo-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.15);
+    background: rgba(255, 255, 255, 0.4) !important;
     border-color: var(--maracuya) !important;
   }
 
   .delete-btn:hover {
-    background: var(--maracuya) !important;
-    transform: scale(1.15) rotate(8deg);
+    background: rgba(255, 59, 48, 0.1) !important;
+    color: #ff3b30 !important;
+    transform: scale(1.1);
   }
 
   select:hover, input:hover {
-    border-color: var(--mango) !important;
+    border-color: var(--maracuya) !important;
   }
 
   select:focus, input:focus {
     border-color: var(--maracuya) !important;
-    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1) !important;
+    box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.1) !important;
+  }
+
+  .activate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 179, 71, 0.3) !important;
   }
 `;
-document.head.appendChild(styleSheet);
+
+if (typeof document !== 'undefined') {
+  document.head.appendChild(styleSheet);
+}
