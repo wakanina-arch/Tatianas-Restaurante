@@ -157,36 +157,36 @@ export default function EntregaPedido({
       {/* Botón QR */}
       <button 
         onClick={() => setShowQR(!showQR)} 
-        className="admin-btn" 
         style={styles.qrToggleBtn}
       >
-        {showQR ? '📱 Ocultar Lector' : '📷 Escanear QR'}
+        <span style={styles.qrIcon}>{showQR ? '📱' : '📷'}</span>
+        {showQR ? ' Ocultar Lector' : ' Escanear QR'}
       </button>
 
       {/* Lector QR */}
       {showQR && (
-  <div style={styles.qrReader}>
-    <QrScanner
-      onScan={(data) => {
-        if (data) {
-          handleScan(data.text);
-        }
-      }}
-      onError={handleError}
-      style={{ width: '100%' }}
-      constraints={{
-        video: { facingMode: 'environment' }
-      }}
-    />
-    <p style={styles.qrHint}>Enfoca el código QR del ticket</p>
-    <button 
-      style={styles.cancelScanBtn}
-      onClick={() => setShowQR(false)}
-    >
-      ✕ Cancelar escaneo
-    </button>
-  </div>
-)}
+        <div style={styles.qrReader}>
+          <QrScanner
+            onScan={(data) => {
+              if (data) {
+                handleScan(data.text);
+              }
+            }}
+            onError={handleError}
+            style={{ width: '100%' }}
+            constraints={{
+              video: { facingMode: 'environment' }
+            }}
+          />
+          <p style={styles.qrHint}>Enfoca el código QR del ticket</p>
+          <button 
+            style={styles.cancelScanBtn}
+            onClick={() => setShowQR(false)}
+          >
+            ✕ Cancelar escaneo
+          </button>
+        </div>
+      )}
 
       {/* Entrada manual */}
       <div style={styles.formContainer}>
@@ -208,14 +208,15 @@ export default function EntregaPedido({
         <button
           style={{
             ...styles.submitButton,
-            opacity: manualId.trim() ? 1 : 0.6,
+            opacity: manualId.trim() ? 1 : 0.5,
             cursor: manualId.trim() ? 'pointer' : 'not-allowed'
           }}
           onClick={() => manualId.trim() ? processCheckout(manualId.trim()) : 
             showTemporaryFeedback('⚠️ Ingresa un código primero', 'error')}
           disabled={!manualId.trim()}
         >
-          ✅ ENTREGAR PEDIDO
+          <span style={styles.submitIcon}>✅</span>
+          ENTREGAR PEDIDO
         </button>
       </div>
 
@@ -227,7 +228,9 @@ export default function EntregaPedido({
           ...(feedback.type === 'success' && styles.feedbackSuccess),
           ...(feedback.type === 'info' && styles.feedbackInfo)
         }}>
-          <span>{feedback.type === 'error' ? '❌' : feedback.type === 'success' ? '✅' : '🔔'}</span>
+          <span style={styles.feedbackIcon}>
+            {feedback.type === 'error' ? '❌' : feedback.type === 'success' ? '✅' : '🔔'}
+          </span>
           {feedback.msg}
         </div>
       )}
@@ -255,14 +258,17 @@ export default function EntregaPedido({
 }
 
 // ============================================
-// ESTILOS
+// ESTILOS IPHONE 16
 // ============================================
 const styles = {
   container: {
-    background: 'white',
+    background: 'rgba(255, 255, 255, 0.9)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
     padding: '1.5rem',
-    borderRadius: '20px',
-    border: '2px solid var(--borde-tropical)',
+    borderRadius: '32px',
+    border: '1px solid rgba(255, 255, 255, 0.5)',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.05)',
     maxWidth: '400px',
     margin: '0 auto',
     width: '100%'
@@ -275,62 +281,79 @@ const styles = {
     marginBottom: '1.5rem'
   },
   counterBadge: {
-    background: 'var(--verde-selva)',
+    background: 'linear-gradient(135deg, var(--verde-selva) 0%, #2a6b2f 100%)',
     color: 'white',
     padding: '0.5rem 0.8rem',
     borderRadius: '30px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    minWidth: '60px'
+    minWidth: '60px',
+    boxShadow: '0 4px 12px rgba(1, 64, 14, 0.2)'
   },
   counterNumber: {
     fontSize: '1.5rem',
-    fontWeight: '900',
+    fontWeight: '700',
     lineHeight: 1
   },
   counterLabel: {
     fontSize: '0.6rem',
     fontWeight: '600',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
   },
   title: {
     margin: 0,
     fontSize: '1.2rem',
     color: 'var(--verde-selva)',
-    fontWeight: '600'
+    fontWeight: '600',
+    letterSpacing: '-0.5px'
   },
   qrToggleBtn: {
     marginBottom: '1rem',
     width: '100%',
-    background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
+    background: 'rgba(255, 255, 255, 0.5)',
     color: 'var(--verde-selva)',
-    border: 'none',
-    padding: '0.6rem',
+    border: '1px solid rgba(255, 179, 71, 0.3)',
+    padding: '0.8rem',
     borderRadius: '30px',
     fontWeight: '600',
-    cursor: 'pointer'
+    fontSize: '0.95rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.3rem'
+  },
+  qrIcon: {
+    fontSize: '1.1rem'
   },
   qrReader: {
     width: '100%',
     marginBottom: '1rem',
-    borderRadius: '12px',
+    borderRadius: '24px',
     overflow: 'hidden',
-    border: '2px solid var(--borde-tropical)'
+    border: '1px solid rgba(255, 179, 71, 0.3)',
+    background: 'white'
   },
   qrHint: {
     textAlign: 'center',
     fontSize: '0.8rem',
-    color: 'var(--gris-secundario)',
-    marginTop: '0.3rem'
+    color: 'var(--gris-texto)',
+    marginTop: '0.5rem',
+    marginBottom: '0.5rem'
   },
   cancelScanBtn: {
     width: '100%',
-    padding: '0.5rem',
-    background: '#f8f9fa',
+    padding: '0.6rem',
+    background: 'rgba(0, 0, 0, 0.02)',
     border: 'none',
-    borderTop: '1px solid var(--borde-tropical)',
-    cursor: 'pointer'
+    borderTop: '1px solid rgba(0, 0, 0, 0.05)',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+    color: '#ff3b30',
+    transition: 'all 0.2s ease'
   },
   formContainer: {
     width: '100%',
@@ -345,7 +368,7 @@ const styles = {
   },
   inputIcon: {
     position: 'absolute',
-    left: '12px',
+    left: '15px',
     top: '50%',
     transform: 'translateY(-50%)',
     fontSize: '1rem',
@@ -354,12 +377,14 @@ const styles = {
   },
   input: {
     width: '100%',
-    padding: '0.8rem 0.8rem 0.8rem 35px',
+    padding: '0.8rem 2.5rem 0.8rem 40px',
     borderRadius: '30px',
-    border: '2px solid var(--borde-tropical)',
+    border: '1px solid rgba(0, 0, 0, 0.1)',
     fontSize: '0.95rem',
     outline: 'none',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    background: 'rgba(255, 255, 255, 0.8)',
+    transition: 'all 0.2s ease'
   },
   clearButton: {
     position: 'absolute',
@@ -370,78 +395,139 @@ const styles = {
     border: 'none',
     color: '#999',
     cursor: 'pointer',
-    fontSize: '1rem'
+    fontSize: '1rem',
+    width: '24px',
+    height: '24px',
+    borderRadius: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s ease'
   },
   submitButton: {
     width: '100%',
     padding: '0.8rem',
     borderRadius: '30px',
-    fontWeight: '700',
-    border: '2px solid var(--maracuya)',
-    background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
-    color: 'var(--verde-selva)'
+    fontWeight: '600',
+    fontSize: '0.95rem',
+    border: 'none',
+    background: 'linear-gradient(135deg, var(--verde-selva) 0%, #2a6b2f 100%)',
+    color: 'white',
+    transition: 'all 0.2s ease',
+    boxShadow: '0 4px 12px rgba(1, 64, 14, 0.2)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.3rem'
+  },
+  submitIcon: {
+    fontSize: '1.1rem'
   },
   feedback: {
     marginTop: '0.5rem',
-    padding: '0.8rem',
-    borderRadius: '12px',
+    padding: '0.8rem 1rem',
+    borderRadius: '20px',
     fontWeight: '500',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px'
+    gap: '8px',
+    fontSize: '0.9rem'
+  },
+  feedbackIcon: {
+    fontSize: '1.1rem'
   },
   feedbackError: {
-    background: '#fdeaea',
-    borderLeft: '5px solid #e74c3c',
-    color: '#c0392b'
+    background: 'rgba(255, 59, 48, 0.1)',
+    color: '#ff3b30',
+    border: '1px solid rgba(255, 59, 48, 0.2)'
   },
   feedbackSuccess: {
-    background: '#e8f8f5',
-    borderLeft: '5px solid #27ae60',
-    color: '#16a085'
+    background: 'rgba(52, 199, 89, 0.1)',
+    color: '#34c759',
+    border: '1px solid rgba(52, 199, 89, 0.2)'
   },
   feedbackInfo: {
-    background: '#fff3e0',
-    borderLeft: '5px solid #f39c12',
-    color: '#d35400'
+    background: 'rgba(255, 179, 71, 0.1)',
+    color: 'var(--maracuya)',
+    border: '1px solid rgba(255, 179, 71, 0.2)'
   },
   recentContainer: {
     marginTop: '1rem',
-    padding: '0.8rem',
-    background: 'var(--crema-tropical)',
-    borderRadius: '12px'
+    padding: '1rem',
+    background: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: '24px',
+    border: '1px solid rgba(255, 255, 255, 0.5)'
   },
   recentTitle: {
     fontSize: '0.85rem',
-    color: 'var(--gris-secundario)',
+    color: 'var(--gris-texto)',
     marginBottom: '0.5rem',
-    fontWeight: '600'
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
   },
   recentItem: {
     display: 'flex',
     justifyContent: 'space-between',
     fontSize: '0.85rem',
-    padding: '0.2rem 0'
+    padding: '0.3rem 0',
+    borderBottom: '1px solid rgba(0, 0, 0, 0.05)'
   },
   recentId: {
     fontWeight: '600',
     color: 'var(--verde-selva)'
   },
   recentTime: {
-    color: 'var(--gris-secundario)'
+    color: 'var(--gris-texto)',
+    fontSize: '0.75rem'
   },
   footerNote: {
     marginTop: '1.5rem',
     fontSize: '0.8rem',
-    color: '#999',
+    color: 'rgba(0, 0, 0, 0.4)',
     textAlign: 'center',
     fontStyle: 'italic',
-    borderTop: '1px dashed var(--borde-tropical)',
+    borderTop: '1px dashed rgba(0, 0, 0, 0.1)',
     paddingTop: '1rem'
   },
   noteSignature: {
     display: 'block',
     fontSize: '0.7rem',
-    color: '#666'
+    color: 'rgba(0, 0, 0, 0.3)',
+    marginTop: '0.2rem'
   }
 };
+
+// ============================================
+// ESTILOS DINÁMICOS (hover effects)
+// ============================================
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+  .qr-toggle-btn:hover {
+    background: rgba(255, 179, 71, 0.1) !important;
+    border-color: var(--maracuya) !important;
+  }
+
+  .cancel-scan-btn:hover {
+    background: rgba(255, 59, 48, 0.05) !important;
+  }
+
+  .input:focus {
+    border-color: var(--maracuya) !important;
+    box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.1) !important;
+  }
+
+  .clear-button:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .submit-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(1, 64, 14, 0.3) !important;
+  }
+`;
+
+// Añadir estilos al documento
+if (typeof document !== 'undefined') {
+  document.head.appendChild(styleSheet);
+}

@@ -4,63 +4,78 @@ export default function TicketModal({ open, onClose, order }) {
   if (!open || !order) return null;
 
   return (
-    <div style={backdropStyle}>
-      <div style={modalStyle}>
-        {/* Botón de imprimir ticket */}
-        <div style={printBtnContainerStyle}>
-          <button style={printBtnStyle} onClick={() => window.print()}>
-            <span role="img" aria-label="printer" style={{ fontSize: "1.7rem" }}>🖨️</span>
+    <div style={styles.overlay} onClick={onClose}>
+      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+        
+        {/* Botón de impresión */}
+        <div style={styles.printContainer}>
+          <button style={styles.printBtn} onClick={() => window.print()}>
+            <span style={styles.printIcon}>🖨️</span>
           </button>
-          <span style={printTextStyle}>Imprimir<br />Ticket</span>
+          <span style={styles.printText}>Imprimir<br />Ticket</span>
         </div>
 
         {/* Resumen de compra */}
-        <div style={summaryCardStyle}>
-          <div style={summaryTitleStyle}>Resumen de Compra</div>
-          <div style={summaryItemsStyle}>
-            {order.items.map(item => (
-              <div key={item.id} style={itemRowStyle}>
-                <span>{item.cantidad} x {item.nombre}</span>
-                <span style={{ fontWeight: 500 }}>${item.precio?.toFixed(2)}</span>
+        <div style={styles.summaryCard}>
+          <h3 style={styles.summaryTitle}>Resumen de Compra</h3>
+          <div style={styles.itemsList}>
+            {order.items?.map((item, idx) => (
+              <div key={item.id || idx} style={styles.itemRow}>
+                <span style={styles.itemName}>{item.cantidad} x {item.nombre}</span>
+                <span style={styles.itemPrice}>${item.precio?.toFixed(2)}</span>
               </div>
             ))}
           </div>
-          <div style={totalRowStyle}>
-            <span style={{ fontWeight: 700, color: "#4f5bd5" }}>Total:</span>
-            <span style={{ fontWeight: 700, color: "#4f5bd5" }}>${order.total?.toFixed(2)}</span>
+          <div style={styles.totalRow}>
+            <span style={styles.totalLabel}>Total:</span>
+            <span style={styles.totalAmount}>${order.total?.toFixed(2)}</span>
           </div>
         </div>
 
         {/* Logo */}
-        <div style={logoContainerStyle}>
-          <img src={order.logoUrl || "/logo-theone.png"} alt="Logo" style={logoStyle} />
+        <div style={styles.logoContainer}>
+          <img 
+            src={order.logoUrl || "/img/The-One.png"} 
+            alt="Logo" 
+            style={styles.logo} 
+          />
         </div>
 
         {/* Mensaje de agradecimiento */}
-        <div style={thanksStyle}>
-          <div style={thanksTitleStyle}>¡Gracias por elegirnos!</div>
-          <div style={thanksSubtitleStyle}>
-            Tu pedido está en manos expertas <span role="img" aria-label="chef">👨‍🍳</span>
-          </div>
+        <div style={styles.thanksContainer}>
+          <h2 style={styles.thanksTitle}>¡Gracias por elegirnos!</h2>
+          <p style={styles.thanksSubtitle}>
+            Tu pedido está en manos expertas <span style={styles.chefIcon}>👨‍🍳</span>
+          </p>
         </div>
 
         {/* QR y número de pedido */}
-        <div style={qrContainerStyle}>
-          <img src={order.qrUrl || "/qr-placeholder.png"} alt="QR" style={qrStyle} />
+        <div style={styles.qrContainer}>
+          <img 
+            src={order.qrUrl || "/qr-placeholder.png"} 
+            alt="QR" 
+            style={styles.qrImage} 
+          />
         </div>
-        <div style={orderNumStyle}>
-          <span style={{ color: "#764ba2", fontWeight: 700 }}>Nº de pedido:</span>
-          <div style={{ fontSize: "1.5rem", fontWeight: 700, color: "#333" }}>{order.numero || "ORD-910"}</div>
+        
+        <div style={styles.orderInfo}>
+          <span style={styles.orderLabel}>Nº de pedido:</span>
+          <span style={styles.orderNumber}>{order.numero || "ORD-910"}</span>
         </div>
 
         {/* Botón finalizar */}
-        <button style={finishBtnStyle} onClick={onClose}>
+        <button style={styles.finishBtn} onClick={onClose}>
           Finalizar y Cerrar
         </button>
 
         {/* Enlace */}
-        <div style={linkContainerStyle}>
-          <a href="https://tatianas-restaurante.vercel.app" target="_blank" rel="noopener noreferrer" style={linkStyle}>
+        <div style={styles.linkContainer}>
+          <a 
+            href="https://tatianas-restaurante.vercel.app" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            style={styles.link}
+          >
             tatianas-restaurante.vercel.app
           </a>
         </div>
@@ -69,157 +84,250 @@ export default function TicketModal({ open, onClose, order }) {
   );
 }
 
-// --- Estilos ---
-const backdropStyle = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  background: "rgba(0,0,0,0.07)",
-  zIndex: 5000,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center"
+// ============================================
+// ESTILOS IPHONE 16 - VERSIÓN MINIMALISTA
+// ============================================
+const styles = {
+  overlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: "rgba(0, 0, 0, 0.15)", // Más transparente
+    backdropFilter: "blur(4px)", // Menos blur
+    WebkitBackdropFilter: "blur(4px)",
+    zIndex: 5000,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "1.5rem" // Más padding alrededor
+  },
+  modal: {
+    background: "rgba(255, 255, 255, 0.85)", // Ligeramente más transparente
+    backdropFilter: "blur(10px)", // Menos blur
+    WebkitBackdropFilter: "blur(10px)",
+    borderRadius: "32px",
+    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)", // Sombra más suave
+    padding: "2.5rem 1.5rem 1.5rem",
+    minWidth: "300px", // Un poco más estrecho
+    maxWidth: "360px", // Más compacto
+    width: "100%",
+    maxHeight: "85vh", // Menos altura máxima
+    overflowY: "auto",
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    border: "1px solid rgba(255, 255, 255, 0.3)"
+  },
+  printContainer: {
+    position: "absolute",
+    top: "12px", // Menos separación
+    right: "12px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "2px" // Menos gap
+  },
+  printBtn: {
+    background: "linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%)",
+    border: "none",
+    borderRadius: "30px",
+    width: "40px", // Más pequeño
+    height: "40px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 4px 8px rgba(255, 59, 48, 0.15)", // Sombra más suave
+    cursor: "pointer",
+    transition: "all 0.2s ease"
+  },
+  printIcon: {
+    fontSize: "1.2rem" // Más pequeño
+  },
+  printText: {
+    color: "var(--gris-texto)",
+    fontWeight: "600",
+    fontSize: "0.6rem", // Más pequeño
+    lineHeight: "1",
+    textAlign: "center",
+    opacity: 0.7
+  },
+  summaryCard: {
+    width: "100%",
+    background: "rgba(255, 255, 255, 0.3)", // Más transparente
+    borderRadius: "20px", // Un poco menos
+    padding: "1rem", // Menos padding
+    marginBottom: "1.2rem", // Menos margen
+    border: "1px solid rgba(255, 255, 255, 0.3)"
+  },
+  summaryTitle: {
+    color: "var(--verde-selva)",
+    fontSize: "1rem", // Más pequeño
+    fontWeight: "600",
+    margin: "0 0 0.8rem 0",
+    textAlign: "left"
+  },
+  itemsList: {
+    maxHeight: "120px", // Menos altura
+    overflowY: "auto",
+    marginBottom: "0.6rem"
+  },
+  itemRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "0.3rem 0", // Menos padding
+    borderBottom: "1px solid rgba(0, 0, 0, 0.03)", // Más sutil
+    fontSize: "0.85rem" // Más pequeño
+  },
+  itemName: {
+    color: "var(--gris-texto)"
+  },
+  itemPrice: {
+    fontWeight: "600",
+    color: "var(--maracuya)"
+  },
+  totalRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "0.6rem",
+    paddingTop: "0.6rem",
+    borderTop: "1px solid rgba(255, 179, 71, 0.15)", // Más sutil
+    fontSize: "0.95rem",
+    fontWeight: "600"
+  },
+  totalLabel: {
+    color: "var(--verde-selva)"
+  },
+  totalAmount: {
+    color: "var(--maracuya)",
+    fontSize: "1.1rem", // Más pequeño
+    fontWeight: "700"
+  },
+  logoContainer: {
+    marginBottom: "0.8rem", // Menos margen
+    background: "white",
+    padding: "8px", // Menos padding
+    borderRadius: "24px", // Un poco menos
+    boxShadow: "0 4px 12px rgba(99, 102, 241, 0.1)" // Sombra más suave
+  },
+  logo: {
+    width: "80px", // Más pequeño
+    height: "auto",
+    display: "block"
+  },
+  thanksContainer: {
+    textAlign: "center",
+    marginBottom: "1.2rem" // Menos margen
+  },
+  thanksTitle: {
+    color: "var(--verde-selva)",
+    fontSize: "1.1rem", // Más pequeño
+    fontWeight: "600",
+    margin: "0 0 0.2rem 0"
+  },
+  thanksSubtitle: {
+    color: "var(--gris-texto)",
+    fontSize: "0.8rem", // Más pequeño
+    margin: 0,
+    opacity: 0.7
+  },
+  chefIcon: {
+    fontSize: "0.9rem"
+  },
+  qrContainer: {
+    marginBottom: "0.8rem", // Menos margen
+    padding: "0.4rem", // Menos padding
+    background: "white",
+    borderRadius: "20px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.03)" // Sombra más suave
+  },
+  qrImage: {
+    width: "100px", // Más pequeño
+    height: "100px",
+    borderRadius: "12px",
+    display: "block"
+  },
+  orderInfo: {
+    textAlign: "center",
+    marginBottom: "1.2rem" // Menos margen
+  },
+  orderLabel: {
+    display: "block",
+    fontSize: "0.7rem", // Más pequeño
+    color: "var(--gris-texto)",
+    marginBottom: "0.1rem",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px"
+  },
+  orderNumber: {
+    fontSize: "1.2rem", // Más pequeño
+    fontWeight: "700",
+    color: "var(--morado-primario)",
+    letterSpacing: "1px"
+  },
+  finishBtn: {
+    width: "100%",
+    background: "linear-gradient(135deg, var(--morado-primario) 0%, #8b5cf6 100%)",
+    color: "white",
+    border: "none",
+    borderRadius: "30px",
+    fontWeight: "600",
+    fontSize: "0.9rem", // Más pequeño
+    padding: "10px", // Menos padding
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    boxShadow: "0 4px 8px rgba(99, 102, 241, 0.15)", // Sombra más suave
+    marginBottom: "0.8rem" // Menos margen
+  },
+  linkContainer: {
+    textAlign: "center"
+  },
+  link: {
+    color: "rgba(0, 0, 0, 0.3)",
+    fontSize: "0.65rem", // Más pequeño
+    textDecoration: "none",
+    transition: "color 0.2s ease"
+  }
 };
 
-const modalStyle = {
-  background: "#fff",
-  borderRadius: "28px",
-  boxShadow: "0 8px 32px rgba(118,75,162,0.15)",
-  padding: "2.5rem 1.2rem 1.2rem 1.2rem",
-  minWidth: "340px",
-  maxWidth: "95vw",
-  maxHeight: "95vh",
-  overflowY: "auto",
-  position: "relative",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center"
-};
+// ============================================
+// ESTILOS DINÁMICOS (hover effects)
+// ============================================
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+  .print-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 59, 48, 0.2) !important;
+  }
 
-const printBtnContainerStyle = {
-  position: "absolute",
-  top: "18px",
-  right: "18px",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center"
-};
+  .finish-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(99, 102, 241, 0.2) !important;
+  }
 
-const printBtnStyle = {
-  background: "#ff4757",
-  border: "none",
-  borderRadius: "50%",
-  width: "38px",
-  height: "38px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  boxShadow: "0 2px 8px rgba(255,71,87,0.2)",
-  cursor: "pointer"
-};
+  .link:hover {
+    color: var(--maracuya) !important;
+  }
 
-const printTextStyle = {
-  color: "#222",
-  fontWeight: 600,
-  fontSize: "1rem",
-  lineHeight: "1.1",
-  marginTop: "2px",
-  textAlign: "center"
-};
+  /* Scrollbar personalizado */
+  .items-list::-webkit-scrollbar {
+    width: 3px; /* Más delgada */
+  }
 
-const summaryCardStyle = {
-  background: "#f8f8ff",
-  borderRadius: "18px",
-};
+  .items-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 2px;
+  }
 
-const summaryTitleStyle = {
-  color: "#4f5bd5",
-  fontSize: "1.5rem",
-  fontWeight: 700,
-};
+  .items-list::-webkit-scrollbar-thumb {
+    background: var(--maracuya);
+    border-radius: 2px;
+  }
+`;
 
-const summaryItemsStyle = {
-  color: "#333",
-  fontSize: "0.9rem",
-  marginBottom: "0.5rem",
-};
-
-const itemRowStyle = {
-  color: "#333",
-  fontSize: "0.9rem",
-  marginBottom: "0.5rem",
-};
-
-const totalRowStyle = {
-  color: "#4f5bd5",
-  fontSize: "1.2rem",
-  fontWeight: 700,
-};
-
-const logoContainerStyle = {
-  position: "absolute",
-  top: "18px",
-  right: "18px",
-  display: "flex",
-  alignItems: "center",
-};
-
-const logoStyle = {
-  width: "100px",
-  height: "100px",
-  objectFit: "cover",
-};
-
-const thanksStyle = {
-  position: "absolute",
-  top: "18px",
-  right: "18px",
-  display: "flex",
-  alignItems: "center",
-};
-
-const thanksTitleStyle = {
-  color: "#4f5bd5",
-  fontSize: "1.5rem",
-  fontWeight: 700,
-};
-
-const thanksSubtitleStyle = {
-  color: "#333",
-  fontSize: "0.9rem",
-};
-
-const qrContainerStyle = {
-  position: "absolute",
-  top: "18px",
-  right: "18px",
-  display: "flex",
-  alignItems: "center",
-};
-
-const qrStyle = {
-  width: "100px",
-  height: "100px",
-  objectFit: "cover",
-};
-
-const orderNumStyle = {
-  color: "#764ba2",
-  fontWeight: 700,
-};
-
-const finishBtnStyle = {
-  marginTop: "1rem",
-  width: "100%",
-  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-  color: "white",
-  border: "none",
-  borderRadius: "12px",
-  fontWeight: "bold",
-  fontSize: "1rem",
-  padding: "12px",
-  cursor: "pointer",
-  boxShadow: "0 5px 15px rgba(118,75,162,0.3)"
-};
+// Añadir estilos al documento
+if (typeof document !== 'undefined') {
+  document.head.appendChild(styleSheet);
+}

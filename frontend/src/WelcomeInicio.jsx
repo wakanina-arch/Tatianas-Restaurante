@@ -142,9 +142,9 @@ export default function WelcomeInicio({ onSelectCategory }) {
       const card = document.getElementById('card-zensual');
       if (card) {
         card.style.transition = 'box-shadow 3s ease-in-out';
-        card.style.boxShadow = '0 20px 40px rgba(255,215,0,0.15)';
+        card.style.boxShadow = '0 15px 30px rgba(255,215,0,0.1)';
         setTimeout(() => {
-          card.style.boxShadow = '0 30px 60px rgba(0,0,0,0.3)';
+          card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.2)';
         }, 3000);
       }
     }, 6000);
@@ -171,7 +171,7 @@ export default function WelcomeInicio({ onSelectCategory }) {
       display: "flex", 
       alignItems: "center", 
       justifyContent: "center",
-      padding: "1rem"
+      padding: "2rem" // Más padding alrededor
     }}>
       <style>{`
         @keyframes girar { 
@@ -179,11 +179,11 @@ export default function WelcomeInicio({ onSelectCategory }) {
           to { transform: rotateY(360deg); } 
         }
         .moneda { 
-          width: 70px; 
-          height: 70px; 
+          width: 60px; /* Más pequeña */
+          height: 60px; 
           cursor: pointer; 
           perspective: 1000px; 
-          margin: 0 auto 15px; 
+          margin: 0 auto 12px; /* Menos margen */
           animation: girar 8s linear infinite; 
           transform-style: preserve-3d; 
           transition: all 0.3s ease;
@@ -201,25 +201,25 @@ export default function WelcomeInicio({ onSelectCategory }) {
           align-items: center; 
           justify-content: center; 
           backface-visibility: hidden; 
-          border: 2px solid rgba(255, 215, 0, 0.5); 
+          border: 2px solid rgba(255, 215, 0, 0.4); /* Borde más sutil */
           color: white; 
-          font-size: 2rem; 
+          font-size: 1.8rem; /* Texto más pequeño */
           backdropFilter: 'blur(4px)';
-          boxShadow: '0 4px 15px rgba(0,0,0,0.3)';
+          boxShadow: '0 4px 10px rgba(0,0,0,0.2)';
         }
         .trasera { 
           transform: rotateY(180deg); 
-          background: rgba(139, 69, 19, 0.8); 
+          background: rgba(139, 69, 19, 0.7); 
         }
         .frontal { 
-          background: rgba(205, 92, 92, 0.8); 
+          background: rgba(205, 92, 92, 0.7); 
         }
         .categoria-btn {
-          padding: 0.8rem;
-          background: rgba(0, 0, 0, 0.3);
+          padding: 0.7rem;
+          background: rgba(0, 0, 0, 0.2);
           color: white;
           border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 24px;
+          border-radius: 20px;
           cursor: pointer;
           display: flex;
           flex-direction: column;
@@ -228,72 +228,33 @@ export default function WelcomeInicio({ onSelectCategory }) {
           backdropFilter: 'blur(8px)';
         }
         .categoria-btn:hover {
-          background: rgba(255, 215, 0, 0.15);
+          background: rgba(255, 215, 0, 0.1);
           transform: translateY(-2px);
-          border-color: rgba(255, 215, 0, 0.3);
-        }
-        .oraculo-container {
-          background: rgba(0, 0, 0, 0.2);
-          backdropFilter: 'blur(12px)';
-          borderRadius: '32px';
-          padding: '1.5rem 1.2rem';
-          margin: '1.5rem 0';
-          boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.5)';
-          transition: 'all 0.3s ease';
-          border: '1px solid rgba(255, 255, 255, 0.1)';
-        }
-        .oraculo-container:hover {
-          boxShadow: '0 20px 40px -12px rgba(255, 215, 0, 0.2)';
-          transform: 'translateY(-2px)';
-          borderColor: 'rgba(255, 215, 0, 0.2)';
-        }
-        .oraculo-iconos {
-          display: 'flex';
-          alignItems: 'center';
-          justifyContent: 'center';
-          gap: '1rem';
-          marginBottom: '1rem';
-          fontSize: '1.8rem';
-          opacity: 0.9;
-        }
-        .oraculo-icono-principal {
-          fontSize: '2.4rem';
-          filter: 'drop-shadow(0 0 12px rgba(255, 215, 0, 0.2))';
-          transition: 'all 0.3s ease';
-        }
-        .oraculo-texto {
-          margin: 0;
-          fontWeight: 300;
-          textShadow: '0 2px 4px rgba(0,0,0,0.3)';
-          color: 'rgba(255, 255, 255, 0.95)';
-          fontSize: '0.95rem';
-          lineHeight: 1.6;
-          letterSpacing: 0.2;
-          fontStyle: 'italic';
+          border-color: rgba(255, 215, 0, 0.2);
         }
       `}</style>
 
       <div id="card-zensual" style={{
-        background: "rgba(30, 20, 15, 0.6)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        borderRadius: "48px",
-        padding: "2.5rem 1.8rem",
-        maxWidth: "360px",
+        background: "rgba(30, 20, 15, 0.5)", // Más transparente
+        backdropFilter: "blur(10px)", // Menos blur
+        WebkitBackdropFilter: "blur(10px)",
+        borderRadius: "40px", // Un poco menos
+        padding: "2rem 1.5rem", // Menos padding
+        maxWidth: "320px", // Más estrecho
         width: "100%",
         textAlign: "center",
-        boxShadow: "0 30px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset",
+        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)", // Sombra más suave
         border: "1px solid rgba(255, 255, 255, 0.05)"
       }}>
         
         {/* MONEDA: TRIDENTE */}
         <div className="moneda" onClick={() => setShowRegister(true)}>
           <div className="cara frontal" style={{
-            background: "rgba(205, 92, 92, 0.7)",
+            background: "rgba(205, 92, 92, 0.6)",
             backdropFilter: "blur(4px)"
           }}>🔱</div>
           <div className="cara trasera" style={{
-            background: "rgba(139, 69, 19, 0.7)",
+            background: "rgba(139, 69, 19, 0.6)",
             backdropFilter: "blur(4px)"
           }}>
             {user ? user.nombre?.charAt(0).toUpperCase() : '👤'}
@@ -302,20 +263,20 @@ export default function WelcomeInicio({ onSelectCategory }) {
         
         <h1 style={{ 
           color: "white", 
-          fontSize: "2.2rem", 
+          fontSize: "2rem", // Más pequeño
           margin: "0.2rem 0 0.1rem", 
           fontFamily: "'Cormorant Garamond', serif", 
           fontWeight: "600",
-          letterSpacing: "1px",
-          textShadow: "0 2px 4px rgba(0,0,0,0.3)"
+          letterSpacing: "0.5px", // Menos espaciado
+          textShadow: "0 2px 4px rgba(0,0,0,0.2)"
         }}>
           ONE TO ONE
         </h1>
         
         <p style={{ 
-          color: "rgba(255, 215, 0, 0.8)", 
-          fontSize: "0.8rem", 
-          marginBottom: "1.5rem", 
+          color: "rgba(255, 215, 0, 0.7)", // Más sutil
+          fontSize: "0.75rem", // Más pequeño
+          marginBottom: "1.2rem", // Menos margen
           fontStyle: "italic",
           fontWeight: "300"
         }}>
@@ -324,36 +285,36 @@ export default function WelcomeInicio({ onSelectCategory }) {
 
         {/* ===== 🎭 ORÁCULO - VERSIÓN SIMPLIFICADA ===== */}
         <div style={{
-          background: "rgba(0, 0, 0, 0.25)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          borderRadius: "32px",
-          padding: "1.5rem 1.2rem",
-          margin: "1.5rem 0",
-          boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.5)",
+          background: "rgba(0, 0, 0, 0.2)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          borderRadius: "28px",
+          padding: "1.2rem 1rem",
+          margin: "1.2rem 0",
+          boxShadow: "0 8px 20px -8px rgba(0, 0, 0, 0.3)",
           transition: "all 0.3s ease",
           border: "1px solid rgba(255, 215, 0, 0.1)"
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.boxShadow = `0 20px 40px -12px ${getColorElemento(fraseData.elemento)}40`;
-          e.currentTarget.style.borderColor = `${getColorElemento(fraseData.elemento)}40`;
+          e.currentTarget.style.boxShadow = `0 15px 30px -12px ${getColorElemento(fraseData.elemento)}30`;
+          e.currentTarget.style.borderColor = `${getColorElemento(fraseData.elemento)}30`;
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.boxShadow = "0 10px 30px -10px rgba(0, 0, 0, 0.5)";
+          e.currentTarget.style.boxShadow = "0 8px 20px -8px rgba(0, 0, 0, 0.3)";
           e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.1)";
         }}>
           <div style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "1rem",
-            marginBottom: "1rem",
-            fontSize: "1.8rem",
-            opacity: 0.9
+            gap: "0.8rem",
+            marginBottom: "0.8rem",
+            fontSize: "1.5rem",
+            opacity: 0.8
           }}>
             <span style={{
-              fontSize: "2.4rem",
-              filter: `drop-shadow(0 0 12px ${getColorElemento(fraseData.elemento)}40)`,
+              fontSize: "2rem",
+              filter: `drop-shadow(0 0 8px ${getColorElemento(fraseData.elemento)}30)`,
               transition: "all 0.3s ease"
             }}>
               {fraseData.icono}
@@ -362,10 +323,10 @@ export default function WelcomeInicio({ onSelectCategory }) {
           <p style={{
             margin: 0,
             fontWeight: 300,
-            textShadow: "0 2px 4px rgba(0,0,0,0.3)",
-            color: "rgba(255, 255, 255, 0.95)",
-            fontSize: "0.95rem",
-            lineHeight: 1.6,
+            textShadow: "0 1px 2px rgba(0,0,0,0.2)",
+            color: "rgba(255, 255, 255, 0.9)",
+            fontSize: "0.85rem", // Más pequeño
+            lineHeight: 1.5,
             letterSpacing: "0.2px",
             fontStyle: "italic"
           }}>
@@ -377,40 +338,40 @@ export default function WelcomeInicio({ onSelectCategory }) {
         <div style={{ 
           display: "grid", 
           gridTemplateColumns: "repeat(2, 1fr)", 
-          gap: "0.7rem", 
-          marginBottom: "1.5rem" 
+          gap: "0.6rem", // Menos gap
+          marginBottom: "1.2rem" // Menos margen
         }}>
           {categorias.map(cat => (
             <button 
               key={cat.id || 'todas'} 
               onClick={() => handleCategorySelect(cat.id)} 
               style={{
-                padding: "0.8rem",
-                background: "rgba(0, 0, 0, 0.3)",
+                padding: "0.7rem",
+                background: "rgba(0, 0, 0, 0.2)",
                 color: "white",
                 border: "1px solid rgba(255, 255, 255, 0.1)",
-                borderRadius: "24px",
+                borderRadius: "20px",
                 cursor: "pointer",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 transition: "all 0.2s ease",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)"
+                backdropFilter: "blur(4px)",
+                WebkitBackdropFilter: "blur(4px)"
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(255, 215, 0, 0.15)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.3)";
+                e.currentTarget.style.background = "rgba(255, 215, 0, 0.1)";
+                e.currentTarget.style.transform = "translateY(-1px)"; // Menos elevación
+                e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.2)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(0, 0, 0, 0.3)";
+                e.currentTarget.style.background = "rgba(0, 0, 0, 0.2)";
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
               }}
             >
-              <span style={{ fontSize: "1.4rem", marginBottom: "0.2rem" }}>{cat.icon}</span>
-              <span style={{ fontSize: "0.7rem", fontWeight: "600", letterSpacing: "0.5px" }}>{cat.label}</span>
+              <span style={{ fontSize: "1.2rem", marginBottom: "0.1rem" }}>{cat.icon}</span>
+              <span style={{ fontSize: "0.65rem", fontWeight: "600", letterSpacing: "0.5px" }}>{cat.label}</span>
             </button>
           ))}
         </div>
@@ -419,36 +380,36 @@ export default function WelcomeInicio({ onSelectCategory }) {
         <p 
           onClick={() => setShowRegister(true)} 
           style={{ 
-            color: "rgba(255, 255, 255, 0.6)", 
-            fontSize: "0.75rem", 
-            marginBottom: "1.5rem", 
+            color: "rgba(255, 255, 255, 0.5)", 
+            fontSize: "0.7rem", 
+            marginBottom: "1.2rem", 
             cursor: "pointer", 
             textDecoration: "none",
-            borderBottom: "1px dotted rgba(255, 215, 0, 0.3)",
-            paddingBottom: "0.2rem",
+            borderBottom: "1px dotted rgba(255, 215, 0, 0.2)",
+            paddingBottom: "0.1rem",
             display: "inline-block",
             transition: "all 0.2s ease"
           }}
           onMouseEnter={(e) => {
-            e.target.style.color = "rgba(255, 215, 0, 0.8)";
-            e.target.style.borderBottomColor = "rgba(255, 215, 0, 0.6)";
+            e.target.style.color = "rgba(255, 215, 0, 0.6)";
+            e.target.style.borderBottomColor = "rgba(255, 215, 0, 0.4)";
           }}
           onMouseLeave={(e) => {
-            e.target.style.color = "rgba(255, 255, 255, 0.6)";
-            e.target.style.borderBottomColor = "rgba(255, 215, 0, 0.3)";
+            e.target.style.color = "rgba(255, 255, 255, 0.5)";
+            e.target.style.borderBottomColor = "rgba(255, 215, 0, 0.2)";
           }}
         >
           ✨ Regístrate para obtener descuentos exclusivos
         </p>
 
         <p style={{ 
-          fontSize: "0.65rem", 
+          fontSize: "0.6rem", // Más pequeño
           color: "#FF4500", 
           fontWeight: "600", 
           textTransform: "uppercase", 
-          letterSpacing: "2px",
+          letterSpacing: "1px", // Menos espaciado
           margin: 0,
-          opacity: 0.8
+          opacity: 0.7
         }}>
           EL SABOR DE LA TIERRA
         </p>
