@@ -298,45 +298,34 @@ function MainApp() {
 // Franja de lado a lado de la pantalla
 // ============================================
 function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerfil, user }) {
-  console.log('🔵 NavBar - onOpenPerfil es una función:', typeof onOpenPerfil === 'function');
-  console.log('🔵 NavBar - user existe:', !!user);
-  
   return (
     <header style={{
       position: 'fixed',
-      top: 20,
+      top: 0, // 👈 Pegado arriba para ganar limpieza
       left: 0,
       right: 0,
-      width: 'auto',
       zIndex: 1000,
-      background: 'rgba(255, 255, 255, 0.7)',
+      background: 'rgba(255, 255, 255, 0.8)', // Un poco más opaco para legibilidad
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
-      //borderRadius: 60,
-      boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
-      border: '1px solid rgba(255, 255, 255, 0.4)',
+      boxShadow: '0 2px 15px rgba(0, 0, 0, 0.05)',
+      borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
       display: 'flex',
-      alignItems: 'auto',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      height: '60px' // Altura fija para control total
     }}>
       
       {/* Contenedor interno */}
       <div style={{
         width: '100%',
-        maxWidth: 1200,
-        padding: '0.2rem 1rem',
+        padding: '0 1rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        margin: '0 auto'
       }}>
         
         {/* ===== IZQUIERDA - MENÚ HAMBURGUESA ===== */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'flex-start',
-          minWidth: '10px' // Ancho fijo para balancear
-        }}>
+         <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
           <button
             onClick={onOpenMenu} 
             style={{  
@@ -345,29 +334,25 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'flex-start',
               gap: 4,
-              padding: '0.1rem'
+              padding: '10px'
             }}  
           >
-            <div style={{ width: 20, height: 2, background: 'var(--verde-selva)', borderRadius: 2 }} />
+            <div style={{ width: 22, height: 2, background: 'var(--verde-selva)', borderRadius: 2 }} />
             <div style={{ width: 16, height: 2, background: 'var(--maracuya)', borderRadius: 2 }} />
-            <div style={{ width: 20, height: 2, background: 'var(--morado-primario)', borderRadius: 2 }} />
+            <div style={{ width: 22, height: 2, background: 'var(--morado-primario)', borderRadius: 2 }} />
           </button>
         </div>
 
         {/* ===== CENTRO - LOGO ONE TO ONE ===== */}
         <div style={{
+          flex: 2, // 👈 Le damos el doble de espacio que a los lados
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 8,
-          cursor: 'pointer',
-          padding: '0 10px',
-          borderRadius: 40,
-          transition: 'background 0.2s ease',
-          filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
-          whiteSpace: 'nowrap'
+          gap: 6,
+          whiteSpace: 'nowrap', // 👈 PROHIBIDO el salto de línea
+          cursor: 'pointer'
         }}
         onClick={() => setCurrentPage('home')}
         onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
@@ -418,12 +403,11 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
 
         {/* ===== DERECHA - ACCIONES ===== */}
         <div style={{ 
+          flex: 1, 
           display: 'flex', 
           justifyContent: 'flex-end',
           alignItems: 'center',
-          gap: 2,
-          minWidth: '10px', // Mismo ancho que izquierda para balancear
-          paddingRight: '10px'
+          gap: '8px' // Espacio controlado entre iconos
         }}>
           
           {/* Carrito */}
