@@ -294,8 +294,8 @@ function MainApp() {
   );
 }
 // ============================================
-// HEADER SUPERIOR FLOTANTE - FULL WIDTH
-// Franja de lado a lado de la pantalla
+// HEADER SUPERIOR FLOTANTE - FRANJA COMPLETA
+// (tu versión original)
 // ============================================
 function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerfil, user }) {
   console.log('🔵 NavBar - onOpenPerfil es una función:', typeof onOpenPerfil === 'function');
@@ -305,16 +305,15 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
     <header style={{
       position: 'fixed',
       top: 20,
-      left: 20,
-      right: 20,
+      left: 0,
+      right: 0,
       width: 'auto',
       zIndex: 1000,
       background: 'rgba(255, 255, 255, 0.7)',
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
-      borderRadius: 60,
       boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
-      border: '1px solid rgba(255, 255, 255, 0.4)',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.4)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
@@ -324,7 +323,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
       <div style={{
         width: '100%',
         maxWidth: 1200,
-        padding: '0.2rem 1rem',
+        padding: '0.1rem 1rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -332,11 +331,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
       }}>
         
         {/* ===== IZQUIERDA - MENÚ HAMBURGUESA ===== */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'flex-start',
-          minWidth: '80px' // Ancho fijo para balancear
-        }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
           <button
             onClick={onOpenMenu} 
             style={{  
@@ -345,9 +340,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'flex-start',
               gap: 4,
-              padding: '0.3rem'
             }}  
           >
             <div style={{ width: 20, height: 2, background: 'var(--verde-selva)', borderRadius: 2 }} />
@@ -360,13 +353,12 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          gap: 8,
+          gap: 13,
           cursor: 'pointer',
-          padding: '0.2rem 0.8rem',
           borderRadius: 40,
           transition: 'background 0.2s ease',
           filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
+          justifyContent: 'center',
           whiteSpace: 'nowrap'
         }}
         onClick={() => setCurrentPage('home')}
@@ -417,15 +409,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         </div>
 
         {/* ===== DERECHA - ACCIONES ===== */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          gap: 2,
-          minWidth: '80px' // Mismo ancho que izquierda para balancear
-        }}>
-          
-          {/* Carrito */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 1}}>
           <NavButton 
             page="carrito" 
             currentPage={currentPage} 
@@ -454,14 +438,13 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             )}
           </NavButton>
 
-          {/* Perfil de Usuario */}
           <button
             onClick={onOpenPerfil}
             style={{
               background: 'transparent',
               border: 'none',
               borderRadius: 40,
-              padding: '0.4rem 0.5rem',
+              padding: '0.5rem 0.7rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -470,12 +453,6 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               transition: 'background 0.2s ease',
               position: 'relative',
               opacity: 0.9
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
             }}
           >
             👤
@@ -493,28 +470,19 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             )}
           </button>
 
-          {/* Dashboard - Solo admin */}
           <button
             onClick={() => setCurrentPage('admin')}
             style={{
               background: 'transparent',
               border: 'none',
               borderRadius: 30,
-              padding: '0.3rem 0.6rem',
+              padding: '0.3rem 0.7rem',
               cursor: 'pointer',
               fontSize: '0.7rem',
               fontWeight: '600',
               letterSpacing: '0.5px',
               color: '#8e8e93',
               transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(142, 142, 147, 0.1)';
-              e.currentTarget.style.color = '#6366f1';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.color = '#8e8e93';
             }}
           >
             DSH
