@@ -405,15 +405,15 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         </div>
 {/* ===== DERECHA - ACCIONES ===== */}
         <div style={{ 
-  display: 'flex', 
-  justifyContent: 'flex-end',
-  alignItems: 'right',
-  gap: 2,
-  width: 'auto',           // 👈 QUE SE AJUSTE AUTOMÁTICAMENTE
-  flexShrink: 0,
-  paddingRight: '1px',    // 👈 AUMENTADO A 15px (SÍ SE PUEDE)
-  minWidth: '90px'         // 👈 AUMENTADO UN POCO
-}}>
+          display: 'flex', 
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          gap: 2,
+          width: '200px',
+          flexShrink: 0,
+          paddingRight: '0.1px',  // 👈 PADDING PARA RESPIRAR
+          minWidth: '80px' 
+        }}>
           <NavButton 
             page="carrito" 
             currentPage={currentPage} 
