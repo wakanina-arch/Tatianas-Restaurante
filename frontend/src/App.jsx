@@ -341,7 +341,6 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           </button>
         </div>
 
-      // ===== CENTRO - LOGO ONE TO ONE (RESPONSIVE) =====
 <div style={{
   display: 'flex',
   alignItems: 'center',
