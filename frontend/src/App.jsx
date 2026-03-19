@@ -305,18 +305,18 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
     <header style={{
       position: 'fixed',
       top: 20,
-      left: 20,
-      right: 20,
+      left: 0,
+      right: 0,
       width: 'auto',
       zIndex: 1000,
       background: 'rgba(255, 255, 255, 0.7)',
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
-      borderRadius: 60,
+      //borderRadius: 60,
       boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
       border: '1px solid rgba(255, 255, 255, 0.4)',
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'auto',
       justifyContent: 'center'
     }}>
       
@@ -335,7 +335,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         <div style={{ 
           display: 'flex', 
           justifyContent: 'flex-start',
-          minWidth: '80px' // Ancho fijo para balancear
+          minWidth: '40px' // Ancho fijo para balancear
         }}>
           <button
             onClick={onOpenMenu} 
@@ -347,7 +347,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               flexDirection: 'column',
               alignItems: 'flex-start',
               gap: 4,
-              padding: '0.3rem'
+              padding: '0.1rem'
             }}  
           >
             <div style={{ width: 20, height: 2, background: 'var(--verde-selva)', borderRadius: 2 }} />
@@ -363,7 +363,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           justifyContent: 'center',
           gap: 8,
           cursor: 'pointer',
-          padding: '0.2rem 0.8rem',
+          padding: '0.1rem 0.4rem',
           borderRadius: 40,
           transition: 'background 0.2s ease',
           filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
@@ -422,7 +422,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           justifyContent: 'flex-end',
           alignItems: 'center',
           gap: 2,
-          minWidth: '80px' // Mismo ancho que izquierda para balancear
+          minWidth: '40px' // Mismo ancho que izquierda para balancear
         }}>
           
           {/* Carrito */}
