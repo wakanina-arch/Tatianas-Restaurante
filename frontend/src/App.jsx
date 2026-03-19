@@ -750,84 +750,83 @@ function MenuItem({ item, addToCart }) {
     paddingRight: '5px'
   }}>
           {item.opciones?.map((opt, idx) => {
-            const tieneOferta = item.enOferta && opt.precioOriginal;
-            const precioOriginal = tieneOferta ? opt.precioOriginal : null;
-            const precioActual = opt.precio || 0;
-            
-            return (
-              <label
-                key={idx}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-star',
-                  padding: '0.5rem 1rem',
-                  background: selectedOption === opt.nombre ? 'rgba(255, 215, 0, 0.1)' : 'rgba(0, 0, 0, 0.02)',
-                  borderRadius: 16,
-                  border: selectedOption === opt.nombre 
-                    ? '1px solid var(--maracuya)' 
-                    : '1px solid rgba(0, 0, 0, 0.05)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  if (selectedOption !== opt.nombre) {
-                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (selectedOption !== opt.nombre) {
-                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';
-                  }
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                  <input 
-                    type="checkbox"
-                    checked={selectedOption === opt.nombre}
-                    onChange={() => setSelectedOption(selectedOption === opt.nombre ? null : opt.nombre)}
-                    style={{
-                      width: 18,
-                      height: 18,
-                      marginTop: '3px',
-                      cursor: 'pointer',
-                      accentColor: 'var(--maracuya)'
-                    }}
-                  />
-                  <span style={{
-                    fontSize: '0.95rem',
-                    fontWeight: '500',
-                    color: 'var(--gris-texto)',
-                    lineHeight: '1.4',
-              /* 🚀 El nombre/descripción ahora fluye libre */
-              whiteSpace: 'normal',
-              wordBreak: 'break-word'
-                  }}>
-                    {opt.nombre}
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  {tieneOferta && (
-                    <span style={{
-                      fontSize: '0.8rem',
-                      color: '#999',
-                      textDecoration: 'line-through'
-                    }}>
-                      ${precioOriginal.toFixed(2)}
-                    </span>
-                  )}
-                  <span style={{
-                    fontSize: '1rem',
-                    fontWeight: '700',
-                    color: 'var(--maracuya)',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    ${precioActual.toFixed(2)}
-                  </span>
-                </div>
-              </label>
-            );
-          })}
+  const tieneOferta = item.enOferta && opt.precioOriginal;
+  const precioOriginal = tieneOferta ? opt.precioOriginal : null;
+  const precioActual = opt.precio || 0;
+  
+  return (
+    <label
+      key={idx}
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        padding: '0.5rem 1rem',
+        background: selectedOption === opt.nombre ? 'rgba(255, 215, 0, 0.1)' : 'rgba(0, 0, 0, 0.02)',
+        borderRadius: 16,
+        border: selectedOption === opt.nombre 
+          ? '1px solid var(--maracuya)' 
+          : '1px solid rgba(0, 0, 0, 0.05)',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease'
+      }}
+      onMouseEnter={(e) => {
+        if (selectedOption !== opt.nombre) {
+          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (selectedOption !== opt.nombre) {
+          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';
+        }
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+        <input 
+          type="checkbox"
+          checked={selectedOption === opt.nombre}
+          onChange={() => setSelectedOption(selectedOption === opt.nombre ? null : opt.nombre)}
+          style={{
+            width: 18,
+            height: 18,
+            marginTop: '3px',
+            cursor: 'pointer',
+            accentColor: 'var(--maracuya)'
+          }}
+        />
+        <span style={{
+          fontSize: '0.95rem',
+          fontWeight: '500',
+          color: 'var(--gris-texto)',
+          lineHeight: '1.4',
+          whiteSpace: 'normal',
+          wordBreak: 'break-word'
+        }}>
+          {opt.nombre}
+        </span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {tieneOferta && (
+          <span style={{
+            fontSize: '0.8rem',
+            color: '#999',
+            textDecoration: 'line-through'
+          }}>
+            ${precioOriginal.toFixed(2)}
+          </span>
+        )}
+        <span style={{
+          fontSize: '1rem',
+          fontWeight: '700',
+          color: 'var(--maracuya)',
+          whiteSpace: 'nowrap'
+        }}>
+          ${precioActual.toFixed(2)}
+        </span>
+      </div>
+    </label>
+  );
+})}
         </div>
 
         <div style={{
