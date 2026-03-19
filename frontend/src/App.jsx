@@ -341,20 +341,23 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           </button>
         </div>
 
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 13,
-          cursor: 'pointer',
-          padding: '0.2rem 1.5rem',
-          borderRadius: 40,
-          transition: 'background 0.2s ease',
-          filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
-          whiteSpace: 'nowrap',
-          flex: '0 1 auto',
-          maxWidth: '60%'
-        }}
+      // ===== CENTRO - LOGO ONE TO ONE (RESPONSIVE) =====
+<div style={{
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: window.innerWidth < 480 ? '6px' : '13px',  // 👈 MENOS GAP EN MÓVIL
+  cursor: 'pointer',
+  padding: window.innerWidth < 480 ? '0.1rem 0.5rem' : '0.2rem 1.5rem',  // 👈 MENOS PADDING
+  borderRadius: 40,
+  transition: 'background 0.2s ease',
+  filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
+  whiteSpace: 'nowrap',
+  flex: '0 1 auto',
+  maxWidth: window.innerWidth < 480 ? '50%' : '60%',  // 👈 MÁS ESTRECHO EN MÓVIL
+  overflow: 'hidden',  // 👈 EVITA DESBORDES
+  textOverflow: 'ellipsis'
+}}
         onClick={() => setCurrentPage('home')}
         onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
