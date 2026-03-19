@@ -103,8 +103,8 @@ export default function WelcomeInicio({ onSelectCategory }) {
   });
 
   const categorias = [
-  { id: 'Primeros', label: 'COMPLEMENTOS', icon: '🍟' },
-  { id: 'Segundos', label: 'ENSALADAS', icon: '🥗' },
+  { id: 'Primero', label: 'COMPLEMENTOS', icon: '🍟' },
+  { id: 'Segundo', label: 'ENSALADAS', icon: '🥗' },
   { id: 'Postre', label: 'BEBIDAS', icon: '🥤' },
   { id: 'Otras', label: 'PIZZAS', icon: '🍕' }
 ];

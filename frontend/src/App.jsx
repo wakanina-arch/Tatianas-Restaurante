@@ -293,7 +293,6 @@ function MainApp() {
     </div>
   );
 }
-
 // ============================================
 // HEADER SUPERIOR FLOTANTE - FULL WIDTH
 // Franja de lado a lado de la pantalla
@@ -305,34 +304,39 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
   return (
     <header style={{
       position: 'fixed',
-      top: 20, // 👈 Cambiado a 0 para que empiece desde arriba
-      left: 0, // 👈 Cambiado a 0 para que llegue al borde izquierdo
-      right: 0, // 👈 Añadido right:0 para que llegue al borde derecho
-      width: 'auto', // 👈 Cambiado a auto para que se ajuste al espacio disponible
+      top: 20,
+      left: 20,
+      right: 20,
+      width: 'auto',
       zIndex: 1000,
       background: 'rgba(255, 255, 255, 0.7)',
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
+      borderRadius: 60,
       boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.4)', // 👈 Cambiado a borderBottom
+      border: '1px solid rgba(255, 255, 255, 0.4)',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center' // 👈 Centramos el contenido interior
+      justifyContent: 'center'
     }}>
       
-      {/* Contenedor interno para mantener el ancho del contenido */}
+      {/* Contenedor interno */}
       <div style={{
         width: '100%',
         maxWidth: 1200,
-        padding: '0.1rem 0.1rem',
+        padding: '0.2rem 1rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        margin: '0 auto' // 👈 Centra el contenedor
+        margin: '0 auto'
       }}>
         
         {/* ===== IZQUIERDA - MENÚ HAMBURGUESA ===== */}
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'flex-start',
+          minWidth: '80px' // Ancho fijo para balancear
+        }}>
           <button
             onClick={onOpenMenu} 
             style={{  
@@ -341,7 +345,9 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
+              alignItems: 'flex-start',
               gap: 4,
+              padding: '0.3rem'
             }}  
           >
             <div style={{ width: 20, height: 2, background: 'var(--verde-selva)', borderRadius: 2 }} />
@@ -354,13 +360,13 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 13,
+          justifyContent: 'center',
+          gap: 8,
           cursor: 'pointer',
-           flex: 2,
+          padding: '0.2rem 0.8rem',
           borderRadius: 40,
           transition: 'background 0.2s ease',
           filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
-          justifyContent: 'center',
           whiteSpace: 'nowrap'
         }}
         onClick={() => setCurrentPage('home')}
@@ -368,57 +374,57 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
         >
           <span style={{
-  fontSize: '1.4rem',
-  filter: 'drop-shadow(0 2px 4px rgba(1, 64, 14, 0.2))',
-  animation: 'brilloMistico 3s infinite alternate',
-  position: 'relative',
-  zIndex: 2
-}}>
-  🔱
-  {/* Brillo místico alrededor del tridente */}
-  <span style={{
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '30px',
-    height: '30px',
-    background: 'radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%)',
-    
-    borderRadius: '50%',
-    zIndex: -1,
-    animation: 'pulso 2s infinite'
-  }} />
-</span>
+            fontSize: '1.4rem',
+            filter: 'drop-shadow(0 2px 4px rgba(1, 64, 14, 0.2))',
+            animation: 'brilloMistico 3s infinite alternate',
+            position: 'relative',
+            zIndex: 2
+          }}>
+            🔱
+            <span style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '30px',
+              height: '30px',
+              background: 'radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%)',
+              borderRadius: '50%',
+              zIndex: -1,
+              animation: 'pulso 2s infinite'
+            }} />
+          </span>
 
-<div style={{
-  display: 'flex',
-  flexDirection: 'column',
-  lineHeight: 1.1,
-  position: 'relative'
-}}>
-  <span style={{
-    fontSize: '1.2rem',
-    fontWeight: '700',
-    background: 'linear-gradient(135deg, #0a1f0a 0%, #1a3b1a 50%, #2d4f2a 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    letterSpacing: '0.5px',
-    textShadow: '0 0 2px rgba(2, 30, 1, 0.8), 0 0 15px rgba(255, 215, 0, 0.3)',
-    animation: 'brilloTexto 2.5s infinite alternate',
-    position: 'relative',
-    
-  }}>
-    ONE TO ONE
-   
-  </span> 
-  
-
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            lineHeight: 1.1,
+            position: 'relative'
+          }}>
+            <span style={{
+              fontSize: '1.2rem',
+              fontWeight: '700',
+              background: 'linear-gradient(135deg, #0a1f0a 0%, #1a3b1a 50%, #2d4f2a 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: '0.5px',
+              textShadow: '0 0 2px rgba(2, 30, 1, 0.8), 0 0 15px rgba(255, 215, 0, 0.3)',
+              animation: 'brilloTexto 2.5s infinite alternate',
+            }}>
+              ONE TO ONE
+            </span> 
           </div>
         </div>
 
         {/* ===== DERECHA - ACCIONES ===== */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 1}}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          gap: 2,
+          minWidth: '80px' // Mismo ancho que izquierda para balancear
+        }}>
+          
           {/* Carrito */}
           <NavButton 
             page="carrito" 
@@ -455,11 +461,11 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               background: 'transparent',
               border: 'none',
               borderRadius: 40,
-              padding: '0.5rem 0.7rem',
+              padding: '0.4rem 0.5rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               fontSize: '1.2rem',
               transition: 'background 0.2s ease',
               position: 'relative',
@@ -494,7 +500,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               background: 'transparent',
               border: 'none',
               borderRadius: 30,
-              padding: '0.3rem 0.7rem',
+              padding: '0.3rem 0.6rem',
               cursor: 'pointer',
               fontSize: '0.7rem',
               fontWeight: '600',
@@ -518,6 +524,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
     </header>
   );
 }
+  
 // ============================================
 // BOTÓN DE NAVEGACIÓN (reutilizable)
 // ============================================
@@ -697,9 +704,9 @@ function MenuItem({ item, addToCart }) {
 
       {/* Galleta informativa - 320px alineada */}
       <div style={{
-  width: '95%',          // 👈 Ocupa casi todo el ancho del móvil
-  maxWidth: 480,         // 👈 SUPERA los 320 del visor
-  margin: '10px auto 0', // Sube un poco para "abrazar" al visor
+  width: '95%',
+  maxWidth: 480,
+  margin: '10px auto 0',
   padding: '1.5rem',
   display: 'flex',
   flexDirection: 'column',
@@ -707,12 +714,16 @@ function MenuItem({ item, addToCart }) {
   background: 'rgba(255, 255, 255, 0.95)',
   backdropFilter: 'blur(15px)',
   WebkitBackdropFilter: 'blur(15px)',
-  borderRadius: 32,      // Bordes más curvos para que se vea más orgánica
+  borderRadius: 32,
   boxShadow: '0 15px 35px rgba(0,0,0,0.12)',
   border: '1px solid rgba(255, 255, 255, 0.6)',
   position: 'relative',
-  zIndex: 10             // Pasa por encima del visor
-      }}>
+  zIndex: 10,
+  maxHeight: '480px',         // 👈 ALTURA MÁXIMA CONTROLADA
+        overflowY: 'auto',
+  scrollbarWidth: 'thin',
+  scrollbarColor: 'var(--verde-selva) rgba(0, 0, 0, 0.05)'      // 👈 SCROLL CUANDO SEA NECESARIO
+}}>
         
         <div>
           <h2 style={{
@@ -737,19 +748,24 @@ function MenuItem({ item, addToCart }) {
     lineHeight: 1.6,
     margin: 0,
     fontStyle: 'italic',
-    /* 🚀 Ingeniería para texto largo */
     whiteSpace: 'normal',
-    wordBreak: 'break-word'
+    wordBreak: 'break-word',
+    maxHeight: '80px',          // 👈 LÍMITE PARA DESCRIPCIÓN
+    overflowY: 'auto',           // 👈 SCROLL SI ES MUY LARGA
+    paddingRight: '5px'
   }}>
     {description}
   </p>
 
         <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.4rem',
-          margin: '0.5rem 0'
-        }}>
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.4rem',
+    margin: '0.5rem 0',
+    maxHeight: '200px',          // 👈 LÍMITE PARA OPCIONES
+    overflowY: 'auto',            // 👈 SCROLL SI HAY MUCHAS
+    paddingRight: '5px'
+  }}>
           {item.opciones?.map((opt, idx) => {
             const tieneOferta = item.enOferta && opt.precioOriginal;
             const precioOriginal = tieneOferta ? opt.precioOriginal : null;
