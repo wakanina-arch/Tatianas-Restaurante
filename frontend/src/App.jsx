@@ -340,7 +340,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             <div style={{ width: 20, height: 2, background: 'var(--morado-primario)', borderRadius: 2 }} />
           </button>
         </div>
-
+{/* =====ACCIONES PARA EL LOGO ===== */}
 <div style={{
   display: 'flex',
   alignItems: 'center',
@@ -403,14 +403,16 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             </span> 
           </div>
         </div>
-
+{/* ===== DERECHA - ACCIONES ===== */}
         <div style={{ 
           display: 'flex', 
           justifyContent: 'flex-end',
           alignItems: 'center',
           gap: 2,
           width: '80px',
-          flexShrink: 0
+          flexShrink: 0,
+          paddingRight: '5px',  // 👈 PADDING PARA RESPIRAR
+          minWidth: '80px' 
         }}>
           <NavButton 
             page="carrito" 
@@ -491,9 +493,11 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           </button>
         </div>
       </div>
-    </header>
+    </header>    
   );
+  
 }
+
   
 // ============================================
 // BOTÓN DE NAVEGACIÓN (reutilizable)
@@ -1283,18 +1287,35 @@ style.textContent = `
     header {
       padding: 0.5rem 1rem !important;
     }
+      
     
     .cart-page > div {
       grid-template-columns: 1fr !important;
     }
-  }
+  
   
   @media (max-width: 480px) {
     .logo-text {
       font-size: 1rem !important;
     }
-  }
+  }.nav-right {
+      width: 70px !important;
+      gap: 1px !important;
+    }
+    
+    .nav-right button {
+      padding: 0.3rem 0.4rem !important;
+      font-size: 0.9rem !important;
+    }
+    
+    .nav-right .dsh-button {
+      font-size: 0.6rem !important;
+      padding: 0.2rem 0.4rem !important;
+    }
+
 `;
+
+
 
 if (typeof document !== 'undefined') {
   document.head.appendChild(style);
