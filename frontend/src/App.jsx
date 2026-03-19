@@ -407,12 +407,10 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         <div style={{ 
           display: 'flex', 
           justifyContent: 'flex-end',
-          alignItems: 'right',
+          alignItems: 'center',
           gap: 2,
-          width: '800px',
-          flexShrink: 0,
-          paddingRight: '1px',  // 👈 PADDING PARA RESPIRAR
-          minWidth: '80px' 
+          width: '80px',
+          flexShrink: 0
         }}>
           <NavButton 
             page="carrito" 
@@ -496,7 +494,6 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
     </header>
   );
 }
-
   
 // ============================================
 // BOTÓN DE NAVEGACIÓN (reutilizable)
