@@ -335,7 +335,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         <div style={{ 
           display: 'flex', 
           justifyContent: 'flex-start',
-          minWidth: '40px' // Ancho fijo para balancear
+          minWidth: '10px' // Ancho fijo para balancear
         }}>
           <button
             onClick={onOpenMenu} 
@@ -363,7 +363,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           justifyContent: 'center',
           gap: 8,
           cursor: 'pointer',
-          padding: '0.1rem 0.4rem',
+          padding: '0 10px',
           borderRadius: 40,
           transition: 'background 0.2s ease',
           filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
@@ -422,7 +422,8 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           justifyContent: 'flex-end',
           alignItems: 'center',
           gap: 2,
-          minWidth: '40px' // Mismo ancho que izquierda para balancear
+          minWidth: '10px', // Mismo ancho que izquierda para balancear
+          paddingRight: '10px'
         }}>
           
           {/* Carrito */}
