@@ -407,11 +407,11 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         <div style={{ 
           display: 'flex', 
           justifyContent: 'flex-end',
-          alignItems: 'center',
+          alignItems: 'right',
           gap: 2,
-          width: '80px',
+          width: '800px',
           flexShrink: 0,
-          paddingRight: '5px',  // 👈 PADDING PARA RESPIRAR
+          paddingRight: '1px',  // 👈 PADDING PARA RESPIRAR
           minWidth: '80px' 
         }}>
           <NavButton 
