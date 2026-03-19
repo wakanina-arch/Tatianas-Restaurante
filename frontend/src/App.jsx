@@ -493,9 +493,8 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           </button>
         </div>
       </div>
-    </header>    
+    </header>
   );
-  
 }
 
   
@@ -1287,35 +1286,18 @@ style.textContent = `
     header {
       padding: 0.5rem 1rem !important;
     }
-      
     
     .cart-page > div {
       grid-template-columns: 1fr !important;
     }
-  
+  }
   
   @media (max-width: 480px) {
     .logo-text {
       font-size: 1rem !important;
     }
-  }.nav-right {
-      width: 70px !important;
-      gap: 1px !important;
-    }
-    
-    .nav-right button {
-      padding: 0.3rem 0.4rem !important;
-      font-size: 0.9rem !important;
-    }
-    
-    .nav-right .dsh-button {
-      font-size: 0.6rem !important;
-      padding: 0.2rem 0.4rem !important;
-    }
   }
 `;
-
-
 
 if (typeof document !== 'undefined') {
   document.head.appendChild(style);
