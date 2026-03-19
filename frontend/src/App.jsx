@@ -407,7 +407,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         <div style={{ 
   display: 'flex', 
   justifyContent: 'flex-end',
-  alignItems: 'center',
+  alignItems: 'right',
   gap: 2,
   width: 'auto',           // 👈 QUE SE AJUSTE AUTOMÁTICAMENTE
   flexShrink: 0,
