@@ -409,9 +409,9 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           justifyContent: 'flex-end',
           alignItems: 'center',
           gap: 2,
-          width: '200px',
+          width: '80px',
           flexShrink: 0,
-          paddingRight: '0.1px',  // 👈 PADDING PARA RESPIRAR
+          paddingRight: '5px',  // 👈 PADDING PARA RESPIRAR
           minWidth: '80px' 
         }}>
           <NavButton 
@@ -1312,7 +1312,7 @@ style.textContent = `
       font-size: 0.6rem !important;
       padding: 0.2rem 0.4rem !important;
     }
-
+  }
 `;
 
 
