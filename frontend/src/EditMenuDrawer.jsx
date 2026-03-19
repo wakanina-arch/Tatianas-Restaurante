@@ -11,8 +11,8 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
   const [categoriasExpandidas, setCategoriasExpandidas] = useState({});
 
   const [imagenesPorCategoria, setImagenesPorCategoria] = useState({
-    Primeros: [],
-    Segundos: [],
+    Primero: [],
+    Segundo: [],
     Postre: [],
     Otras: []
   });

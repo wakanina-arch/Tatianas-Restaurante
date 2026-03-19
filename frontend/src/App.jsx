@@ -24,7 +24,7 @@ const STORAGE_KEYS = {
 const DEFAULT_MENU_ITEMS = [
   {
     id: 1,
-    nombre: 'Primeros',
+    nombre: 'Primero',
     imagenes: [
       '/img/Complementos/Alitas1.png',
       '/img/Complementos/Alitas2.png',
@@ -45,7 +45,7 @@ const DEFAULT_MENU_ITEMS = [
   },
   {
     id: 2,
-    nombre: 'Segundos',
+    nombre: 'Segundo',
     imagenes: [
       '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
       '/img/Ensaladas/Ensalada Caprese.jpg',
@@ -169,20 +169,22 @@ function MainApp() {
     }
   }, []);
 
-  const handleSelectCategory = (category, volverAWelcome = false) => {
-    console.log('Categoría seleccionada:', category);
-    
-    if (volverAWelcome) {
-      setShowWelcome(true);
-      setCurrentPage('home');
-      return;
-    }
-    
-    setSelectedCategory(category);
-    setShowWelcome(false);
-    setCurrentPage('home');
-  };
+  const handleSelectCategory = (categoryLabel, volverAWelcome = false) => {
+  console.log('🎭 Orden recibida para:', categoryLabel);
   
+  if (volverAWelcome) {
+    setShowWelcome(true);
+    setSelectedCategory(null);
+    setCurrentPage('home');
+    return;
+  }
+  
+  // Si no es para volver, abrimos el salón con la categoría elegida
+  setSelectedCategory(categoryLabel); 
+  setShowWelcome(false);              
+  setCurrentPage('home');             
+};
+
   const [menuItems, setMenuItems] = useLocalStorage(STORAGE_KEYS.MENU, DEFAULT_MENU_ITEMS);
   const [pendingOrders, setPendingOrders] = useLocalStorage(STORAGE_KEYS.PENDING, []);
   const [log, setLog] = useLocalStorage(STORAGE_KEYS.LOGS, []);
@@ -246,21 +248,23 @@ function MainApp() {
           
         <main className="main-content" style={{ paddingTop: '100px' }}>
   {currentPage === 'home' && (
-  <HomePage 
-    platillos={menuItems.filter(item => {
-      // 1. Si no hay categoría seleccionada, mostramos todo
-      if (!selectedCategory) return true;
+    <HomePage 
+      platillos={itemsToShow.filter(item => {
+        // Si no hay nada seleccionado, muestra el primero por defecto
+        if (!selectedCategory) return true;
 
-      // 2. Limpiamos espacios y comparamos
-      const itemNombre = item.nombre?.trim().toLowerCase();
-      const catSeleccionada = selectedCategory?.trim().toLowerCase();
-      console.log("Categoría activa:", selectedCategory);
-console.log("Nombres disponibles:", menuItems.map(i => i.nombre));
+        // LIMPIEZA DE CABLEADO:
+        // Pasamos a minúsculas y quitamos la "s" final de ambos lados
+        const nombrePlato = (item.nombre || "").toLowerCase().trim().replace(/s$/, '');
+        const nombreBoton = selectedCategory.toLowerCase().trim().replace(/s$/, '');
 
-      return itemNombre === catSeleccionada;
-    })} 
-  />
-)}
+        // Ahora "primero" coincidirá con "primeros"
+        return nombrePlato === nombreBoton;
+      })} // Tomamos el primero que coincida para la Galleta
+    />
+  )}
+
+
 
             {currentPage === 'carrito' && (
               <CartPage 
@@ -300,8 +304,8 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
     <header style={{
       position: 'fixed',
       top: 20, // 👈 Cambiado a 0 para que empiece desde arriba
-      left: 20, // 👈 Cambiado a 0 para que llegue al borde izquierdo
-      right: 20, // 👈 Añadido right:0 para que llegue al borde derecho
+      left: 0, // 👈 Cambiado a 0 para que llegue al borde izquierdo
+      right: 0, // 👈 Añadido right:0 para que llegue al borde derecho
       width: 'auto', // 👈 Cambiado a auto para que se ajuste al espacio disponible
       zIndex: 1000,
       background: 'rgba(255, 255, 255, 0.7)',
@@ -318,7 +322,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
       <div style={{
         width: '100%',
         maxWidth: 1200,
-        padding: '0.1rem 1rem',
+        padding: '0.1rem 0.1rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -340,7 +344,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             background: 'transparent',
             border: 'none',
             borderRadius: 40,
-            padding: '0.2rem 0.5rem',
+            padding: '0.2rem 0.4rem',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
@@ -434,7 +438,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             currentPage={currentPage} 
             setCurrentPage={setCurrentPage}
           >
-            <span style={{ fontSize: '1.2rem', opacity: 0.9 }}>🛒</span>
+            <span style={{ fontSize: '1.1rem', opacity: 1 }}>🛒</span>
             {itemCount > 0 && (
               <span style={{
                 position: 'absolute',
@@ -442,8 +446,8 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
                 right: -3,
                 background: '#ff3b30',
                 color: 'white',
-                width: 18,
-                height: 18,
+                width: 16,
+                height: 16,
                 borderRadius: '50%',
                 fontSize: '0.65rem',
                 display: 'flex',

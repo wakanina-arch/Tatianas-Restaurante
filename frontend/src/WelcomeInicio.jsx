@@ -284,7 +284,7 @@ export default function WelcomeInicio({ onSelectCategory }) {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: "3px",
+    gap: "10px",
     fontFamily: "'Segoe UI', sans-serif",
     marginTop: "-0.8rem",
     marginBottom: "1rem",
@@ -428,7 +428,7 @@ export default function WelcomeInicio({ onSelectCategory }) {
           {categorias.map(cat => (
             <button 
               key={cat.id || 'todas'} 
-              onClick={() => handleCategorySelect(cat.id)} 
+              onClick={() => onSelectCategory(cat.id)} 
               style={{
                 padding: "0.7rem",
                 background: "rgba(0, 0, 0, 0.2)",
@@ -463,17 +463,21 @@ export default function WelcomeInicio({ onSelectCategory }) {
         {/* MENSAJE DE REGISTRO OPCIONAL */}
         <p 
           onClick={() => setShowRegister(true)} 
-          style={{ 
-            color: "rgba(255, 255, 255, 0.5)", 
-            fontSize: "0.7rem", 
-            marginBottom: "1.2rem", 
-            cursor: "pointer", 
-            textDecoration: "none",
-            borderBottom: "1px dotted rgba(255, 215, 0, 0.2)",
-            paddingBottom: "0.1rem",
-            display: "inline-block",
-            transition: "all 0.2s ease"
-          }}
+          style={{
+  display: "inline-block",
+  color: "rgba(255, 255, 255, 0.5)", 
+  fontSize: "0.7rem", 
+  marginBottom: "1.2rem", 
+  paddingBottom: "0.1rem",
+  textDecoration: "none",
+  borderBottom: "1px dotted rgba(255, 215, 0, 0.2)",
+  transition: "all 0.2s ease",
+  /* --- CARPINTERÍA PARA IPHONE --- */
+  cursor: "pointer",
+  WebkitTapHighlightColor: "transparent", 
+  touchAction: "manipulation"
+}}
+
           onMouseEnter={(e) => {
             e.target.style.color = "rgba(255, 215, 0, 0.6)";
             e.target.style.borderBottomColor = "rgba(255, 215, 0, 0.4)";

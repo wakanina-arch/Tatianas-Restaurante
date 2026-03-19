@@ -2,8 +2,8 @@
 
 // Mapeo de categorías a rutas de carpetas
 const categoryPaths = {
-  'Primeros': '/img/Complementos/',
-  'Segundos': '/img/Ensaladas/',
+  'Primero': '/img/Complementos/',
+  'Segundo': '/img/Ensaladas/',
   'Postre': '/img/Bebidas/',
   'Otras': '/img/Otras/'
 };
