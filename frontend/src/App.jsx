@@ -87,16 +87,16 @@ const DEFAULT_MENU_ITEMS = [
     ]
   },
   {
-    id: 4,
-    nombre: 'Pizzas',
-    imagenes: [
-      '/img/Pizzas/Carbonara.jpg',
-      '/img/Pizzas/Champinones.jpg',
-      '/img/Pizzas/Cuatro-Quesos.jpg',
-      '/img/Pizzas/Hawaiana.jpg',
-      '/img/Pizzas/Margherita.jpg',
-    ],
-    video: null,
+  id: 4,
+  nombre: 'Pizzas', // 👈 Debe coincidir con el id
+  imagenes: [
+    '/img/Pizzas/Carbonara.jpg',
+    '/img/Pizzas/Champinones.jpg',
+    '/img/Pizzas/Cuatro-Quesos.jpg',
+    '/img/Pizzas/Hawaiana.jpg',
+    '/img/Pizzas/Margherita.jpg',
+  ],
+  video: null,
     precio: 0.00,
     region: 'Mundo',
     historia: 'Superfood del mundo...',
@@ -107,8 +107,8 @@ const DEFAULT_MENU_ITEMS = [
       { nombre: 'Pizza', precio: 0.00, calorias: 250, proteina: 6, carbohidratos: 40, descripcion: '...' },
       { nombre: 'Hamburguesa', precio: 0.00, calorias: 320, proteina: 5, carbohidratos: 48, descripcion: '...' },
       { nombre: 'HotDog', precio: 0.00, calorias: 180, proteina: 3, carbohidratos: 25, descripcion: '...' }
-    ]
-  }
+  ]
+}
 ];
 
 // ============================================
@@ -170,20 +170,20 @@ function MainApp() {
   }, []);
 
   const handleSelectCategory = (categoryLabel, volverAWelcome = false) => {
-    console.log('🎭 Orden recibida para:', categoryLabel);
-    
-    if (volverAWelcome) {
-      setShowWelcome(true);
-      setSelectedCategory(null);
-      setCurrentPage('home');
-      return;
-    }
-    
-    // Si no es para volver, abrimos el salón con la categoría elegida
-    setSelectedCategory(categoryLabel); 
-    setShowWelcome(false);              
-    setCurrentPage('home');             
-  };
+  console.log('🎭 Orden recibida para:', categoryLabel);
+  
+  if (volverAWelcome) {
+    setShowWelcome(true);
+    setSelectedCategory(null);
+    setCurrentPage('home');
+    return;
+  }
+  
+  // Si no es para volver, abrimos el salón con la categoría elegida
+  setSelectedCategory(categoryLabel); 
+  setShowWelcome(false);              
+  setCurrentPage('home');             
+};
 
   const [menuItems, setMenuItems] = useLocalStorage(STORAGE_KEYS.MENU, DEFAULT_MENU_ITEMS);
   const [pendingOrders, setPendingOrders] = useLocalStorage(STORAGE_KEYS.PENDING, []);
@@ -246,21 +246,27 @@ function MainApp() {
             usuario={user}
           />
           
-          <main className="main-content" style={{ paddingTop: '100px' }}>
-            {currentPage === 'home' && (
-              <HomePage 
-                platillos={itemsToShow.filter(item => {
-                  // Si no hay nada seleccionado, muestra todos
-                  if (!selectedCategory) return true;
+        <main className="main-content" style={{ paddingTop: '100px' }}>
+  {currentPage === 'home' && (
+    <HomePage 
+      platillos={itemsToShow.filter(item => {
+        // Si no hay nada seleccionado, muestra el primero por defecto
+        if (!selectedCategory) return true;
 
-                  // LIMPIEZA DE CABLEADO:
-                  const nombrePlato = (item.nombre || "").toLowerCase().trim().replace(/s$/, '');
-                  const nombreBoton = selectedCategory.toLowerCase().trim().replace(/s$/, '');
+        // LIMPIEZA DE CABLEADO:
+        // Pasamos a minúsculas y quitamos la "s" final de ambos lados
+        const nombrePlato = (item.nombre || "").toLowerCase().trim().replace(/s$/, '');
+        const nombreBoton = selectedCategory.toLowerCase().trim().replace(/s$/, '');
 
-                  return nombrePlato === nombreBoton;
-                })}
-              />
-            )}
+        // Ahora "primero" coincidirá con "primeros"
+       
+
+        return nombrePlato === nombreBoton;
+      })} // Tomamos el primero que coincida para la Galleta
+    />
+  )}
+
+
 
             {currentPage === 'carrito' && (
               <CartPage 
@@ -287,9 +293,9 @@ function MainApp() {
     </div>
   );
 }
-
 // ============================================
-// HEADER SUPERIOR FLOTANTE - FRANJA COMPLETA
+// HEADER SUPERIOR FLOTANTE - FULL WIDTH
+// Franja de lado a lado de la pantalla
 // ============================================
 function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerfil, user }) {
   console.log('🔵 NavBar - onOpenPerfil es una función:', typeof onOpenPerfil === 'function');
@@ -299,31 +305,38 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
     <header style={{
       position: 'fixed',
       top: 20,
-      left: 0,
-      right: 0,
+      left: 20,
+      right: 20,
       width: 'auto',
       zIndex: 1000,
       background: 'rgba(255, 255, 255, 0.7)',
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
+      borderRadius: 60,
       boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.4)',
+      border: '1px solid rgba(255, 255, 255, 0.4)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
     }}>
       
+      {/* Contenedor interno */}
       <div style={{
         width: '100%',
         maxWidth: 1200,
-        padding: '0.1rem 1rem',
+        padding: '0.2rem 1rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         margin: '0 auto'
       }}>
         
-        <div style={{ display: 'flex', justifyContent: 'flex-start', width: '80px', flexShrink: 0 }}>
+        {/* ===== IZQUIERDA - MENÚ HAMBURGUESA ===== */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'flex-start',
+          minWidth: '80px' // Ancho fijo para balancear
+        }}>
           <button
             onClick={onOpenMenu} 
             style={{  
@@ -332,7 +345,9 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
+              alignItems: 'flex-start',
               gap: 4,
+              padding: '0.3rem'
             }}  
           >
             <div style={{ width: 20, height: 2, background: 'var(--verde-selva)', borderRadius: 2 }} />
@@ -340,23 +355,20 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             <div style={{ width: 20, height: 2, background: 'var(--morado-primario)', borderRadius: 2 }} />
           </button>
         </div>
-{/* =====ACCIONES PARA EL LOGO ===== */}
-<div style={{
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: window.innerWidth < 480 ? '6px' : '13px',  // 👈 MENOS GAP EN MÓVIL
-  cursor: 'pointer',
-  padding: window.innerWidth < 480 ? '0.1rem 0.5rem' : '0.2rem 1.5rem',  // 👈 MENOS PADDING
-  borderRadius: 40,
-  transition: 'background 0.2s ease',
-  filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
-  whiteSpace: 'nowrap',
-  flex: '0 1 auto',
-  maxWidth: window.innerWidth < 480 ? '50%' : '60%',  // 👈 MÁS ESTRECHO EN MÓVIL
-  overflow: 'hidden',  // 👈 EVITA DESBORDES
-  textOverflow: 'ellipsis'
-}}
+
+        {/* ===== CENTRO - LOGO ONE TO ONE ===== */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
+          cursor: 'pointer',
+          padding: '0.2rem 0.8rem',
+          borderRadius: 40,
+          transition: 'background 0.2s ease',
+          filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
+          whiteSpace: 'nowrap'
+        }}
         onClick={() => setCurrentPage('home')}
         onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
@@ -403,15 +415,17 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             </span> 
           </div>
         </div>
-{/* ===== DERECHA - ACCIONES ===== */}
+
+        {/* ===== DERECHA - ACCIONES ===== */}
         <div style={{ 
           display: 'flex', 
           justifyContent: 'flex-end',
           alignItems: 'center',
           gap: 2,
-          width: '80px',
-          flexShrink: 0
+          minWidth: '80px' // Mismo ancho que izquierda para balancear
         }}>
+          
+          {/* Carrito */}
           <NavButton 
             page="carrito" 
             currentPage={currentPage} 
@@ -440,13 +454,14 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             )}
           </NavButton>
 
+          {/* Perfil de Usuario */}
           <button
             onClick={onOpenPerfil}
             style={{
               background: 'transparent',
               border: 'none',
               borderRadius: 40,
-              padding: '0.5rem 0.7rem',
+              padding: '0.4rem 0.5rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -455,6 +470,12 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               transition: 'background 0.2s ease',
               position: 'relative',
               opacity: 0.9
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
             }}
           >
             👤
@@ -472,19 +493,28 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             )}
           </button>
 
+          {/* Dashboard - Solo admin */}
           <button
             onClick={() => setCurrentPage('admin')}
             style={{
               background: 'transparent',
               border: 'none',
               borderRadius: 30,
-              padding: '0.3rem 0.7rem',
+              padding: '0.3rem 0.6rem',
               cursor: 'pointer',
               fontSize: '0.7rem',
               fontWeight: '600',
               letterSpacing: '0.5px',
               color: '#8e8e93',
               transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(142, 142, 147, 0.1)';
+              e.currentTarget.style.color = '#6366f1';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.color = '#8e8e93';
             }}
           >
             DSH
@@ -672,70 +702,68 @@ function MenuItem({ item, addToCart }) {
         )}
       </div>
 
-      {/* Galleta informativa - Versión Minimalista */}
+      {/* Galleta informativa - 320px alineada */}
       <div style={{
-        width: '92%',
-        maxWidth: 400,
-        margin: '8px auto 0',
-        padding: '1.2rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.8rem',
-        background: 'rgba(255, 255, 255, 0.92)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderRadius: 24,
-        boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
-        border: '1px solid rgba(255, 255, 255, 0.4)',
-        position: 'relative',
-        zIndex: 10,
-        maxHeight: '400px',
-        overflowY: 'auto',
-        scrollbarWidth: 'thin',
-        scrollbarColor: 'var(--verde-selva) rgba(0, 0, 0, 0.02)'
-      }}>
+  width: '95%',
+  maxWidth: 480,
+  margin: '10px auto 0',
+  padding: '1.5rem',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem',
+  background: 'rgba(255, 255, 255, 0.95)',
+  backdropFilter: 'blur(15px)',
+  WebkitBackdropFilter: 'blur(15px)',
+  borderRadius: 32,
+  boxShadow: '0 15px 35px rgba(0,0,0,0.12)',
+  border: '1px solid rgba(255, 255, 255, 0.6)',
+  position: 'relative',
+  zIndex: 10,
+  maxHeight: '480px',         // 👈 ALTURA MÁXIMA CONTROLADA
+  overflowY: 'auto'           // 👈 SCROLL CUANDO SEA NECESARIO
+}}>
         
         <div>
           <h2 style={{
-            fontSize: '1.5rem',
-            fontWeight: '600',
+            fontSize: '1.8rem',
+            fontWeight: '700',
             color: 'var(--verde-selva)',
-            margin: '0 0 0.3rem 0',
+            margin: '0 0 0.5rem 0',
             display: 'flex',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: '0.3rem'
+            gap: '0.5rem'
           }}>
             {item.nombre}
             <OfertaBadge />
           </h2>
         </div>
         
-        <p style={{
-          fontSize: '0.85rem',
-          color: 'var(--gris-texto)',
-          lineHeight: 1.5,
-          margin: 0,
-          fontStyle: 'italic',
-          whiteSpace: 'normal',
-          wordBreak: 'break-word',
-          maxHeight: '60px',
-          overflowY: 'auto',
-          paddingRight: '4px',
-          opacity: 0.9
-        }}>
-          {description}
-        </p>
+       {/* DESCRIPCIÓN TIPO "GALLETA" */}
+  <p style={{
+    fontSize: '0.9rem',
+    color: 'var(--gris-texto)',
+    lineHeight: 1.6,
+    margin: 0,
+    fontStyle: 'italic',
+    whiteSpace: 'normal',
+    wordBreak: 'break-word',
+    maxHeight: '80px',          // 👈 LÍMITE PARA DESCRIPCIÓN
+    overflowY: 'auto',           // 👈 SCROLL SI ES MUY LARGA
+    paddingRight: '5px'
+  }}>
+    {description}
+  </p>
 
         <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.3rem',
-          margin: '0.3rem 0',
-          maxHeight: '180px',
-          overflowY: 'auto',
-          paddingRight: '4px'
-        }}>
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.4rem',
+    margin: '0.5rem 0',
+    maxHeight: '200px',          // 👈 LÍMITE PARA OPCIONES
+    overflowY: 'auto',            // 👈 SCROLL SI HAY MUCHAS
+    paddingRight: '5px'
+  }}>
           {item.opciones?.map((opt, idx) => {
             const tieneOferta = item.enOferta && opt.precioOriginal;
             const precioOriginal = tieneOferta ? opt.precioOriginal : null;
@@ -747,45 +775,56 @@ function MenuItem({ item, addToCart }) {
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  alignItems: 'flex-start',
-                  padding: '0.4rem 0.8rem',
-                  background: selectedOption === opt.nombre ? 'rgba(255, 215, 0, 0.08)' : 'rgba(0, 0, 0, 0.01)',
-                  borderRadius: 14,
+                  alignItems: 'flex-star',
+                  padding: '0.5rem 1rem',
+                  background: selectedOption === opt.nombre ? 'rgba(255, 215, 0, 0.1)' : 'rgba(0, 0, 0, 0.02)',
+                  borderRadius: 16,
                   border: selectedOption === opt.nombre 
                     ? '1px solid var(--maracuya)' 
-                    : '1px solid rgba(0, 0, 0, 0.03)',
+                    : '1px solid rgba(0, 0, 0, 0.05)',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
+                onMouseEnter={(e) => {
+                  if (selectedOption !== opt.nombre) {
+                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selectedOption !== opt.nombre) {
+                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';
+                  }
+                }}
               >
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                   <input 
                     type="checkbox"
                     checked={selectedOption === opt.nombre}
                     onChange={() => setSelectedOption(selectedOption === opt.nombre ? null : opt.nombre)}
                     style={{
-                      width: 16,
-                      height: 16,
-                      marginTop: '2px',
+                      width: 18,
+                      height: 18,
+                      marginTop: '3px',
                       cursor: 'pointer',
                       accentColor: 'var(--maracuya)'
                     }}
                   />
                   <span style={{
-                    fontSize: '0.9rem',
+                    fontSize: '0.95rem',
                     fontWeight: '500',
                     color: 'var(--gris-texto)',
                     lineHeight: '1.4',
-                    whiteSpace: 'normal',
-                    wordBreak: 'break-word'
+              /* 🚀 El nombre/descripción ahora fluye libre */
+              whiteSpace: 'normal',
+              wordBreak: 'break-word'
                   }}>
                     {opt.nombre}
                   </span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   {tieneOferta && (
                     <span style={{
-                      fontSize: '0.75rem',
+                      fontSize: '0.8rem',
                       color: '#999',
                       textDecoration: 'line-through'
                     }}>
@@ -793,8 +832,8 @@ function MenuItem({ item, addToCart }) {
                     </span>
                   )}
                   <span style={{
-                    fontSize: '0.95rem',
-                    fontWeight: '600',
+                    fontSize: '1rem',
+                    fontWeight: '700',
                     color: 'var(--maracuya)',
                     whiteSpace: 'nowrap'
                   }}>
@@ -809,22 +848,22 @@ function MenuItem({ item, addToCart }) {
         <div style={{
           display: 'flex',
           justifyContent: 'space-around',
-          background: 'rgba(255, 215, 0, 0.03)',
-          padding: '0.4rem',
-          borderRadius: 16,
-          border: '1px solid rgba(255, 215, 0, 0.05)'
+          background: 'rgba(255, 215, 0, 0.05)',
+          padding: '0.5rem',
+          borderRadius: 20,
+          border: '1px solid rgba(255, 215, 0, 0.1)'
         }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.8rem' }}>
-            <span style={{ fontSize: '0.9rem', opacity: 0.7 }}>🥗</span>
-            <span style={{ fontWeight: '500', color: 'var(--verde-selva)' }}>{nutrition.calorias}</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
+            <span style={{ fontSize: '1rem' }}>🥗</span>
+            <span style={{ fontWeight: '600', color: 'var(--verde-selva)' }}>{nutrition.calorias}</span> kcal
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.8rem' }}>
-            <span style={{ fontSize: '0.9rem', opacity: 0.7 }}>🥩</span>
-            <span style={{ fontWeight: '500', color: 'var(--verde-selva)' }}>{nutrition.proteina}</span>g
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
+            <span style={{ fontSize: '1rem' }}>🥩</span>
+            <span style={{ fontWeight: '600', color: 'var(--verde-selva)' }}>{nutrition.proteina}</span>g
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', fontSize: '0.8rem' }}>
-            <span style={{ fontSize: '0.9rem', opacity: 0.7 }}>🍚</span>
-            <span style={{ fontWeight: '500', color: 'var(--verde-selva)' }}>{nutrition.carbohidratos}</span>g
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
+            <span style={{ fontSize: '1rem' }}>🍚</span>
+            <span style={{ fontWeight: '600', color: 'var(--verde-selva)' }}>{nutrition.carbohidratos}</span>g
           </span>
         </div>
 
@@ -832,13 +871,13 @@ function MenuItem({ item, addToCart }) {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          paddingTop: '0.6rem',
-          borderTop: '1px solid rgba(0, 0, 0, 0.03)'
+          paddingTop: '0.8rem',
+          borderTop: '1px solid rgba(0, 0, 0, 0.05)'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             {selectedOption && selectedData && item.enOferta && selectedData.precioOriginal && (
               <span style={{
-                fontSize: '0.8rem',
+                fontSize: '0.9rem',
                 color: '#999',
                 textDecoration: 'line-through'
               }}>
@@ -846,8 +885,8 @@ function MenuItem({ item, addToCart }) {
               </span>
             )}
             <span style={{
-              fontSize: '1.5rem',
-              fontWeight: '600',
+              fontSize: '1.8rem',
+              fontWeight: '700',
               color: 'var(--maracuya)',
               lineHeight: 1
             }}>
@@ -857,20 +896,32 @@ function MenuItem({ item, addToCart }) {
           <button 
             style={{
               background: !selectedOption 
-                ? 'rgba(0, 0, 0, 0.05)' 
+                ? 'rgba(0, 0, 0, 0.1)' 
                 : 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
               color: !selectedOption ? '#999' : 'var(--verde-selva)',
               border: 'none',
-              padding: '0.5rem 1rem',
-              borderRadius: 25,
-              fontWeight: '500',
-              fontSize: '0.85rem',
+              padding: '0.6rem 1.2rem',
+              borderRadius: 30,
+              fontWeight: '600',
+              fontSize: '0.9rem',
               cursor: !selectedOption ? 'not-allowed' : 'pointer',
               transition: 'all 0.2s ease',
-              boxShadow: !selectedOption ? 'none' : '0 4px 10px rgba(255, 215, 0, 0.2)'
+              boxShadow: !selectedOption ? 'none' : '0 4px 12px rgba(255, 215, 0, 0.3)'
             }}
             onClick={handleAddToCart}
             disabled={!selectedOption}
+            onMouseEnter={(e) => {
+              if (selectedOption) {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(255, 215, 0, 0.4)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (selectedOption) {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 215, 0, 0.3)';
+              }
+            }}
           >
             Añadir
           </button>
@@ -1107,6 +1158,7 @@ function CartSummary({ total, onCheckout, onClear, user }) {
         <span style={{ color: '#34c759' }}>Gratis</span>
       </div>
       
+      {/* Mensaje de descuento para no registrados */}
       {!user && (
         <div style={{
           background: 'rgba(255, 215, 0, 0.05)',
@@ -1120,7 +1172,7 @@ function CartSummary({ total, onCheckout, onClear, user }) {
             ✨ ¿Eres cliente frecuente?
           </p>
           <button
-            onClick={() => {}}
+            onClick={() => {/* Abrir registro */}}
             style={{
               background: 'transparent',
               border: '1px solid var(--maracuya)',
@@ -1144,6 +1196,7 @@ function CartSummary({ total, onCheckout, onClear, user }) {
         </div>
       )}
       
+      {/* Badge de descuento para registrados */}
       {user && (
         <div style={{
           background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%)',
@@ -1241,7 +1294,7 @@ style.textContent = `
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background: radial-gradient(circle at 30% 30%, #8B4513, #2C1810) fixed;
+   background: "radial-gradient(circle at 30% 30%, #8B4513, #2C1810)"
   }
 
   .app {
@@ -1262,23 +1315,6 @@ style.textContent = `
     --crema-tropical: #fff9f0;
   }
 
-  @keyframes brilloMistico {
-    0% { filter: drop-shadow(0 2px 4px rgba(1, 64, 14, 0.2)); }
-    50% { filter: drop-shadow(0 2px 12px rgba(255, 215, 0, 0.5)); }
-    100% { filter: drop-shadow(0 2px 4px rgba(1, 64, 14, 0.2)); }
-  }
-
-  @keyframes pulso {
-    0% { opacity: 0.2; transform: translate(-50%, -50%) scale(0.8); }
-    50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.2); }
-    100% { opacity: 0.2; transform: translate(-50%, -50%) scale(0.8); }
-  }
-
-  @keyframes brilloTexto {
-    0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.2); }
-    100% { text-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
-  }
-
   @media (max-width: 768px) {
     header {
       padding: 0.5rem 1rem !important;
@@ -1296,6 +1332,9 @@ style.textContent = `
   }
 `;
 
+// ============================================
+// AGREGAR ESTILOS AL DOCUMENTO
+// ============================================
 if (typeof document !== 'undefined') {
   document.head.appendChild(style);
 }
