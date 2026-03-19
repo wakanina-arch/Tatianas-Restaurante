@@ -259,6 +259,8 @@ function MainApp() {
         const nombreBoton = selectedCategory.toLowerCase().trim().replace(/s$/, '');
 
         // Ahora "primero" coincidirá con "primeros"
+       
+
         return nombrePlato === nombreBoton;
       })} // Tomamos el primero que coincida para la Galleta
     />
@@ -330,40 +332,23 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
       }}>
         
         {/* ===== IZQUIERDA - MENÚ HAMBURGUESA ===== */}
-        <button
-          onClick={() => {
-            console.log('🟢 Click en botón menu');
-            if (onOpenMenu) {
-              console.log('🟢 Abriendo menú');
-              onOpenMenu();
-            } else {
-              console.log('🔴 ERROR: onOpenMenu no está definido');
-            }
-          }} 
-          style={{  
-            background: 'transparent',
-            border: 'none',
-            borderRadius: 40,
-            padding: '0.2rem 0.4rem',
-            cursor: 'pointer',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 3,
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'background 0.2s ease'
-          }}  
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'transparent';
-          }}
-        >
-          <div style={{ width: 22, height: 2, background: 'var(--verde-selva)', borderRadius: 2 }} />
-          <div style={{ width: 22, height: 2, background: 'var(--maracuya)', borderRadius: 2 }} />
-          <div style={{ width: 22, height: 2, background: 'var(--morado-primario)', borderRadius: 2 }} />
-        </button>
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+          <button
+            onClick={onOpenMenu} 
+            style={{  
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+            }}  
+          >
+            <div style={{ width: 20, height: 2, background: 'var(--verde-selva)', borderRadius: 2 }} />
+            <div style={{ width: 16, height: 2, background: 'var(--maracuya)', borderRadius: 2 }} />
+            <div style={{ width: 20, height: 2, background: 'var(--morado-primario)', borderRadius: 2 }} />
+          </button>
+        </div>
 
         {/* ===== CENTRO - LOGO ONE TO ONE ===== */}
         <div style={{
@@ -371,10 +356,12 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           alignItems: 'center',
           gap: 13,
           cursor: 'pointer',
-          padding: '0.1rem 0.5rem',
+           flex: 2,
           borderRadius: 40,
           transition: 'background 0.2s ease',
           filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(255, 215, 0, 0.3))',
+          justifyContent: 'center',
+          whiteSpace: 'nowrap'
         }}
         onClick={() => setCurrentPage('home')}
         onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
@@ -431,7 +418,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         </div>
 
         {/* ===== DERECHA - ACCIONES ===== */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 1}}>
           {/* Carrito */}
           <NavButton 
             page="carrito" 
@@ -472,7 +459,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'flex-end',
               fontSize: '1.2rem',
               transition: 'background 0.2s ease',
               position: 'relative',
@@ -710,20 +697,23 @@ function MenuItem({ item, addToCart }) {
 
       {/* Galleta informativa - 320px alineada */}
       <div style={{
-        width: '100%',
-        maxWidth: 320,
-        margin: '0 auto',
-        padding: '1.2rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.8rem',
-        background: 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
-        borderRadius: 24,
-        boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
-        border: '1px solid rgba(255, 255, 255, 0.5)'
+  width: '95%',          // 👈 Ocupa casi todo el ancho del móvil
+  maxWidth: 480,         // 👈 SUPERA los 320 del visor
+  margin: '10px auto 0', // Sube un poco para "abrazar" al visor
+  padding: '1.5rem',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem',
+  background: 'rgba(255, 255, 255, 0.95)',
+  backdropFilter: 'blur(15px)',
+  WebkitBackdropFilter: 'blur(15px)',
+  borderRadius: 32,      // Bordes más curvos para que se vea más orgánica
+  boxShadow: '0 15px 35px rgba(0,0,0,0.12)',
+  border: '1px solid rgba(255, 255, 255, 0.6)',
+  position: 'relative',
+  zIndex: 10             // Pasa por encima del visor
       }}>
+        
         <div>
           <h2 style={{
             fontSize: '1.8rem',
@@ -740,20 +730,24 @@ function MenuItem({ item, addToCart }) {
           </h2>
         </div>
         
-        <p style={{
-          fontSize: '0.9rem',
-          color: 'var(--gris-texto)',
-          lineHeight: 1.6,
-          margin: 0,
-          fontStyle: 'italic'
-        }}>
-          {description}
-        </p>
+       {/* DESCRIPCIÓN TIPO "GALLETA" */}
+  <p style={{
+    fontSize: '0.9rem',
+    color: 'var(--gris-texto)',
+    lineHeight: 1.6,
+    margin: 0,
+    fontStyle: 'italic',
+    /* 🚀 Ingeniería para texto largo */
+    whiteSpace: 'normal',
+    wordBreak: 'break-word'
+  }}>
+    {description}
+  </p>
 
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.5rem',
+          gap: '0.4rem',
           margin: '0.5rem 0'
         }}>
           {item.opciones?.map((opt, idx) => {
@@ -767,7 +761,7 @@ function MenuItem({ item, addToCart }) {
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  alignItems: 'center',
+                  alignItems: 'flex-star',
                   padding: '0.5rem 1rem',
                   background: selectedOption === opt.nombre ? 'rgba(255, 215, 0, 0.1)' : 'rgba(0, 0, 0, 0.02)',
                   borderRadius: 16,
@@ -796,6 +790,7 @@ function MenuItem({ item, addToCart }) {
                     style={{
                       width: 18,
                       height: 18,
+                      marginTop: '3px',
                       cursor: 'pointer',
                       accentColor: 'var(--maracuya)'
                     }}
@@ -803,7 +798,11 @@ function MenuItem({ item, addToCart }) {
                   <span style={{
                     fontSize: '0.95rem',
                     fontWeight: '500',
-                    color: 'var(--gris-texto)'
+                    color: 'var(--gris-texto)',
+                    lineHeight: '1.4',
+              /* 🚀 El nombre/descripción ahora fluye libre */
+              whiteSpace: 'normal',
+              wordBreak: 'break-word'
                   }}>
                     {opt.nombre}
                   </span>
@@ -821,7 +820,8 @@ function MenuItem({ item, addToCart }) {
                   <span style={{
                     fontSize: '1rem',
                     fontWeight: '700',
-                    color: 'var(--maracuya)'
+                    color: 'var(--maracuya)',
+                    whiteSpace: 'nowrap'
                   }}>
                     ${precioActual.toFixed(2)}
                   </span>

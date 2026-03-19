@@ -70,7 +70,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
   // FUNCIONES DE MANEJO
   // ============================================
 
-  const toggleCategoria = (idx) => {
+  const toggleCategory = (idx) => {
     setCategoriasExpandidas(prev => ({
       ...prev,
       [idx]: !prev[idx]
@@ -98,7 +98,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
   // Función para decodificar URL y obtener nombre legible
   const getNombreDesdeUrl = (url) => {
     try {
-      const nombreArchivo = decodeURIComponent(url.split('/').pop().split('.')[0]);
+      const nombreArchivo = decodeURIComponent(url.split('/').pop().split('.'));
       return nombreArchivo.replace(/[-_]/g, ' ');
     } catch (e) {
       return '';
@@ -119,7 +119,8 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     updated[itemIdx].opciones.push({
       nombre: '',
       precio: 0,
-      imagen: ''
+      imagen: '',
+      descripción:''
     });
     setItems(updated);
     
@@ -293,7 +294,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
                   {/* Header de categoría */}
                   <div 
                     style={styles.categoryHeader}
-                    onClick={() => toggleCategoria(idx)}
+                    onClick={() => toggleCategory(idx)}
                   >
                     <div style={styles.categoryTitleRow}>
                       <span style={styles.categoryBadge}>Categoría</span>
