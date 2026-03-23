@@ -248,23 +248,28 @@ function MainApp() {
           
         <main className="main-content" style={{ paddingTop: '100px' }}>
   {currentPage === 'home' && (
-    <HomePage 
-      platillos={itemsToShow.filter(item => {
-        // Si no hay nada seleccionado, muestra el primero por defecto
-        if (!selectedCategory) return true;
+  <HomePage 
+    platillos={itemsToShow.filter(item => {
+      if (!selectedCategory) return true;
 
-        // LIMPIEZA DE CABLEADO:
-        // Pasamos a minúsculas y quitamos la "s" final de ambos lados
-        const nombrePlato = (item.nombre || "").toLowerCase().trim().replace(/s$/, '');
-        const nombreBoton = selectedCategory.toLowerCase().trim().replace(/s$/, '');
+      const nombrePlato = (item.nombre || "").toLowerCase().trim();
+      const nombreBoton = selectedCategory.toLowerCase().trim();
 
-        // Ahora "primero" coincidirá con "primeros"
-       
+      // Mapeo de plural a singular
+      const mapeo = {
+        'primeros': 'primero',
+        'segundos': 'segundo',
+        'bebidas': 'bebida',
+        'postres': 'postre',
+        'pizzas': 'pizza'
+      };
 
-        return nombrePlato === nombreBoton;
-      })} // Tomamos el primero que coincida para la Galleta
-    />
-  )}
+      const singularBoton = mapeo[nombreBoton] || nombreBoton;
+      
+      return nombrePlato === singularBoton || nombrePlato === nombreBoton;
+    })}
+  />
+)}
 
 
 
