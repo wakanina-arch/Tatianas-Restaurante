@@ -259,10 +259,10 @@ function MainApp() {
       const nombreBoton = selectedCategory.toLowerCase().trim();
 
       const mapeo = {
-        'primeros': 'primero',
-        'segundos': 'segundo',
-        'bebidas': 'bebida',
-        'postres': 'postre',
+        'primeros': 'Primero',
+        'segundos': 'Segundo',
+        'bebidas': 'Bebida',
+        'postres': 'Postre',
         'pizzas': 'pizza'
       };
 
