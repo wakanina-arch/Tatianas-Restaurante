@@ -250,12 +250,14 @@ function MainApp() {
   {currentPage === 'home' && (
   <HomePage 
     platillos={itemsToShow.filter(item => {
+      console.log('🔍 selectedCategory:', selectedCategory);
+      console.log('🔍 item.nombre:', item.nombre);
+      
       if (!selectedCategory) return true;
 
       const nombrePlato = (item.nombre || "").toLowerCase().trim();
       const nombreBoton = selectedCategory.toLowerCase().trim();
 
-      // Mapeo de plural a singular
       const mapeo = {
         'primeros': 'primero',
         'segundos': 'segundo',
@@ -265,12 +267,13 @@ function MainApp() {
       };
 
       const singularBoton = mapeo[nombreBoton] || nombreBoton;
+      const coincide = nombrePlato === singularBoton || nombrePlato === nombreBoton;
       
-      return nombrePlato === singularBoton || nombrePlato === nombreBoton;
+      console.log('🔍 coincide:', coincide);
+      return coincide;
     })}
   />
 )}
-
 
 
             {currentPage === 'carrito' && (
