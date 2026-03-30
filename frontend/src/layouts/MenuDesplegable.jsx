@@ -6,8 +6,8 @@ export default function MenuDesplegable({ abierto, onClose, onSelectCategoria })
   const categorias = [
     { id: 'Primero', label: 'PRIMEROS', icono: '🍖', elemento: 'fuego' },
     { id: 'Segundo', label: 'SEGUNDOS', icono: '🥘', elemento: 'tierra' },
-    { id: 'Postre', label: 'POSTRES', icono: '🍯', elemento: 'agua' },
-    { id: 'Otras', label: 'OTRAS', icono: '🔥', elemento: 'metal' },
+    { id: 'Bebidas', label: 'BEBIDAS', icono: '🥤', elemento: 'agua' },
+    { id: 'Pizzas', label: 'PIZZAS', icono: '🍕', elemento: 'metal' },
     { id: 'welcome', label: 'ORIGEN', icono: '✨', elemento: 'aire' },
   ];
 

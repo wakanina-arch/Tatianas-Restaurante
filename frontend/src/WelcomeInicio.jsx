@@ -221,10 +221,10 @@ export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegist
         {/* 🌱 ELEMENTO MADERA - Categorías */}
         <div style={styles.gridCategorias}>
           {[
-            {id:'primero', l:'PRIMEROS', i:'🍖', elemento: 'FUEGO'},
-            {id:'segundo', l:'SEGUNDOS', i:'🥘', elemento: 'TIERRA'}, 
-            {id:'bebidas', l:'BEBIDAS', i:'🍵', elemento: 'AGUA'},
-            {id:'pizzas', l:'PIZZAS', i:'🍕', elemento: 'METAL'}
+            {id:'Primero', l:'PRIMEROS', i:'🍖', elemento: 'FUEGO'},
+            {id:'Segundo', l:'SEGUNDOS', i:'🥘', elemento: 'TIERRA'}, 
+            {id:'Bebidas', l:'BEBIDAS', i:'🍵', elemento: 'AGUA'},
+            {id:'Pizzas', l:'PIZZAS', i:'🍕', elemento: 'METAL'}
           ].map(cat => (
             <button 
               key={cat.id} 

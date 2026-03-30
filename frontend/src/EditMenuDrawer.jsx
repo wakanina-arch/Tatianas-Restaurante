@@ -33,22 +33,25 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
       '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
       '/img/Ensaladas/Ensalada Caprese.jpg',
       '/img/Ensaladas/Ensalada César.jpg',
-      '/img/Ensaladas/Pescado frito.jpg',
-      '/img/Ensaladas/Camarones al ajillo.jpg'
+      '/img/Ensaladas/Ensalada Coleslaw.jpg',
+      '/img/Ensaladas/Ensalada Griega.jpg'
     ],
-    Postre: [
+    Bebidas: [
       '/img/Bebidas/AguaMineral.jpg',
       '/img/Bebidas/CervezaClub.jpg',
-      '/img/Bebidas/Tres leches.jpg',
-      '/img/Bebidas/Cheesecake.jpg'
+      '/img/Bebidas/CervezaGuinness.jpg',
+      '/img/Bebidas/CocaCola.jpg',
+      '/img/Bebidas/ZumoDeFrutas.jpg',
+      '/img/Bebidas/ZumosVerdes.jpg'
+
     ],
-    Otras: [
-      '/img/Otras/Carbonara.jpg',
-      '/img/Otras/Champinones.jpg',
-      '/img/Otras/Cuatro Quesos.jpg',
-      '/img/Otras/Hawaiana.jpg',
-      '/img/Otras/Marguerita.jpg',
-      '/img/Otras/Rustica.jpg'
+    Pizzas: [
+      '/img/Pizzas/Carbonara.jpg',
+      '/img/Pizzas/Champinones.jpg',
+      '/img/Pizzas/Cuatro-Quesos.jpg',
+      '/img/Pizzas/Hawaiana.jpg',
+      '/img/Pizzas/Margherita.jpg',
+      '/img/Pizzas/Rustica.jpg'
     ]
   });
 }, []);
