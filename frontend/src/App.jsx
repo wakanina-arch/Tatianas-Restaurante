@@ -248,31 +248,32 @@ function MainApp() {
           
         <main className="main-content" style={{ paddingTop: '100px' }}>
   {currentPage === 'home' && (
-  <HomePage 
-    platillos={itemsToShow.filter(item => {
-      console.log('🔍 selectedCategory:', selectedCategory);
-      console.log('🔍 item.nombre:', item.nombre);
-      
-      if (!selectedCategory) return true;
+  <>
+    {console.log('🔴 selectedCategory:', selectedCategory)}
+    {console.log('🔴 itemsToShow:', itemsToShow.map(i => i.nombre))}
+    <HomePage 
+      platillos={itemsToShow.filter(item => {
+        if (!selectedCategory) return true;
 
-      const nombrePlato = (item.nombre || "").toLowerCase().trim();
-      const nombreBoton = selectedCategory.toLowerCase().trim();
+        const nombrePlato = (item.nombre || "").toLowerCase().trim();
+        const nombreBoton = selectedCategory.toLowerCase().trim();
 
-      const mapeo = {
-        'primeros': 'Primero',
-        'segundos': 'Segundo',
-        'bebidas': 'Bebida',
-        'postres': 'Postre',
-        'pizzas': 'pizza'
-      };
+        const mapeo = {
+          'primeros': 'primero',
+          'segundos': 'segundo',
+          'bebidas': 'bebidas',
+          'pizzas': 'pizzas',
+          'otras': 'pizzas'
+        };
 
-      const singularBoton = mapeo[nombreBoton] || nombreBoton;
-      const coincide = nombrePlato === singularBoton || nombrePlato === nombreBoton;
-      
-      console.log('🔍 coincide:', coincide);
-      return coincide;
-    })}
-  />
+        const singularBoton = mapeo[nombreBoton] || nombreBoton;
+        const coincide = nombrePlato === singularBoton || nombrePlato === nombreBoton;
+        
+        console.log(`🔍 Comparando: "${nombrePlato}" vs "${nombreBoton}" (singular: "${singularBoton}") = ${coincide}`);
+        return coincide;
+      })}
+    />
+  </>
 )}
 
 
