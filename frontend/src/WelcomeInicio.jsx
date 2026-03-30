@@ -97,7 +97,7 @@ const getFraseAleatoria = () => {
   };
 };
 
-export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegistro, onDashboard}) {
+export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegistro, onDashboard }) {
   const [showRegister, setShowRegister] = useState(false);
   
   // ✅ CORREGIDO: useState con función para generar frase UNA SOLA VEZ
@@ -189,6 +189,10 @@ export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegist
           border-color: #CD7F32;
           transform: translateY(-2px);
         }
+        button {
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+        }
       `}} />
 
       <div id="card-zensual" style={styles.card}>
@@ -219,12 +223,12 @@ export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegist
           {[
             {id:'primero', l:'PRIMEROS', i:'🍖', elemento: 'FUEGO'},
             {id:'segundo', l:'SEGUNDOS', i:'🥘', elemento: 'TIERRA'}, 
-            {id:'postres', l:'BEBIDAS', i:'🍵', elemento: 'AGUA'},
-            {id:'otras', l:'OTROS', i:'🔥', elemento: 'METAL'}
+            {id:'bebidas', l:'BEBIDAS', i:'🍵', elemento: 'AGUA'},
+            {id:'pizzas', l:'PIZZAS', i:'🍕', elemento: 'METAL'}
           ].map(cat => (
             <button 
               key={cat.id} 
-              onClick={() => onSelectCategory(cat.id, fraseData.texto)} 
+              onClick={() => onSelectCategory(cat.id)} 
               style={styles.btnCat}
               className="elemento-tierra"
             >
@@ -262,15 +266,13 @@ export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegist
         {/* 💧 ELEMENTO AGUA - Footer */}
         <p style={styles.footer}>— DESDE EL BARRO —</p>
    
-        {/* 🛡️ DASHBOARD - Solo visible para administradores */}
-{true &&  (
-  <button 
-    onClick={onDashboard} 
-    style={styles.btnDashboard}
-  >
-    🛡️ DASHBOARD ADMIN
-  </button>
-)}
+        {/* 🛡️ DASHBOARD - Botón para administradores */}
+        <button 
+          onClick={onDashboard} 
+          style={styles.btnDashboard}
+        >
+          🛡️ DASHBOARD ADMIN
+        </button>
         
         {/* 🌑 Elemento VACÍO */}
         <div style={{
@@ -389,18 +391,18 @@ const styles = {
     fontFamily: "'Cormorant Garamond', serif"
   },
   btnDashboard: {
-  background: "linear-gradient(135deg, #FFD700, #FF4500)",
-  border: "none",
-  padding: "8px 16px",
-  borderRadius: "30px",
-  color: "#1a0a0a",
-  fontWeight: "bold",
-  fontSize: "0.8rem",
-  cursor: "pointer",
-  marginBottom: "10px",
-  textTransform: "uppercase",
-  letterSpacing: "1px",
-  transition: "all 0.3s ease",
-  boxShadow: "0 2px 8px rgba(255,215,0,0.3)"
-}
+    background: "linear-gradient(135deg, #FFD700, #FF4500)",
+    border: "none",
+    padding: "8px 16px",
+    borderRadius: "30px",
+    color: "#1a0a0a",
+    fontWeight: "bold",
+    fontSize: "0.8rem",
+    cursor: "pointer",
+    marginBottom: "10px",
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+    transition: "all 0.3s ease",
+    boxShadow: "0 2px 8px rgba(255,215,0,0.3)"
+  }
 };

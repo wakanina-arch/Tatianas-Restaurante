@@ -4,9 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import AdminPage from './AdminPage';
-import ComandasDrawer from './ComandasDrawer';
 import { CartProvider, useCart } from './CartContext';
-import MediaCarousel from './components/MediaCarousel';
 import PaymentModal from './PaymentModal';
 import WelcomeInicio from './WelcomeInicio';
 import MenuDesplegable from './layouts/MenuDesplegable';
