@@ -183,6 +183,12 @@ function MainApp() {
   setCurrentPage('home');             
 };
 
+  const handleBackToWelcome = () => {
+    setShowWelcome(true);
+    setSelectedCategory(null);
+    setCurrentPage('home');
+  };
+
   const [menuItems, setMenuItems] = useLocalStorage(STORAGE_KEYS.MENU, DEFAULT_MENU_ITEMS);
   const [pendingOrders, setPendingOrders] = useLocalStorage(STORAGE_KEYS.PENDING, []);
   const [log, setLog] = useLocalStorage(STORAGE_KEYS.LOGS, []);
@@ -227,6 +233,7 @@ function MainApp() {
               console.log('🟢 MainApp: onOpenPerfil ejecutado');
               setPerfilAbierto(true);
             }}
+            onBackToWelcome={handleBackToWelcome}
             user={user}
           />
           
@@ -292,6 +299,7 @@ function MainApp() {
                 setPendingOrders={setPendingOrders}
                 finishedOrders={finishedOrders}
                 setFinishedOrders={setFinishedOrders}
+                onBack={() => setCurrentPage('home')}
               />
             )}
           </main>
@@ -304,7 +312,7 @@ function MainApp() {
 // HEADER SUPERIOR FLOTANTE - FULL WIDTH
 // Franja de lado a lado de la pantalla
 // ============================================
-function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerfil, user }) {
+function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerfil, onBackToWelcome, user }) {
   return (
     <header style={{
       position: 'fixed',
@@ -361,7 +369,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
           whiteSpace: 'nowrap', // 👈 PROHIBIDO el salto de línea
           cursor: 'pointer'
         }}
-        onClick={() => setCurrentPage('home')}
+        onClick={onBackToWelcome}
         onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
         >
@@ -380,7 +388,7 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
               transform: 'translate(-50%, -50%)',
               width: '30px',
               height: '30px',
-              background: 'radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%)',
+              //background: 'radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%)',
               borderRadius: '50%',
               zIndex: -1,
               animation: 'pulso 2s infinite'

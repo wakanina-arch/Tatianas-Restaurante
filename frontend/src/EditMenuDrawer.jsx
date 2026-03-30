@@ -26,8 +26,9 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
       '/img/Complementos/Alitas1.png',
       '/img/Complementos/Alitas2.png',
       '/img/Complementos/Bistec convinado.png',
-      '/img/Complementos/Lomo salteado.jpg',
-      '/img/Complementos/Pollo al horno.jpg'
+      '/img/Complementos/Bowl Patatas fritas.png',
+      '/img/Complementos/Combos.png',
+      '/img/Complementos/Nachos con queso.png'
     ],
     Segundo: [
       '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
@@ -477,11 +478,13 @@ const styles = {
   },
   drawer: {
     width: '520px',
+    maxWidth: '90%',
     background: 'rgba(255, 255, 255, 0.9)',
     backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
     height: '100%',
     overflowY: 'auto',
+     overflowX: 'hidden',
     boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)',
     display: 'flex',
     flexDirection: 'column',
@@ -528,7 +531,9 @@ const styles = {
   content: {
     padding: '1.5rem',
     flex: 1,
-    overflowY: 'auto'
+    overflowY: 'auto',
+     overflowX: 'hidden',
+    wordWrap: 'break-word'
   },
   addCategoryBtn: {
     width: '100%',
@@ -559,7 +564,8 @@ const styles = {
     WebkitBackdropFilter: 'blur(10px)',
     borderRadius: '24px',
     boxShadow: '0 4px 16px rgba(0, 0, 0, 0.03)',
-    border: '1px solid rgba(255, 255, 255, 0.5)'
+    border: '1px solid rgba(255, 255, 255, 0.5)',
+     overflowX: 'hidden'
   },
   categoryHeader: {
     display: 'flex',
@@ -706,7 +712,8 @@ const styles = {
     border: '1px solid rgba(0, 0, 0, 0.1)',
     fontSize: '0.9rem',
     background: 'rgba(255, 255, 255, 0.9)',
-    transition: 'all 0.2s ease'
+    transition: 'all 0.2s ease',
+    boxSizing: 'border-box'
   },
   imageSelector: {
     marginBottom: '1rem',
@@ -719,7 +726,8 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '0.5rem',
-    marginTop: '0.5rem'
+    marginTop: '0.5rem',
+    overflowX: 'hidden'
   },
   imageOption: {
     cursor: 'pointer',
@@ -727,7 +735,8 @@ const styles = {
     overflow: 'hidden',
     border: '1px solid transparent',
     transition: 'all 0.2s ease',
-    background: 'white'
+    background: 'white',
+    width: '100%'
   },
   imageOptionThumb: {
     width: '100%',
@@ -758,7 +767,8 @@ const styles = {
     height: '100px',
     objectFit: 'cover',
     borderRadius: '16px',
-    border: '1px solid var(--maracuya)'
+    border: '1px solid var(--maracuya)',
+    maxWidth: '100%'
   },
   previewPlaceholder: {
     height: '60px',
@@ -858,5 +868,8 @@ styleSheet.textContent = `
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(1, 64, 14, 0.3) !important;
   }
+    .drawer, .drawer * {
+  -webkit-overflow-scrolling: touch;  /* scroll suave en iOS */
+}
 `;
 document.head.appendChild(styleSheet);

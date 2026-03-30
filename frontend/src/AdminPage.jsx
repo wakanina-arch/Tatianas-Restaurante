@@ -14,7 +14,8 @@ export default function AdminPage({
   pendingOrders,
   setPendingOrders,
   finishedOrders,
-  setFinishedOrders
+  setFinishedOrders,
+  onBack
 }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [ordersOpen, setOrdersOpen] = useState(false);
@@ -77,11 +78,83 @@ export default function AdminPage({
 
   return (
     <section className="admin-page">
-      <div className="hero" style={{ marginBottom: '2rem', padding: '1.5rem' }}>
-        <h2>📊 Dashboard Administrativo</h2>
-        <p style={{ color: 'var(--gris-secundario)' }}>Gestión integral de restaurante</p>
-      </div>
+      <div style={{
+  marginBottom: '1.5rem',
+  padding: '0.5rem 1.2rem',           // ← padding reducido
+  background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 69, 0, 0.1) 100%)',
+  borderRadius: '28px',
+  border: '1px solid rgba(255, 215, 0, 0.3)',
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
+  textAlign: 'center',
+  position: 'relative'               // ← para posicionar el botón X
+}}>
+  {/* Botón de cierre (X) */}
+  <button
+    onClick={onBack}
+    style={{
+      position: 'absolute',
+      top: '12px',
+      right: '16px',
+      background: 'rgba(0, 0, 0, 0.4)',
+      border: 'none',
+      borderRadius: '20px',
+      width: '32px',
+      height: '32px',
+      fontSize: '1.2rem',
+      cursor: 'pointer',
+      color: '#FFD700',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'all 0.2s ease',
+      backdropFilter: 'blur(4px)'
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.background = 'rgba(255, 69, 0, 0.6)';
+      e.currentTarget.style.color = 'white';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)';
+      e.currentTarget.style.color = '#FFD700';
+    }}
+  >
+    ✕
+  </button>
 
+  <div style={{
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'linear-gradient(135deg, #FFD700, #FF4500)',
+    width: '48px',                   // ← tamaño reducido
+    height: '48px',
+    borderRadius: '24px',
+    marginBottom: '0.5rem',          // ← margen reducido
+    boxShadow: '0 4px 12px rgba(255, 215, 0, 0.3)'
+  }}>
+    <span style={{ fontSize: '1.6rem' }}>🔱</span>
+  </div>
+  <h2 style={{
+    margin: '0 0 0.25rem 0',         // ← margen reducido
+    fontSize: '1.2rem',              // ← tamaño reducido
+    fontWeight: '600',
+    background: 'linear-gradient(135deg, #FFD700, #FF4500)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text'
+  }}>
+    Dashboard Administrativo
+  </h2>
+  <p style={{
+    margin: 0,
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontSize: '0.9rem',              // ← tamaño reducido
+    letterSpacing: '1px'
+  }}>
+    Gestión integral del restaurante
+  </p>
+</div>
       <Acordeon
         menuItems={menuItems}
         finishedOrders={finishedOrders}
