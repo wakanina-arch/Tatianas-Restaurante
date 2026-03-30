@@ -25,27 +25,27 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     Primero: [
       '/img/Complementos/Alitas1.png',
       '/img/Complementos/Alitas2.png',
-      '/img/Complementos/Bistec%20convinado.png', // CORREGIDO: espacio como %20
-      '/img/Complementos/Lomo%20salteado.jpg', // CORREGIDO
-      '/img/Complementos/Pollo%20al%20horno.jpg' // CORREGIDO
+      '/img/Complementos/Bistec convinado.png',
+      '/img/Complementos/Lomo salteado.jpg',
+      '/img/Complementos/Pollo al horno.jpg'
     ],
     Segundo: [
-      '/img/Ensaladas/Ensalada%20Alemana%20de%20Patata.jpg', // CORREGIDO
-      '/img/Ensaladas/Ensalada%20Caprese.jpg', // CORREGIDO
-      '/img/Ensaladas/Ensalada%20César.jpg', // CORREGIDO: mantiene tilde
-      '/img/Ensaladas/Pescado%20frito.jpg', // CORREGIDO
-      '/img/Ensaladas/Camarones%20al%20ajillo.jpg' // CORREGIDO
+      '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
+      '/img/Ensaladas/Ensalada Caprese.jpg',
+      '/img/Ensaladas/Ensalada César.jpg',
+      '/img/Ensaladas/Pescado frito.jpg',
+      '/img/Ensaladas/Camarones al ajillo.jpg'
     ],
     Postre: [
       '/img/Bebidas/AguaMineral.jpg',
       '/img/Bebidas/CervezaClub.jpg',
-      '/img/Bebidas/Tres%20leches.jpg', // CORREGIDO
+      '/img/Bebidas/Tres leches.jpg',
       '/img/Bebidas/Cheesecake.jpg'
     ],
     Otras: [
       '/img/Otras/Carbonara.jpg',
       '/img/Otras/Champinones.jpg',
-      '/img/Otras/Cuatro%20Quesos.jpg', // CORREGIDO
+      '/img/Otras/Cuatro Quesos.jpg',
       '/img/Otras/Hawaiana.jpg',
       '/img/Otras/Marguerita.jpg',
       '/img/Otras/Rustica.jpg'
@@ -88,6 +88,13 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     if (!updated[itemIdx].opciones) updated[itemIdx].opciones = [];
     if (!updated[itemIdx].opciones[optIdx]) updated[itemIdx].opciones[optIdx] = {};
     
+    // Normalizar URLs de imágenes para HTTPS
+    if (field === 'imagen' && value) {
+      if (value.startsWith('http://')) {
+        value = value.replace('http://', 'https://');
+      }
+    }
+    
     updated[itemIdx].opciones[optIdx] = {
       ...updated[itemIdx].opciones[optIdx],
       [field]: value
@@ -98,7 +105,8 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
   // Función para decodificar URL y obtener nombre legible
   const getNombreDesdeUrl = (url) => {
     try {
-      const nombreArchivo = decodeURIComponent(url.split('/').pop().split('.'));
+      const decodedUrl = decodeURIComponent(url);
+      const nombreArchivo = decodedUrl.split('/').pop().split('.')[0];
       return nombreArchivo.replace(/[-_]/g, ' ');
     } catch (e) {
       return '';

@@ -604,6 +604,9 @@ function MenuItem({ item, addToCart }) {
 
   const description = selectedData?.descripcion || item.historia;
   
+  // Usar imagen de la opción seleccionada o la del item
+  const imageSrc = selectedData?.imagen || item.imagenes?.[0];
+  
   const OfertaBadge = () => {
     if (!item.enOferta) return null;
     return (
@@ -662,9 +665,9 @@ function MenuItem({ item, addToCart }) {
         borderRadius: 24,
         boxShadow: '0 12px 30px rgba(0,0,0,0.15)'
       }}>
-        {item.imagenes && item.imagenes[0] ? (
+        {imageSrc ? (
           <img 
-            src={item.imagenes[0]} 
+            src={imageSrc} 
             alt={item.nombre}
             style={{
               position: 'absolute',
