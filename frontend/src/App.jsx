@@ -286,7 +286,8 @@ function MainApp() {
               <CartPage 
                 addLog={addLog} 
                 setPendingOrders={setPendingOrders}
-                user={user}
+                  user={user}
+                  onVolverAlMenu={() => setCurrentPage('home')}
               />
             )}
             {currentPage === 'admin' && (
@@ -958,60 +959,32 @@ function buildMediaItems(item) {
   return items;
 }
 // ============================================
-// RESUMEN CARRITO DE COMPRA
+// CARRITO - ESTILO CRISTAL ESMERILADO (ORIGINAL MEJORADO)
 // ============================================
-function CartPage({ addLog, setPendingOrders, user }) {
-  const { cartItems, removeFromCart, updateQuantity, clearCart, calculateTotal } = useCart();
+function CartPage({ addLog, setPendingOrders, user, onVolverAlMenu }) {
+  const { cartItems, removeFromCart, updateQuantity, calculateTotal } = useCart();
   const [payOpen, setPayOpen] = useState(false);
   const total = calculateTotal();
 
   if (cartItems.length === 0) {
     return (
-      <section className="cart-page" style={{
-        maxWidth: 600,
-        margin: '0 auto',
-        padding: '2rem',
-        textAlign: 'center'
-      }}>
-        <h2 style={{ fontSize: '1.8rem', color: 'var(--verde-selva)', marginBottom: '1rem' }}>
-          Tu Carrito
-        </h2>
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.7)',
-          backdropFilter: 'blur(10px)',
-          borderRadius: 48,
-          padding: '3rem',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
-        }}>
-          <p style={{ fontSize: '1.2rem', color: 'var(--gris-texto)' }}>
-            Tu carrito está vacío. ¡Agrega platos deliciosos! 🛒
-          </p>
+      <section style={styles.container}>
+        <div style={styles.emptyCard}>
+          <span style={styles.emptyIcon}>🛒</span>
+          <h2 style={styles.emptyTitle}>Tu Carrito</h2>
+          <p style={styles.emptyText}>Tu carrito está vacío. ¡Agrega platos deliciosos!</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="cart-page" style={{
-      maxWidth: 800,
-      margin: '0 auto',
-      padding: '1rem'
-    }}>
-      <h2 style={{ fontSize: '1.8rem', color: 'var(--verde-selva)', marginBottom: '1.5rem' }}>
-        Tu Carrito 🛒
-      </h2>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 300px',
-        gap: '1.5rem'
-      }}>
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.7)',
-          backdropFilter: 'blur(10px)',
-          borderRadius: 32,
-          padding: '1.5rem',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
-        }}>
+    <section style={styles.container}>
+      <h2 style={styles.pageTitle}>Revisa tu Carrito 🔱</h2>
+      
+      <div style={styles.cartCard}>
+        {/* Lista de items */}
+        <div style={styles.itemsList}>
           {cartItems.map((item) => (
             <CartItem
               key={item.id}
@@ -1022,11 +995,12 @@ function CartPage({ addLog, setPendingOrders, user }) {
           ))}
         </div>
         
+        {/* Resumen */}
         <CartSummary
           total={total}
           onCheckout={() => setPayOpen(true)}
-          onClear={clearCart}
           user={user}
+          onVolver={onVolverAlMenu}
         />
       </div>
 
@@ -1045,300 +1019,352 @@ function CartItem({ item, onRemove, onUpdateQuantity }) {
   const cantidad = item.cantidad || 1;
 
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '1rem',
-      borderBottom: '1px solid rgba(0, 0, 0, 0.05)'
-    }}>
-      <div style={{ flex: 2 }}>
-        <h4 style={{ margin: '0 0 0.3rem 0', fontSize: '1rem', color: 'var(--verde-selva)' }}>
-          {item.nombre}
-        </h4>
-        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--gris-texto)' }}>
-          ${item.precio.toFixed(2)} c/u
-        </p>
+    <div style={styles.cartItem}>
+      <div style={styles.itemInfo}>
+        <h4 style={styles.itemName}>{item.nombre}</h4>
+        <p style={styles.itemPrice}>${item.precio.toFixed(2)} c/u</p>
       </div>
       
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.8rem',
-        background: 'rgba(0, 0, 0, 0.02)',
-        padding: '0.3rem',
-        borderRadius: 30
-      }}>
+      <div style={styles.itemActions}>
+        <div style={styles.quantityControl}>
+          <button 
+            onClick={() => onUpdateQuantity(item.id, cantidad - 1)}
+            disabled={cantidad <= 1}
+            style={cantidad <= 1 ? styles.qtyBtnDisabled : styles.qtyBtn}
+          >
+            −
+          </button>
+          <span style={styles.qtyValue}>{cantidad}</span>
+          <button 
+            onClick={() => onUpdateQuantity(item.id, cantidad + 1)}
+            style={styles.qtyBtn}
+          >
+            +
+          </button>
+        </div>
+
+        <div style={styles.itemTotal}>${(item.precio * cantidad).toFixed(2)}</div>
+
         <button 
-          onClick={() => onUpdateQuantity(item.id, cantidad - 1)}
-          disabled={cantidad <= 1}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            width: 30,
-            height: 30,
-            borderRadius: 15,
-            cursor: cantidad <= 1 ? 'not-allowed' : 'pointer',
-            fontSize: '1.2rem',
-            color: cantidad <= 1 ? '#ccc' : 'var(--maracuya)'
-          }}
+          onClick={() => onRemove(item.id)}
+          style={styles.removeBtn}
         >
-          −
-        </button>
-        <span style={{ minWidth: 30, textAlign: 'center', fontWeight: '600' }}>
-          {cantidad}
-        </span>
-        <button 
-          onClick={() => onUpdateQuantity(item.id, cantidad + 1)}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            width: 30,
-            height: 30,
-            borderRadius: 15,
-            cursor: 'pointer',
-            fontSize: '1.2rem',
-            color: 'var(--maracuya)'
-          }}
-        >
-          +
+          🗑️
         </button>
       </div>
-
-      <div style={{ fontWeight: '700', color: 'var(--maracuya)' }}>
-        ${(item.precio * cantidad).toFixed(2)}
-      </div>
-
-      <button 
-        onClick={() => onRemove(item.id)}
-        style={{
-          background: 'transparent',
-          border: 'none',
-          fontSize: '1.2rem',
-          cursor: 'pointer',
-          opacity: 0.6,
-          transition: 'opacity 0.2s ease'
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
-        onMouseLeave={(e) => e.currentTarget.style.opacity = 0.6}
-      >
-        🗑️
-      </button>
     </div>
   );
 }
 
-function CartSummary({ total, onCheckout, onClear, user }) {
+function CartSummary({ total, onCheckout, user, onVolver }) {
   return (
-    <div style={{
-      background: 'rgba(255, 255, 255, 0.7)',
-      backdropFilter: 'blur(10px)',
-      borderRadius: 32,
-      padding: '1.5rem',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-      position: 'sticky',
-      top: 100
-    }}>
-      <h3 style={{ margin: '0 0 1rem 0', color: 'var(--verde-selva)' }}>Resumen</h3>
+    <div style={styles.summaryCard}>
+      <h3 style={styles.summaryTitle}>Resumen</h3>
       
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: '0.8rem',
-        fontSize: '0.95rem',
-        color: 'var(--gris-texto)'
-      }}>
-        <span>Subtotal:</span>
+      <div style={styles.summaryRow}>
+        <span>Subtotal</span>
         <span>${total}</span>
       </div>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: '1rem',
-        fontSize: '0.95rem',
-        color: 'var(--gris-texto)'
-      }}>
-        <span>Envío:</span>
+      <div style={styles.summaryRow}>
+        <span>Envío</span>
         <span style={{ color: '#34c759' }}>Gratis</span>
       </div>
       
-      {/* Mensaje de descuento para no registrados */}
       {!user && (
-        <div style={{
-          background: 'rgba(255, 215, 0, 0.05)',
-          borderRadius: 20,
-          padding: '1rem',
-          margin: '1rem 0',
-          textAlign: 'center',
-          border: '1px dashed rgba(255, 215, 0, 0.3)'
-        }}>
-          <p style={{ fontSize: '0.8rem', color: 'var(--gris-texto)', margin: '0 0 0.5rem 0' }}>
-            ✨ ¿Eres cliente frecuente?
-          </p>
-          <button
-            onClick={() => {/* Abrir registro */}}
-            style={{
-              background: 'transparent',
-              border: '1px solid var(--maracuya)',
-              borderRadius: 30,
-              padding: '0.4rem 1rem',
-              fontSize: '0.8rem',
-              color: 'var(--maracuya)',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 215, 0, 0.1)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-            }}
-          >
+        <div style={styles.promoBox}>
+          <p style={styles.promoText}>✨ ¿Eres cliente frecuente?</p>
+          <button style={styles.promoBtn}>
             Regístrate y obtén 10% OFF
           </button>
         </div>
       )}
       
-      {/* Badge de descuento para registrados */}
       {user && (
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%)',
-          borderRadius: 20,
-          padding: '0.8rem',
-          margin: '1rem 0',
-          textAlign: 'center',
-          border: '1px solid rgba(255, 215, 0, 0.3)'
-        }}>
-          <p style={{ fontSize: '0.85rem', color: 'var(--verde-selva)', fontWeight: '600', margin: 0 }}>
-            🎉 10% de descuento para miembros
-          </p>
+        <div style={styles.memberBadge}>
+          🎉 10% de descuento para miembros
         </div>
       )}
       
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        margin: '1rem 0',
-        fontSize: '1.2rem',
-        fontWeight: '700',
-        color: 'var(--verde-selva)'
-      }}>
-        <span>Total:</span>
-        <span className="total-amount">${total}</span>
+      <div style={styles.totalRow}>
+        <span>Total</span>
+        <span style={styles.totalAmount}>${total}</span>
       </div>
       
-      <button 
-        onClick={onCheckout}
-        style={{
-          width: '100%',
-          padding: '0.8rem',
-          marginBottom: '0.5rem',
-          background: 'linear-gradient(135deg, var(--verde-selva) 0%, #2a6b2f 100%)',
-          color: 'white',
-          border: 'none',
-          borderRadius: 40,
-          fontWeight: '600',
-          fontSize: '1rem',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease',
-          boxShadow: '0 4px 12px rgba(1, 64, 14, 0.2)'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-2px)';
-          e.currentTarget.style.boxShadow = '0 6px 16px rgba(1, 64, 14, 0.3)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 4px 12px rgba(1, 64, 14, 0.2)';
-        }}
-      >
+      <button onClick={onCheckout} style={styles.checkoutBtn}>
         Proceder al Pago
       </button>
       
-      <button 
-        onClick={onClear}
-        style={{
-          width: '100%',
-          padding: '0.8rem',
-          background: 'transparent',
-          border: '2px solid rgba(255, 215, 0, 0.3)',
-          borderRadius: 40,
-          fontWeight: '600',
-          fontSize: '1rem',
-          color: 'var(--gris-texto)',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease'
-        }}
+      <button
+        onClick={onVolver}
+        style={styles.backBtn}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(255, 215, 0, 0.05)';
-          e.currentTarget.style.borderColor = 'var(--maracuya)';
+          e.currentTarget.style.background = 'rgba(1, 64, 14, 0.05)';
+          e.currentTarget.style.borderColor = '#FF8C42';
+          e.currentTarget.style.color = '#FF8C42';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.background = 'transparent';
-          e.currentTarget.style.borderColor = 'rgba(255, 215, 0, 0.3)';
+          e.currentTarget.style.borderColor = 'rgba(255, 179, 71, 0.3)';
+          e.currentTarget.style.color = '#01400e';
         }}
       >
-        Vaciar Carrito
+        🍽️ Seguir Comprando
       </button>
     </div>
   );
 }
 
 // ============================================
-// ESTILOS ADICIONALES
+// ESTILOS CRISTAL ESMERILADO (GLASSMORPHISM)
+// Apilado vertical, colores alegres
 // ============================================
-const style = document.createElement('style');
-style.textContent = `
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+const styles = {
+  container: {
+    maxWidth: 600,
+    margin: '0 auto',
+    padding: '1rem',
+    width: '100%'
+  },
+  pageTitle: {
+    fontSize: '1.6rem',
+    fontWeight: '600',
+    color: '#039921',
+    marginBottom: '1.5rem',
+    textAlign: 'center'
+  },
+  cartCard: {
+    background: 'rgba(255, 255, 255, 0.7)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    borderRadius: 32,
+    padding: '1.2rem',
+    border: '1px solid rgba(255, 255, 255, 0.5)',
+    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.05)'
+  },
+  itemsList: {
+    marginBottom: '1.5rem'
+  },
+  cartItem: {
+    padding: '1rem 0',
+    borderBottom: '1px solid rgba(0, 0, 0, 0.05)'
+  },
+  itemInfo: {
+    marginBottom: '0.5rem'
+  },
+  itemName: {
+    margin: 0,
+    fontSize: '1rem',
+    fontWeight: '600',
+    color: '#01400e'
+  },
+  itemPrice: {
+    margin: '0.2rem 0 0',
+    fontSize: '0.8rem',
+    color: '#666'
+  },
+  itemActions: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '1rem'
+  },
+  quantityControl: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    background: 'rgba(0, 0, 0, 0.03)',
+    padding: '0.2rem 0.2rem',
+    borderRadius: 30
+  },
+  qtyBtn: {
+    background: 'transparent',
+    border: 'none',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    cursor: 'pointer',
+    fontSize: '1.2rem',
+    color: '#FF8C42',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  qtyBtnDisabled: {
+    background: 'transparent',
+    border: 'none',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    cursor: 'not-allowed',
+    fontSize: '1.2rem',
+    color: '#ccc',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  qtyValue: {
+    minWidth: 32,
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: '0.9rem'
+  },
+  itemTotal: {
+    fontWeight: '700',
+    color: '#FF8C42',
+    fontSize: '0.9rem',
+    minWidth: '70px'
+  },
+  removeBtn: {
+    background: 'none',
+    border: 'none',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    opacity: 0.5,
+    transition: 'opacity 0.2s ease',
+    padding: '4px'
+  },
+  summaryCard: {
+    borderTop: '1px solid rgba(0, 0, 0, 0.05)',
+    paddingTop: '1rem'
+  },
+  summaryTitle: {
+    margin: '0 0 1rem 0',
+    fontSize: '1rem',
+    fontWeight: '600',
+    color: '#01400e'
+  },
+  summaryRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '0.5rem',
+    fontSize: '0.85rem',
+    color: '#666'
+  },
+  promoBox: {
+    background: 'rgba(255, 215, 0, 0.08)',
+    borderRadius: 20,
+    padding: '0.8rem',
+    margin: '1rem 0',
+    textAlign: 'center'
+  },
+  promoText: {
+    fontSize: '0.75rem',
+    color: '#666',
+    margin: '0 0 0.5rem 0'
+  },
+  promoBtn: {
+    background: 'transparent',
+    border: '1px solid #FF8C42',
+    borderRadius: 30,
+    padding: '0.3rem 0.8rem',
+    fontSize: '0.7rem',
+    color: '#FF8C42',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease'
+  },
+  memberBadge: {
+    background: 'rgba(255, 215, 0, 0.08)',
+    borderRadius: 20,
+    padding: '0.5rem',
+    margin: '1rem 0',
+    textAlign: 'center',
+    fontSize: '0.75rem',
+    fontWeight: '600',
+    color: '#01400e'
+  },
+  totalRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '1rem 0',
+    fontSize: '1.1rem',
+    fontWeight: '700',
+    color: '#01400e',
+    paddingTop: '0.5rem',
+    borderTop: '1px solid rgba(255, 179, 71, 0.2)'
+  },
+  totalAmount: {
+    color: '#FF8C42',
+    fontSize: '1.2rem'
+  },
+  checkoutBtn: {
+    width: '100%',
+    padding: '0.8rem',
+    background: 'linear-gradient(135deg, #01400e 0%, #2a6b2f 100%)',
+    color: 'white',
+    border: 'none',
+    borderRadius: 40,
+    fontWeight: '600',
+    fontSize: '0.9rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    marginBottom: '0.5rem'
+  },
+  backBtn: {
+    width: '100%',
+    padding: '0.8rem',
+    background: 'transparent',
+    border: '1px solid rgba(255, 179, 71, 0.3)',
+    borderRadius: 40,
+    fontWeight: '500',
+    fontSize: '0.9rem',
+    color: '#666',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease'
+  },
+  emptyContainer: {
+    maxWidth: 600,
+    margin: '0 auto',
+    padding: '2rem',
+    textAlign: 'center'
+  },
+  emptyCard: {
+    background: 'rgba(255, 255, 255, 0.7)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    borderRadius: 32,
+    padding: '2rem',
+    border: '1px solid rgba(255, 255, 255, 0.5)'
+  },
+  emptyIcon: {
+    fontSize: '3rem',
+    display: 'block',
+    marginBottom: '1rem'
+  },
+  emptyTitle: {
+    fontSize: '1.2rem',
+    color: '#01400e',
+    marginBottom: '0.5rem'
+  },
+  emptyText: {
+    fontSize: '0.85rem',
+    color: '#666'
   }
+};
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-   background: "radial-gradient(circle at 30% 30%, #8B4513, #2C1810)"
-  }
-
-  .app {
-    min-height: 100vh;
-  }
-
-  .main-content {
-    min-height: calc(100vh - 100px);
-  }
-
-  :root {
-    --verde-selva: #01400e;
-    --maracuya: #f87903f6;
-    --mango: #FF8C42;
-    --morado-primario: #4a4af3;
-    --gris-texto: #4a5568;
-    --borde-tropical: rgba(255, 179, 71, 0.2);
-    --crema-tropical: #fff9f0;
-  }
-
-  @media (max-width: 768px) {
-    header {
-      padding: 0.5rem 1rem !important;
-    }
-    
-    .cart-page > div {
-      grid-template-columns: 1fr !important;
-    }
+// Efectos hover
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+  .checkout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(1, 64, 14, 0.3);
   }
   
-  @media (max-width: 480px) {
-    .logo-text {
-      font-size: 1rem !important;
-    }
+  .clear-btn:hover {
+    border-color: #FF8C42;
+    color: #FF8C42;
+  }
+  
+  .promo-btn:hover {
+    background: rgba(255, 140, 66, 0.1);
+  }
+  
+  .remove-btn:hover {
+    opacity: 1 !important;
+    color: #ff3b30;
   }
 `;
 
-// ============================================
-// AGREGAR ESTILOS AL DOCUMENTO
-// ============================================
 if (typeof document !== 'undefined') {
-  document.head.appendChild(style);
+  document.head.appendChild(styleSheet);
 }
