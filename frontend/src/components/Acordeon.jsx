@@ -85,7 +85,7 @@ export default function Acordeon({
     },
     {
       id: 'registro',
-      title: '📊 Registro',
+      title: '📊 Archivo',
       icon: '📊',
       badge: log.length,
       badgeColor: 'var(--gris-secundario)',

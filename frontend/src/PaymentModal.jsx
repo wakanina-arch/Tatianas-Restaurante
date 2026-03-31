@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from './CartContext';
+import TicketModal from './TicketModal';
 
 export default function PaymentModal({ open, onClose, total, addLog, setPendingOrders }) {
   const [step, setStep] = useState(1);
@@ -11,8 +12,8 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
     cvv: '',
     metodo: 'tarjeta',
   });
-  const [qr, setQr] = useState(null);
-  const [orderId, setOrderId] = useState(null);
+  const [orderData, setOrderData] = useState(null);
+  const [showTicket, setShowTicket] = useState(false);  // ← Nuevo estado para TicketModal
   const { cartItems, clearCart, addOrder } = useCart();
 
   if (!open) return null;
@@ -47,22 +48,24 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
           pedido: generatedId,
           usuario: form.nombre,
           hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          detalle: `Pago con Tarjeta aprobado - Total: $${total}`
+          detalle: `Pago con ${form.metodo} aprobado - Total: $${total}`
         });
       }
 
-      setOrderId(generatedId);
-      const orderUrl = `https://one-to-one.app/orden/${generatedId}`;
-      setQr(`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(orderUrl)}&size=200x200`);
-      
       const newOrder = {
         id: generatedId,
+        numero: generatedId,
+        ordenId: generatedId,
         cliente: form.nombre,
-        mesa: Math.floor(Math.random()*10)+1,
-        estado: 'En preparación',
-        hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        items: cartItems.map(i => ({ nombre: i.nombre, cantidad: i.cantidad, precio: i.precio })),
+        items: cartItems.map(i => ({ 
+          id: i.id, 
+          nombre: i.nombre, 
+          cantidad: i.cantidad, 
+          precio: i.precio 
+        })),
         total: parseFloat(total),
+        metodo: form.metodo,
+        fecha: new Date().toISOString()
       };
 
       addOrder(newOrder); 
@@ -70,234 +73,196 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
         setPendingOrders(prev => [...prev, newOrder]);
       }
 
-      setStep(2);
+      setOrderData(newOrder);
+      setShowTicket(true);      // ← Abrir TicketModal
+      setStep(2);                // ← Mantener paso para que no se cierre
     }, 1200);
   };
 
+  const handleCloseTicket = () => {
+    setShowTicket(false);
+    clearCart();
+    onClose();                  // ← Cerrar PaymentModal
+    setStep(1);
+  };
+
   return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={e => e.stopPropagation()}>
-        {/* Header con botón de cierre */}
-        <div style={styles.header}>
-          <h2 style={styles.title}>
-            {step === 1 ? (
-              <>
-                <span style={styles.titleIcon}>💳</span>
-                Pago Seguro
-              </>
-            ) : (
-              <>
-                <span style={styles.titleIcon}>✅</span>
-                Pago Exitoso
-              </>
-            )}
-          </h2>
-          <button onClick={onClose} style={styles.closeBtn}>✕</button>
-        </div>
+    <>
+      {/* Modal de pago */}
+      <div style={styles.overlay} onClick={onClose}>
+        <div style={styles.modal} onClick={e => e.stopPropagation()}>
+          <div style={styles.header}>
+            <h2 style={styles.title}>
+              {step === 1 ? (
+                <>
+                  <span style={styles.titleIcon}>💳</span>
+                  Pago Seguro
+                </>
+              ) : (
+                <>
+                  <span style={styles.titleIcon}>✅</span>
+                  Pago Exitoso
+                </>
+              )}
+            </h2>
+            <button onClick={onClose} style={styles.closeBtn}>✕</button>
+          </div>
 
-        {step === 1 && (
-          <form onSubmit={handleSubmit} style={styles.form}>
-            {/* Nombre */}
-            <div style={styles.inputGroup}>
-              <label style={styles.label}>Nombre Completo</label>
-              <input 
-                name="nombre" 
-                value={form.nombre} 
-                onChange={handleChange} 
-                required 
-                style={styles.input}
-                placeholder="Ej: Juan Pérez"
-              />
-            </div>
-
-            {/* Email */}
-            <div style={styles.inputGroup}>
-              <label style={styles.label}>Email</label>
-              <input 
-                name="email" 
-                type="email" 
-                value={form.email} 
-                onChange={handleChange} 
-                required 
-                style={styles.input}
-                placeholder="ejemplo@correo.com"
-              />
-            </div>
-
-            {/* Método de pago */}
-            <div style={styles.inputGroup}>
-              <label style={styles.label}>Método de pago</label>
-              <select 
-                name="metodo" 
-                value={form.metodo} 
-                onChange={handleMetodoChange} 
-                style={styles.select}
-              >
-                <option value="tarjeta">💳 Tarjeta</option>
-                <option value="bimo">📱 BIMO</option>
-                <option value="payphone">📲 PayPhone</option>
-                <option value="deuna">🪙 Deuna</option>
-              </select>
-            </div>
-
-            {/* Campos dinámicos según método */}
-            {form.metodo === 'tarjeta' && (
-              <>
-                <div style={styles.inputGroup}>
-                  <label style={styles.label}>Número de Tarjeta</label>
-                  <div style={styles.inputWithIcon}>
-                    <input
-                      name="tarjeta"
-                      type="text"
-                      value={form.tarjeta}
-                      onChange={handleChange}
-                      required
-                      maxLength={16}
-                      placeholder="1234 5678 9012 3456"
-                      style={styles.input}
-                    />
-                    <span style={styles.cardIcon}>
-                      {/^4/.test(form.tarjeta) && '💳 Visa'}
-                      {/^(5[1-5])/.test(form.tarjeta) && '💳 Mastercard'}
-                      {/^(36|38|30[0-5])/.test(form.tarjeta) && '💳 Diners'}
-                    </span>
-                  </div>
-                </div>
-
-                <div style={styles.row}>
-                  <div style={{...styles.inputGroup, flex: 1}}>
-                    <label style={styles.label}>Vencimiento</label>
-                    <input 
-                      name="vencimiento" 
-                      type="text" 
-                      value={form.vencimiento} 
-                      onChange={handleChange} 
-                      required 
-                      placeholder="MM/AA" 
-                      maxLength={5} 
-                      style={styles.input}
-                    />
-                  </div>
-                  <div style={{...styles.inputGroup, flex: 1}}>
-                    <label style={styles.label}>CVV</label>
-                    <input 
-                      name="cvv" 
-                      type="password" 
-                      value={form.cvv} 
-                      onChange={handleChange} 
-                      required 
-                      maxLength={4} 
-                      placeholder="123" 
-                      style={styles.input}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-
-            {(form.metodo === 'bimo' || form.metodo === 'payphone' || form.metodo === 'deuna') && (
+          {step === 1 && (
+            <form onSubmit={handleSubmit} style={styles.form}>
+              {/* ... formulario completo ... */}
               <div style={styles.inputGroup}>
-                <label style={styles.label}>
-                  {form.metodo === 'bimo' && 'Número BIMO'}
-                  {form.metodo === 'payphone' && 'Número PayPhone'}
-                  {form.metodo === 'deuna' && 'Número Deuna'}
-                </label>
-                <input
-                  name="tarjeta"
-                  type="text"
-                  value={form.tarjeta}
-                  onChange={handleChange}
-                  required
-                  maxLength={10}
-                  placeholder="09XXXXXXXX"
+                <label style={styles.label}>Nombre Completo</label>
+                <input 
+                  name="nombre" 
+                  value={form.nombre} 
+                  onChange={handleChange} 
+                  required 
                   style={styles.input}
+                  placeholder="Ej: Juan Pérez"
                 />
               </div>
-            )}
 
-            {/* Total y botón de pago */}
-            <div style={styles.totalContainer}>
-              <span style={styles.totalLabel}>Total a pagar:</span>
-              <span style={styles.totalAmount}>${total}</span>
-            </div>
-
-            <button type="submit" style={styles.payBtn}>
-              <span style={styles.payBtnIcon}>🔒</span>
-              Pagar Ahora
-            </button>
-          </form>
-        )}
-
-        {step === 2 && (
-          <div style={styles.successContainer}>
-            {/* Resumen de compra */}
-            <div style={styles.summaryCard}>
-              <h3 style={styles.summaryTitle}>Resumen de Compra</h3>
-              <ul style={styles.itemList}>
-                {cartItems.map((item, i) => (
-                  <li key={i} style={styles.itemRow}>
-                    <span style={styles.itemName}>
-                      {item.cantidad} x {item.nombre}
-                    </span>
-                    <span style={styles.itemPrice}>
-                      ${(item.precio * item.cantidad).toFixed(2)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <div style={styles.summaryTotal}>
-                <span>Total:</span>
-                <span style={styles.totalHighlight}>${total}</span>
-              </div>
-            </div>
-
-            {/* Logo y QR */}
-            <div style={styles.successContent}>
-              <div style={styles.logoContainer}>
-                <img src="/img/The-One.png" alt="Logo" style={styles.logo} />
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Email</label>
+                <input 
+                  name="email" 
+                  type="email" 
+                  value={form.email} 
+                  onChange={handleChange} 
+                  required 
+                  style={styles.input}
+                  placeholder="ejemplo@correo.com"
+                />
               </div>
 
-              <h2 style={styles.successTitle}>¡Gracias por elegirnos!</h2>
-              <p style={styles.successMessage}>Tu pedido está en manos expertas 👨‍🍳</p>
-              
-              {qr && (
-                <div style={styles.qrContainer}>
-                  <img src={qr} alt="QR" style={styles.qrImage} />
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Método de pago</label>
+                <select 
+                  name="metodo" 
+                  value={form.metodo} 
+                  onChange={handleMetodoChange} 
+                  style={styles.select}
+                >
+                  <option value="tarjeta">💳 Tarjeta</option>
+                  <option value="bimo">📱 BIMO</option>
+                  <option value="payphone">📲 PayPhone</option>
+                  <option value="deuna">🪙 Deuna</option>
+                </select>
+              </div>
+
+              {form.metodo === 'tarjeta' && (
+                <>
+                  <div style={styles.inputGroup}>
+                    <label style={styles.label}>Número de Tarjeta</label>
+                    <div style={styles.inputWithIcon}>
+                      <input
+                        name="tarjeta"
+                        type="text"
+                        value={form.tarjeta}
+                        onChange={handleChange}
+                        required
+                        maxLength={16}
+                        placeholder="1234 5678 9012 3456"
+                        style={styles.input}
+                      />
+                      <span style={styles.cardIcon}>
+                        {/^4/.test(form.tarjeta) && '💳 Visa'}
+                        {/^(5[1-5])/.test(form.tarjeta) && '💳 Mastercard'}
+                        {/^(36|38|30[0-5])/.test(form.tarjeta) && '💳 Diners'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={styles.row}>
+                    <div style={{...styles.inputGroup, flex: 1}}>
+                      <label style={styles.label}>Vencimiento</label>
+                      <input 
+                        name="vencimiento" 
+                        type="text" 
+                        value={form.vencimiento} 
+                        onChange={handleChange} 
+                        required 
+                        placeholder="MM/AA" 
+                        maxLength={5} 
+                        style={styles.input}
+                      />
+                    </div>
+                    <div style={{...styles.inputGroup, flex: 1}}>
+                      <label style={styles.label}>CVV</label>
+                      <input 
+                        name="cvv" 
+                        type="password" 
+                        value={form.cvv} 
+                        onChange={handleChange} 
+                        required 
+                        maxLength={4} 
+                        placeholder="123" 
+                        style={styles.input}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {(form.metodo === 'bimo' || form.metodo === 'payphone' || form.metodo === 'deuna') && (
+                <div style={styles.inputGroup}>
+                  <label style={styles.label}>
+                    {form.metodo === 'bimo' && 'Número BIMO'}
+                    {form.metodo === 'payphone' && 'Número PayPhone'}
+                    {form.metodo === 'deuna' && 'Número Deuna'}
+                  </label>
+                  <input
+                    name="tarjeta"
+                    type="text"
+                    value={form.tarjeta}
+                    onChange={handleChange}
+                    required
+                    maxLength={10}
+                    placeholder="09XXXXXXXX"
+                    style={styles.input}
+                  />
                 </div>
               )}
-              
-              <div style={styles.orderInfo}>
-                <span style={styles.orderLabel}>N° de pedido:</span>
-                <span style={styles.orderNumber}>{orderId}</span>
+
+              <div style={styles.totalContainer}>
+                <span style={styles.totalLabel}>Total a pagar:</span>
+                <span style={styles.totalAmount}>${total}</span>
               </div>
-            </div>
 
-            {/* Botón de impresión y finalizar */}
-            <div style={styles.successFooter}>
-              <button 
-                onClick={() => window.print()} 
-                style={styles.printBtn}
-              >
-                <span style={styles.printIcon}>🖨️</span>
-                Imprimir Ticket
+              <button type="submit" style={styles.payBtn}>
+                <span style={styles.payBtnIcon}>🔒</span>
+                Pagar Ahora
               </button>
+            </form>
+          )}
 
-              <button 
-                style={styles.finishBtn}
-                onClick={() => { clearCart(); onClose(); setStep(1); }}
-              >
-                Finalizar y Cerrar
-              </button>
+          {step === 2 && !showTicket && (
+            <div style={styles.processingContainer}>
+              <p>Procesando pago...</p>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+
+      {/* TicketModal independiente */}
+      {showTicket && orderData && (
+        <TicketModal 
+          open={showTicket} 
+          onClose={handleCloseTicket} 
+          order={orderData} 
+        />
+      )}
+    </>
   );
 }
 
+
 // ============================================
 // ESTILOS IPHONE 16
+// ============================================
+// ============================================
+// ESTILOS MINIMALISTAS - COHERENTES CON TICKET
 // ============================================
 const styles = {
   overlay: {
@@ -306,7 +271,7 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(0, 0, 0, 0.3)',
+    background: 'rgba(0, 0, 0, 0.4)',
     backdropFilter: 'blur(8px)',
     WebkitBackdropFilter: 'blur(8px)',
     zIndex: 2000,
@@ -317,47 +282,45 @@ const styles = {
   },
   modal: {
     width: '100%',
-    maxWidth: 480,
-    background: 'rgba(255, 255, 255, 0.9)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
+    maxWidth: 420,
+    background: '#FFFFFF',
     borderRadius: 32,
-    boxShadow: '0 30px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.5) inset',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-    overflow: 'hidden'
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+    overflow: 'hidden',
+    animation: 'slideUp 0.3s ease-out'
   },
   header: {
-    padding: '1.2rem 1.5rem',
+    padding: '1rem 1.5rem',
+    background: '#FFFFFF',
     borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    background: 'rgba(255, 255, 255, 0.5)'
+    justifyContent: 'space-between'
   },
   title: {
     margin: 0,
-    fontSize: '1.3rem',
+    fontSize: '1.1rem',
     fontWeight: '600',
-    color: 'var(--verde-selva)',
+    color: '#1a1a1a',
     display: 'flex',
     alignItems: 'center',
     gap: '0.5rem'
   },
   titleIcon: {
-    fontSize: '1.5rem'
+    fontSize: '1.2rem'
   },
   closeBtn: {
-    background: 'rgba(0, 0, 0, 0.05)',
+    background: 'none',
     border: 'none',
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    fontSize: '1.2rem',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    fontSize: '1rem',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    color: '#666',
+    color: '#999',
     transition: 'all 0.2s ease'
   },
   form: {
@@ -372,29 +335,31 @@ const styles = {
     gap: '0.3rem'
   },
   label: {
-    fontSize: '0.8rem',
+    fontSize: '0.7rem',
     fontWeight: '600',
-    color: 'var(--gris-texto)',
+    color: '#666',
     textTransform: 'uppercase',
     letterSpacing: '0.5px'
   },
   input: {
-    padding: '0.8rem 1rem',
-    borderRadius: 20,
-    border: '1px solid rgba(0, 0, 0, 0.1)',
-    fontSize: '0.95rem',
-    background: 'rgba(255, 255, 255, 0.8)',
+    padding: '0.7rem 1rem',
+    borderRadius: 24,
+    border: '1px solid #e0e0e0',
+    fontSize: '0.9rem',
+    background: '#FFFFFF',
     transition: 'all 0.2s ease',
-    width: '100%'
+    width: '100%',
+    outline: 'none'
   },
   select: {
-    padding: '0.8rem 1rem',
-    borderRadius: 20,
-    border: '1px solid rgba(0, 0, 0, 0.1)',
-    fontSize: '0.95rem',
-    background: 'rgba(255, 255, 255, 0.8)',
+    padding: '0.7rem 1rem',
+    borderRadius: 24,
+    border: '1px solid #e0e0e0',
+    fontSize: '0.9rem',
+    background: '#FFFFFF',
     cursor: 'pointer',
-    fontWeight: '500'
+    fontWeight: '500',
+    outline: 'none'
   },
   inputWithIcon: {
     position: 'relative',
@@ -405,9 +370,9 @@ const styles = {
     right: 12,
     top: '50%',
     transform: 'translateY(-50%)',
-    fontSize: '0.8rem',
-    color: 'var(--morado-primario)',
-    fontWeight: '600'
+    fontSize: '0.7rem',
+    color: '#8B5CF6',
+    fontWeight: '500'
   },
   row: {
     display: 'flex',
@@ -417,184 +382,71 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '1rem',
-    background: 'rgba(255, 215, 0, 0.05)',
-    borderRadius: 20,
-    marginTop: '0.5rem',
-    border: '1px solid rgba(255, 215, 0, 0.2)'
+    padding: '0.8rem 1rem',
+    background: '#f8f8f8',
+    borderRadius: 28,
+    marginTop: '0.5rem'
   },
   totalLabel: {
-    fontSize: '0.95rem',
-    color: 'var(--gris-texto)',
+    fontSize: '0.85rem',
+    color: '#666',
     fontWeight: '500'
   },
   totalAmount: {
-    fontSize: '1.5rem',
+    fontSize: '1.3rem',
     fontWeight: '700',
-    color: 'var(--maracuya)'
+    color: '#FF8C42'
   },
   payBtn: {
-    padding: '1rem',
-    background: 'linear-gradient(135deg, var(--verde-selva) 0%, #2a6b2f 100%)',
+    padding: '0.9rem',
+    background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)',
     color: 'white',
     border: 'none',
     borderRadius: 30,
     fontWeight: '600',
-    fontSize: '1rem',
+    fontSize: '0.9rem',
     cursor: 'pointer',
     transition: 'all 0.2s ease',
-    boxShadow: '0 4px 12px rgba(1, 64, 14, 0.2)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '0.5rem'
   },
   payBtnIcon: {
-    fontSize: '1rem'
-  },
-  successContainer: {
-    padding: '1.5rem',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.5rem'
-  },
-  summaryCard: {
-    background: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: 24,
-    padding: '1.2rem',
-    border: '1px solid rgba(255, 255, 255, 0.5)'
-  },
-  summaryTitle: {
-    margin: '0 0 0.8rem 0',
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: 'var(--verde-selva)'
-  },
-  itemList: {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-    maxHeight: 120,
-    overflowY: 'auto'
-  },
-  itemRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '0.4rem 0',
-    borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
     fontSize: '0.9rem'
-  },
-  itemName: {
-    color: 'var(--gris-texto)'
-  },
-  itemPrice: {
-    fontWeight: '600',
-    color: 'var(--maracuya)'
-  },
-  summaryTotal: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '0.8rem',
-    paddingTop: '0.8rem',
-    borderTop: '2px solid rgba(255, 215, 0, 0.2)',
-    fontSize: '1rem',
-    fontWeight: '600'
-  },
-  totalHighlight: {
-    color: 'var(--maracuya)',
-    fontSize: '1.2rem'
-  },
-  successContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '1rem'
-  },
-  logoContainer: {
-    background: 'white',
-    padding: '12px',
-    borderRadius: 30,
-    boxShadow: '0 8px 20px rgba(102, 126, 234, 0.15)',
-    marginBottom: '0.5rem'
-  },
-  logo: {
-    width: 120,
-    height: 'auto'
-  },
-  successTitle: {
-    margin: 0,
-    fontSize: '1.4rem',
-    fontWeight: '600',
-    color: 'var(--verde-selva)',
-    textAlign: 'center'
-  },
-  successMessage: {
-    margin: 0,
-    fontSize: '0.9rem',
-    color: 'var(--gris-texto)',
-    textAlign: 'center'
-  },
-  qrContainer: {
-    padding: '0.5rem',
-    background: 'white',
-    borderRadius: 20,
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)'
-  },
-  qrImage: {
-    width: 140,
-    height: 140,
-    borderRadius: 12
-  },
-  orderInfo: {
-    textAlign: 'center'
-  },
-  orderLabel: {
-    display: 'block',
-    fontSize: '0.8rem',
-    color: 'var(--gris-texto)',
-    marginBottom: '0.2rem'
-  },
-  orderNumber: {
-    fontSize: '1.5rem',
-    fontWeight: '700',
-    color: 'var(--morado-primario)',
-    letterSpacing: '1px'
-  },
-  successFooter: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.8rem'
-  },
-  printBtn: {
-    padding: '0.8rem',
-    background: 'rgba(255, 255, 255, 0.5)',
-    border: '1px solid rgba(0, 0, 0, 0.1)',
-    borderRadius: 30,
-    fontSize: '0.95rem',
-    fontWeight: '500',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.5rem'
-  },
-  printIcon: {
-    fontSize: '1.1rem'
-  },
-  finishBtn: {
-    padding: '1rem',
-    background: 'linear-gradient(135deg, var(--morado-primario) 0%, #8b5cf6 100%)',
-    color: 'white',
-    border: 'none',
-    borderRadius: 30,
-    fontWeight: '600',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    boxShadow: '0 4px 12px rgba(99, 102, 241, 0.2)'
   }
 };
 
-// Estilos hover (se aplican vía className o con eventos onMouseEnter/Leave)
-// Se pueden agregar como estilos globales o manejarlos con estados
+// Animación
+const styleSheet = document.createElement('style');
+styleSheet.textContent = `
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .close-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #666;
+  }
+  
+  input:focus, select:focus {
+    border-color: #FF8C42;
+    box-shadow: 0 0 0 2px rgba(255, 140, 66, 0.1);
+  }
+  
+  .pay-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+if (typeof document !== 'undefined') {
+  document.head.appendChild(styleSheet);
+}

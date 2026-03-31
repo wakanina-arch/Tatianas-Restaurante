@@ -222,36 +222,41 @@ export default function PromosDrawer({ open, onClose, menuItems, onSaveMenu }) {
 // ESTILOS CON EFECTO VIDRIO (EL QUE BUSCAS)
 // ============================================
 const styles = {
-  overlay: {
+   overlay: {
     position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(0, 0, 0, 0.2)',
+    background: 'rgba(0, 0, 0, 0.5)',
     backdropFilter: 'blur(8px)',
     WebkitBackdropFilter: 'blur(8px)',
     zIndex: 2000,
     display: 'flex',
-    justifyContent: 'flex-end'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   drawer: {
-    width: '500px',
-    maxWidth: '90%',
-    height: '100%',
-    background: 'rgba(255, 255, 255, 0.85)', // 👈 Fondo blanco cristalizado
-    backdropFilter: 'blur(20px)', // 👈 Efecto niebla
+    width: '90%',
+    maxWidth: '550px',
+    maxHeight: '85vh',
+    background: 'rgba(255, 255, 255, 0.95)',
+    backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
-    boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)',
+    borderRadius: '32px',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
     display: 'flex',
     flexDirection: 'column',
-    borderLeft: '1px solid rgba(255, 255, 255, 0.5)',
-    animation: 'slideIn 0.3s ease-out'
+    border: '1px solid rgba(255, 255, 255, 0.5)'
   },
   header: {
-    padding: '1.5rem',
-    background: 'rgba(255, 255, 255, 0.3)',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
+    padding: '1rem 1.5rem',
+    background: 'linear-gradient(135deg, var(--morado-primario) 0%, #8b5cf6 100%)',
+    color: 'white',
+    borderTopLeftRadius: '32px',
+    borderTopRightRadius: '32px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -259,30 +264,30 @@ const styles = {
     top: 0,
     zIndex: 10
   },
-  title: {
+   title: {
     margin: 0,
-    fontSize: '1.3rem',
+    fontSize: '1.2rem',
     fontWeight: '600',
-    color: 'var(--verde-selva)',
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem'
+    gap: '0.5rem',
+    color: 'white'  // ← cambiar de var(--verde-selva) a blanco
   },
   titleIcon: {
-    fontSize: '1.5rem'
+    fontSize: '1.3rem'
   },
   closeBtn: {
-    background: 'rgba(0, 0, 0, 0.05)',
+    background: 'rgba(0, 0, 0, 0.2)',
     border: 'none',
-    width: '36px',
-    height: '36px',
-    borderRadius: '50%',
-    fontSize: '1.2rem',
+    width: '32px',
+    height: '32px',
+    borderRadius: '16px',
+    fontSize: '1rem',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    color: '#666',
+    color: 'white',
     transition: 'all 0.2s ease'
   },
   content: {

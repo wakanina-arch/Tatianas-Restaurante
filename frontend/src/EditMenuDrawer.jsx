@@ -395,20 +395,20 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
 
                               {/* Precio */}
                               <div style={styles.fieldGroup}>
-                                <label style={styles.label}>Precio ($):</label>
-                                <input 
-                                  type="number" 
-                                  step="0.01"
-                                  min="0"
-                                  style={styles.input}
-                                  value={opt.precio !== undefined ? opt.precio : ''} 
-                                  onChange={e => {
-                                    const val = e.target.value === '' ? 0 : parseFloat(e.target.value);
-                                    handleOptionChange(idx, oidx, 'precio', val);
-                                  }} 
-                                  placeholder="0.00"
-                                />
-                              </div>
+  <label style={styles.label}>Precio ($):</label>
+  <input 
+    type="number" 
+    step="0.01"
+    min="0"
+    style={styles.input}
+    value={opt.precio !== undefined && opt.precio !== null && opt.precio !== 0 ? opt.precio : ''} 
+    onChange={e => {
+      const val = e.target.value === '' ? null : parseFloat(e.target.value);
+      handleOptionChange(idx, oidx, 'precio', val);
+    }} 
+    placeholder="0.00"
+  />
+</div>
 
                               {/* URL de imagen/video */}
                               <div style={styles.fieldGroup}>
@@ -469,83 +469,86 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(0, 0, 0, 0.3)',
+    background: 'rgba(0, 0, 0, 0.5)',
     zIndex: 3000,
     display: 'flex',
-    justifyContent: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'center',
     backdropFilter: 'blur(8px)',
     WebkitBackdropFilter: 'blur(8px)'
   },
   drawer: {
-    width: '520px',
-    maxWidth: '90%',
-    background: 'rgba(255, 255, 255, 0.9)',
+    width: '90%',
+    maxWidth: '600px',
+    maxHeight: '85vh',
+    background: 'rgba(255, 255, 255, 0.95)',
     backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
-    height: '100%',
+    borderRadius: '32px',
     overflowY: 'auto',
-     overflowX: 'hidden',
-    boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.1)',
+    overflowX: 'hidden',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
     display: 'flex',
     flexDirection: 'column',
-    borderLeft: '1px solid rgba(255, 255, 255, 0.3)'
+    border: '1px solid rgba(255, 255, 255, 0.3)'
   },
   header: {
-    padding: '1.5rem',
+    padding: '1rem 1.5rem',
     background: 'linear-gradient(135deg, var(--morado-primario) 0%, #8b5cf6 100%)',
     color: 'white',
+    borderTopLeftRadius: '32px',
+    borderTopRightRadius: '32px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     position: 'sticky',
     top: 0,
-    zIndex: 10,
-    borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
+    zIndex: 10
   },
   headerTitle: {
     margin: 0,
-    fontSize: '1.3rem',
+    fontSize: '1.2rem',
     display: 'flex',
     alignItems: 'center',
     gap: '0.5rem',
-    fontWeight: '600'
+    fontWeight: '600',
+    color: 'white'
   },
   headerIcon: {
-    fontSize: '1.5rem'
+    fontSize: '1.3rem'
   },
   closeBtn: {
-    position: 'absolute',
-    top: '1rem',
-    right: '1rem',
-    background: 'rgba(255, 255, 255, 0.2)',
+    background: 'rgba(0, 0, 0, 0.2)',
     border: 'none',
     borderRadius: '30px',
-    width: '36px',
-    height: '36px',
+    width: '32px',
+    height: '32px',
+    fontSize: '1rem',
+    cursor: 'pointer',
     color: 'white',
-    fontSize: '1.5rem',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'background 0.2s ease',
-    backdropFilter: 'blur(4px)'
+    transition: 'all 0.2s ease'
   },
   content: {
     padding: '1.5rem',
     flex: 1,
     overflowY: 'auto',
-     overflowX: 'hidden',
+    overflowX: 'hidden',
     wordWrap: 'break-word'
   },
   addCategoryBtn: {
     width: '100%',
-    padding: '1rem',
+    padding: '0.8rem',
     background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
     color: 'var(--verde-selva)',
     border: 'none',
     borderRadius: '30px',
     fontWeight: '600',
-    fontSize: '1rem',
+    fontSize: '0.9rem',
     cursor: 'pointer',
-    marginBottom: '2rem',
+    marginBottom: '1.5rem',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -554,48 +557,52 @@ const styles = {
     boxShadow: '0 4px 12px rgba(255, 179, 71, 0.3)'
   },
   addCategoryIcon: {
-    fontSize: '1.2rem'
+    fontSize: '1rem'
   },
   categoryCard: {
-    marginBottom: '2rem',
-    padding: '1.2rem',
+    marginBottom: '1.5rem',
+    padding: '1rem',
     background: 'rgba(255, 255, 255, 0.7)',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
     borderRadius: '24px',
     boxShadow: '0 4px 16px rgba(0, 0, 0, 0.03)',
     border: '1px solid rgba(255, 255, 255, 0.5)',
-     overflowX: 'hidden'
+    overflowX: 'hidden'
   },
   categoryHeader: {
     display: 'flex',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '0.5rem',
-    gap: '1rem',
+    gap: '0.8rem',
     cursor: 'pointer'
   },
   categoryTitleRow: {
     flex: 1,
     display: 'flex',
     alignItems: 'center',
-    gap: '0.8rem'
+    gap: '0.8rem',
+    flexWrap: 'wrap',
+    minWidth: '0'
   },
   categoryBadge: {
     background: 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
     color: 'var(--verde-selva)',
-    padding: '0.3rem 0.8rem',
+    padding: '0.2rem 0.6rem',
     borderRadius: '30px',
-    fontSize: '0.7rem',
+    fontSize: '0.65rem',
     fontWeight: '700',
     whiteSpace: 'nowrap'
   },
   categoryInput: {
     flex: 1,
-    padding: '0.6rem 1rem',
+    minWidth: '150px',
+    padding: '0.5rem 0.8rem',
     borderRadius: '20px',
     border: '1px solid rgba(0, 0, 0, 0.1)',
-    fontSize: '0.95rem',
+    fontSize: '0.85rem',
     fontWeight: '500',
     background: 'rgba(255, 255, 255, 0.8)',
     transition: 'all 0.2s ease'
@@ -608,37 +615,39 @@ const styles = {
   removeCategoryBtn: {
     background: 'rgba(0, 0, 0, 0.05)',
     border: 'none',
-    fontSize: '1rem',
+    fontSize: '0.9rem',
     cursor: 'pointer',
     color: '#666',
-    padding: '0.3rem',
+    padding: '0.2rem',
     borderRadius: '20px',
-    width: '30px',
-    height: '30px',
+    width: '28px',
+    height: '28px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'all 0.2s ease'
   },
   expandIcon: {
-    fontSize: '0.8rem',
+    fontSize: '0.75rem',
     color: 'var(--maracuya)',
     width: '24px',
     textAlign: 'center'
   },
   optionsSection: {
     borderTop: '1px solid rgba(0, 0, 0, 0.05)',
-    paddingTop: '1.2rem',
+    paddingTop: '1rem',
     marginTop: '0.5rem'
   },
   optionsHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '1rem'
+    marginBottom: '0.8rem',
+    flexWrap: 'wrap',
+    gap: '0.5rem'
   },
   optionsTitle: {
-    fontSize: '0.95rem',
+    fontSize: '0.85rem',
     fontWeight: '600',
     color: 'var(--verde-selva)'
   },
@@ -646,44 +655,46 @@ const styles = {
     background: 'rgba(255, 255, 255, 0.5)',
     border: '1px solid rgba(255, 179, 71, 0.3)',
     color: 'var(--verde-selva)',
-    padding: '0.3rem 1rem',
+    padding: '0.2rem 0.8rem',
     borderRadius: '30px',
-    fontSize: '0.75rem',
+    fontSize: '0.7rem',
     fontWeight: '600',
     cursor: 'pointer',
     transition: 'all 0.2s ease'
   },
   optionCard: {
-    marginBottom: '1.2rem',
-    padding: '1rem',
+    marginBottom: '1rem',
+    padding: '0.8rem',
     background: 'white',
-    borderRadius: '20px',
+    borderRadius: '16px',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)',
-    border: '1px solid rgba(255, 179, 71, 0.2)'
+    border: '1px solid rgba(255, 179, 71, 0.2)',
+    width: '100%',
+    boxSizing: 'border-box'
   },
   optionHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '0.8rem'
+    marginBottom: '0.6rem'
   },
   optionBadge: {
     background: 'var(--maracuya)',
     color: 'white',
-    padding: '0.2rem 0.8rem',
+    padding: '0.15rem 0.6rem',
     borderRadius: '30px',
-    fontSize: '0.65rem',
+    fontSize: '0.6rem',
     fontWeight: '600'
   },
   removeOptionBtn: {
     background: 'rgba(0, 0, 0, 0.05)',
     border: 'none',
     color: '#666',
-    fontSize: '0.8rem',
+    fontSize: '0.7rem',
     cursor: 'pointer',
-    width: '24px',
-    height: '24px',
-    borderRadius: '12px',
+    width: '22px',
+    height: '22px',
+    borderRadius: '11px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
@@ -691,40 +702,41 @@ const styles = {
   optionFields: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.8rem'
+    gap: '0.6rem',
+    width: '100%'
   },
   fieldGroup: {
-    marginBottom: '0.5rem'
+    marginBottom: '0.3rem'
   },
   label: {
     display: 'block',
-    fontSize: '0.75rem',
+    fontSize: '0.65rem',
     color: 'var(--gris-texto)',
-    marginBottom: '0.3rem',
+    marginBottom: '0.2rem',
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: '0.5px'
   },
   input: {
     width: '100%',
-    padding: '0.7rem 1rem',
+    padding: '0.5rem 0.8rem',
     borderRadius: '20px',
     border: '1px solid rgba(0, 0, 0, 0.1)',
-    fontSize: '0.9rem',
+    fontSize: '0.8rem',
     background: 'rgba(255, 255, 255, 0.9)',
     transition: 'all 0.2s ease',
     boxSizing: 'border-box'
   },
   imageSelector: {
-    marginBottom: '1rem',
-    padding: '1rem',
+    marginBottom: '0.8rem',
+    padding: '0.8rem',
     background: 'rgba(255, 255, 255, 0.5)',
     borderRadius: '16px',
     border: '1px solid rgba(255, 179, 71, 0.2)'
   },
   imageGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))',
     gap: '0.5rem',
     marginTop: '0.5rem',
     overflowX: 'hidden'
@@ -740,64 +752,64 @@ const styles = {
   },
   imageOptionThumb: {
     width: '100%',
-    height: '50px',
+    height: '45px',
     objectFit: 'cover'
   },
   imageOptionName: {
     display: 'block',
-    fontSize: '0.6rem',
+    fontSize: '0.55rem',
     textAlign: 'center',
-    padding: '0.2rem',
+    padding: '0.15rem',
     color: 'var(--gris-texto)'
   },
   noOptions: {
     textAlign: 'center',
-    padding: '1.5rem',
+    padding: '1rem',
     background: 'rgba(0, 0, 0, 0.02)',
     borderRadius: '16px',
     color: '#999',
-    fontSize: '0.85rem',
+    fontSize: '0.75rem',
     fontStyle: 'italic'
   },
   previewContainer: {
-    margin: '0.5rem 0'
+    margin: '0.3rem 0'
   },
   previewMedia: {
     width: '100%',
-    height: '100px',
+    height: '80px',
     objectFit: 'cover',
-    borderRadius: '16px',
+    borderRadius: '12px',
     border: '1px solid var(--maracuya)',
     maxWidth: '100%'
   },
   previewPlaceholder: {
-    height: '60px',
+    height: '50px',
     background: 'rgba(0, 0, 0, 0.02)',
-    borderRadius: '16px',
+    borderRadius: '12px',
     border: '1px dashed rgba(0, 0, 0, 0.1)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '0.5rem',
-    fontSize: '0.75rem',
+    fontSize: '0.7rem',
     color: '#999',
-    margin: '0.5rem 0'
+    margin: '0.3rem 0'
   },
   previewPlaceholderIcon: {
-    fontSize: '1rem'
+    fontSize: '0.9rem'
   },
   saveBtn: {
     width: '100%',
-    padding: '1rem',
+    padding: '0.8rem',
     background: 'linear-gradient(135deg, var(--verde-selva) 0%, #2a6b2f 100%)',
     color: 'white',
     border: 'none',
     borderRadius: '30px',
     fontWeight: '600',
-    fontSize: '1rem',
+    fontSize: '0.9rem',
     cursor: 'pointer',
     boxShadow: '0 4px 12px rgba(1, 64, 14, 0.2)',
-    marginTop: '1.5rem',
+    marginTop: '1rem',
     transition: 'all 0.2s ease'
   },
   saveBtnDisabled: {
@@ -817,8 +829,8 @@ const styles = {
     gap: '0.5rem'
   },
   spinner: {
-    width: '16px',
-    height: '16px',
+    width: '14px',
+    height: '14px',
     border: '2px solid rgba(255,255,255,0.3)',
     borderRadius: '50%',
     borderTopColor: 'white',
@@ -826,50 +838,38 @@ const styles = {
   }
 };
 
-// Estilo para animación
+// Estilo para animación y responsive
 const styleSheet = document.createElement('style');
 styleSheet.textContent = `
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
   
-  .add-category-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(255, 179, 71, 0.4) !important;
+  @media (max-width: 480px) {
+    .drawer {
+      width: 95% !important;
+      max-width: 95% !important;
+    }
+    .category-header {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    .category-title-row {
+      width: 100% !important;
+    }
+    .category-actions {
+      justify-content: flex-end !important;
+    }
+    .option-card {
+      padding: 0.6rem !important;
+    }
+    .image-grid {
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)) !important;
+    }
+    .input, .category-input {
+      font-size: 0.8rem !important;
+      padding: 0.4rem 0.6rem !important;
+    }
   }
-  
-  input:focus {
-    border-color: var(--maracuya) !important;
-    box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.1) !important;
-    outline: none;
-  }
-  
-  .image-option:hover {
-    border-color: var(--maracuya) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 179, 71, 0.2);
-  }
-  
-  .close-btn:hover {
-    background: rgba(255, 255, 255, 0.3) !important;
-  }
-  
-  .remove-category-btn:hover {
-    background: rgba(255, 59, 48, 0.1) !important;
-    color: #ff3b30 !important;
-  }
-  
-  .add-option-btn:hover {
-    background: rgba(255, 179, 71, 0.1) !important;
-    border-color: var(--maracuya) !important;
-  }
-  
-  .save-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(1, 64, 14, 0.3) !important;
-  }
-    .drawer, .drawer * {
-  -webkit-overflow-scrolling: touch;  /* scroll suave en iOS */
-}
 `;
 document.head.appendChild(styleSheet);

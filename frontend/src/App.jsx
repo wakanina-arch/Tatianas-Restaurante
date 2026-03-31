@@ -957,7 +957,9 @@ function buildMediaItems(item) {
 
   return items;
 }
-
+// ============================================
+// RESUMEN CARRITO DE COMPRA
+// ============================================
 function CartPage({ addLog, setPendingOrders, user }) {
   const { cartItems, removeFromCart, updateQuantity, clearCart, calculateTotal } = useCart();
   const [payOpen, setPayOpen] = useState(false);
@@ -1309,9 +1311,9 @@ style.textContent = `
 
   :root {
     --verde-selva: #01400e;
-    --maracuya: #FFB347;
+    --maracuya: #f87903f6;
     --mango: #FF8C42;
-    --morado-primario: #6366f1;
+    --morado-primario: #4a4af3;
     --gris-texto: #4a5568;
     --borde-tropical: rgba(255, 179, 71, 0.2);
     --crema-tropical: #fff9f0;

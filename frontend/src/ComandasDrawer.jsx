@@ -127,7 +127,7 @@ export default function ComandasDrawer({
                               cursor: 'pointer'
                             }}
                           >
-                            🍳 En Preparación
+                            🍳 en-Preparación
                           </button>
                         </div>
                         <span style={styles.expandIcon}>{isExpanded ? '▲' : '▼'}</span>
@@ -192,7 +192,7 @@ export default function ComandasDrawer({
                           <span style={styles.orderId}>#{order.id}</span>
                           <span style={styles.orderComanda}>Comanda {order.comanda || order.mesa}</span>
                           <span style={{...styles.estadoBadge, background: '#27ae60'}}>
-                            ✅ Listo
+                            ✅ Listo-Entregar
                           </span>
                         </div>
                         <span style={styles.expandIcon}>{isExpanded ? '▲' : '▼'}</span>
