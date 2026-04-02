@@ -67,7 +67,7 @@ function MenuItem({ item, addToCart }) {
       {/* Carrusel cuadrado - 320px */}
       <div style={{
         width: '100%',
-        maxWidth: 320,
+        maxWidth: 360,
         aspectRatio: '1/1',
         margin: '0 auto 20px auto',
         position: 'relative',
@@ -94,8 +94,7 @@ function MenuItem({ item, addToCart }) {
           />
         ) : (
           <div style={{
-            width: '100%',
-            height: '100%',
+          //  maxWidth: '95%',   // o '100%' - lo ajustamos visualmente
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -109,25 +108,28 @@ function MenuItem({ item, addToCart }) {
       </div>
 
       {/* Galleta informativa - 320px alineada */}
-      <div style={{
-        width: '95%',
-        maxWidth: '90%',
-        margin: '10px auto 0',
-        padding: '1.5rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(15px)',
-        WebkitBackdropFilter: 'blur(15px)',
-        borderRadius: 32,
-        boxShadow: '0 15px 35px rgba(0,0,0,0.12)',
-        border: '1px solid rgba(255, 255, 255, 0.6)',
-        position: 'relative',
-        zIndex: 10,
-        maxHeight: '480px',
-        overflowY: 'auto'
-      }}>
+      {/* Galleta informativa - más ancha que la imagen */}
+<div style={{
+  width: 'calc(100% + 60px)',    // 40px más ancha que el contenedor
+  maxWidth: 'calc(100% + 60px)',
+  marginLeft: '-30px',            // centrar la galleta
+  marginTop: '10px',
+  marginBottom: '0',
+  padding: '1.5rem',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem',
+  background: 'rgba(255, 255, 255, 0.95)',
+  backdropFilter: 'blur(15px)',
+  WebkitBackdropFilter: 'blur(15px)',
+  borderRadius: '28px',
+  boxShadow: '0 15px 35px rgba(0,0,0,0.12)',
+  border: '1px solid rgba(255, 255, 255, 0.6)',
+  position: 'relative',
+  zIndex: 10,
+  maxHeight: '480px',
+  overflowY: 'auto'
+}}>
         
         <div>
           <h2 style={{

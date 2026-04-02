@@ -62,32 +62,19 @@ export default function HomePage({ platillos, selectedCategory, comercioId }) {
 >
         {categorias.map((categoria) => (
           <SwiperSlide key={categoria.id}>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '1rem',
-              padding: '1rem'
-            }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.8rem',
-                marginBottom: '1.5rem'
-              }}>
-                <span style={{ fontSize: '2rem' }}>{categoria.icono}</span>
-                <h2 style={{
-                  fontSize: '1.4rem',
-                  fontWeight: '600',
-                  color: '#01400e',
-                  margin: 0
-                }}>{categoria.nombre}</h2>
-              </div>
-
-              <MenuItem item={categoria.categoria} addToCart={addToCart} />
-            </div>
-          </SwiperSlide>
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '1rem',
+              padding: '1rem',
+    width: '100%',           // ← añade
+  overflow: 'visible',   // ← añade para evitar recortes
+  }}>
+    {/* Título eliminado */}
+    <MenuItem item={categoria.categoria} addToCart={addToCart} />
+  </div>
+</SwiperSlide>
         ))}
       </Swiper>
     </section>
@@ -103,7 +90,7 @@ swiperStyles.textContent = `
     margin-bottom: 10px !important;
   }
   .swiper-pagination-bullet {
-    background: #01400e !important;
+    background: #f4f9f5 !important;
     opacity: 0.4 !important;
   }
   .swiper-pagination-bullet-active {
