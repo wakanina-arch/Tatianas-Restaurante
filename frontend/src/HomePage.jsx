@@ -66,8 +66,8 @@ export default function HomePage({ platillos, selectedCategory, comercioId }) {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '1rem',
-              padding: '1rem',
+    gap: '0.5rem',
+    padding: '0.5rem',
     width: '100%',           // ← añade
   overflow: 'visible',   // ← añade para evitar recortes
   }}>

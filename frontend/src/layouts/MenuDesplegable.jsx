@@ -87,32 +87,32 @@ export default function MenuDesplegable({ abierto, onClose, onSelectCategoria, c
 
 const styles = {
   overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 98,
-    background: "rgba(0, 0, 0, 0.2)",
-    backdropFilter: "blur(8px)",
-    WebkitBackdropFilter: "blur(8px)",
-    transition: "all 0.3s ease"
-  },
+  position: "fixed",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 98,
+  background: "rgba(0, 0, 0, 0.3)",          // ← más oscuro para contraste
+  backdropFilter: "blur(4px)",
+  WebkitBackdropFilter: "blur(4px)",
+  transition: "all 0.3s ease"
+},
   menu: {
-    position: "fixed",
-    top: "80px",
-    left: "15px",
-    width: "280px",
-    background: "rgba(18, 12, 12, 0.85)",
-    backdropFilter: "blur(20px)",
-    WebkitBackdropFilter: "blur(20px)",
-    borderRadius: "24px", // iPhone style
-    padding: "1.5rem 0.8rem",
-    border: "1px solid rgba(255, 215, 0, 0.2)",
-    borderTop: "2px solid rgba(255, 215, 0, 0.5)",
-    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 215, 0, 0.1) inset",
-    zIndex: 999
-  },
+  position: "fixed",
+  top: "80px",
+  left: "15px",
+  width: "280px",
+  background: "rgba(20, 10, 10, 0.85)",      // ← fondo oscuro (como Welcome)
+  backdropFilter: "blur(20px)",              // ← esmerilado
+  WebkitBackdropFilter: "blur(20px)",
+  borderRadius: "24px",
+  padding: "1.5rem 0.8rem",
+  border: "1px solid rgba(255, 215, 0, 0.2)",
+  borderTop: "2px solid rgba(255, 215, 0, 0.3)",
+  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 215, 0, 0.1) inset",
+  zIndex: 999
+},
   header: {
     marginBottom: "1.2rem",
     textAlign: "center"

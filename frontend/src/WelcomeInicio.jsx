@@ -62,8 +62,36 @@ export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegist
             <span style={styles.opcionalTexto}>Opcional</span>
           </div>
         <h1 style={styles.titulo}>
-          <span style={{ color: '#FF4500' }}>ONE</span> TO{' '}
-          <span style={{ color: '#FFD700' }}>ONE</span>
+          <h1 style={{
+  textAlign: 'center',
+  fontSize: '1.6rem',
+  margin: '0 0 8px 0',
+  fontFamily: "'Cormorant Garamond', serif",
+  letterSpacing: '4px',
+  fontWeight: 300,
+}}>
+  <span style={{
+    fontSize: '1.4rem',
+    fontWeight: '700',
+    color: '#B22222',  // rojo místico
+    textShadow: '0 0 5px rgba(178,34,34,0.5), 0 0 10px rgba(178,34,34,0.3)',
+    animation: 'brilloRojo 2.5s infinite alternate',
+  }}>ONE</span>{' '}
+  <span style={{
+    fontSize: '1.4rem',
+    fontWeight: '700',
+    color: '#1a3b1a',  // verde selva
+    textShadow: '0 0 5px rgba(26,59,26,0.5), 0 0 10px rgba(26,59,26,0.3)',
+    animation: 'brilloVerde 2.5s infinite alternate',
+  }}>TO</span>{' '}
+  <span style={{
+    fontSize: '1.4rem',
+    fontWeight: '700',
+    color: '#FFD700',  // dorado
+    textShadow: '0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(255,215,0,0.3)',
+    animation: 'brilloDorado 2.5s infinite alternate',
+  }}>ONE</span>
+</h1>
         </h1>
         <div style={styles.fraseContainer}>
           <span style={styles.fraseIcono}>{fraseData.icono}</span>
@@ -139,12 +167,16 @@ const styles = {
     gap: '6px',
   },
   moneda: {
-    fontSize: '1.5rem',
-    cursor: 'pointer',
-    transition: 'transform 0.3s ease',
-    animation: 'flotar 3s ease-in-out infinite',
-    textAlign: 'center',
-  },
+  fontSize: '2rem',           // ← un poco más grande
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+  animation: 'flotar 3s ease-in-out infinite, pulso 2s ease-in-out infinite',
+  textShadow: '0 0 5px rgba(255,215,0,0.5)',
+  '&:hover': {
+    transform: 'scale(1.1)',
+    textShadow: '0 0 15px rgba(255,215,0,0.8)',
+  }
+},
   opcionalTexto: {
     color: '#FFD700',
     fontSize: '0.65rem',
@@ -208,6 +240,10 @@ styleSheet.textContent = `
   .comercio-card:hover {
     transform: scale(1.02);
   }
+    @keyframes pulso {
+  0%, 100% { text-shadow: 0 0 0px rgba(255,215,0,0); }
+  50% { text-shadow: 0 0 12px rgba(255,215,0,0.8); }
+}
 `;
 if (typeof document !== 'undefined') {
   document.head.appendChild(styleSheet);

@@ -62,19 +62,19 @@ function MenuItem({ item, addToCart }) {
       flexDirection: 'column',
       alignItems: 'center',
       background: 'transparent',
-      marginBottom: '1rem'
+      marginBottom: '2rem'
     }}>
       {/* Carrusel cuadrado - 320px */}
       <div style={{
         width: '100%',
         maxWidth: 360,
         aspectRatio: '1/1',
-        margin: '0 auto 20px auto',
+        margin: '1.5rem auto 0.75rem auto',
         position: 'relative',
         overflow: 'hidden',
         backgroundColor: '#1a1a1a',
         borderRadius: 24,
-        boxShadow: '0 12px 30px rgba(0,0,0,0.15)'
+        boxShadow: '0 8px 20px rgba(0,0,0,0.12)'
       }}>
         {imageSrc ? (
           <img 
@@ -110,37 +110,38 @@ function MenuItem({ item, addToCart }) {
       {/* Galleta informativa - 320px alineada */}
       {/* Galleta informativa - más ancha que la imagen */}
 <div style={{
-  width: 'calc(100% + 60px)',    // 40px más ancha que el contenedor
-  maxWidth: 'calc(100% + 60px)',
-  marginLeft: '-30px',            // centrar la galleta
-  marginTop: '10px',
-  marginBottom: '0',
+  width: 'calc(100% + 80px)',    // 80px más ancha (40px cada lado)
+  maxWidth: 'calc(100% + 80px)',
+  marginLeft: '-40px',            // centrar la galleta
+  marginTop: '0.75rem',           // espacio de respiración con la imagen
+  marginBottom: '2.5rem',         // espacio hacia abajo para ver los dots
   padding: '1.5rem',
   display: 'flex',
   flexDirection: 'column',
   gap: '1rem',
-  background: 'rgba(255, 255, 255, 0.95)',
-  backdropFilter: 'blur(15px)',
-  WebkitBackdropFilter: 'blur(15px)',
+  background: 'rgba(255, 255, 255, 0.97)',
+  backdropFilter: 'blur(12px)',
+  WebkitBackdropFilter: 'blur(12px)',
   borderRadius: '28px',
-  boxShadow: '0 15px 35px rgba(0,0,0,0.12)',
-  border: '1px solid rgba(255, 255, 255, 0.6)',
+  boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+  border: '1px solid rgba(255, 255, 255, 0.5)',
   position: 'relative',
   zIndex: 10,
-  maxHeight: '480px',
+  maxHeight: '400px',
   overflowY: 'auto'
 }}>
         
         <div>
           <h2 style={{
-            fontSize: '1.8rem',
-            fontWeight: '700',
+            fontSize: '1.7rem',
+            fontWeight: '600',
             color: 'var(--verde-selva)',
-            margin: '0 0 0.5rem 0',
+            margin: '0 0 0.35rem 0',
             display: 'flex',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: '0.5rem'
+            gap: '0.5rem',
+            letterSpacing: '-0.5px'
           }}>
             {item.nombre}
             <OfertaBadge />
@@ -151,14 +152,15 @@ function MenuItem({ item, addToCart }) {
         <p style={{
           fontSize: '0.9rem',
           color: 'var(--gris-texto)',
-          lineHeight: 1.6,
+          lineHeight: 1.5,
           margin: 0,
           fontStyle: 'italic',
           whiteSpace: 'normal',
           wordBreak: 'break-word',
-          maxHeight: '80px',
+          maxHeight: '75px',
           overflowY: 'auto',
-          paddingRight: '5px'
+          paddingRight: '4px',
+          fontWeight: '400'
         }}>
           {description}
         </p>
@@ -166,11 +168,11 @@ function MenuItem({ item, addToCart }) {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.4rem',
-          margin: '0.5rem 0',
-          maxHeight: '200px',
+          gap: '0.35rem',
+          margin: '0.35rem 0',
+          maxHeight: '180px',
           overflowY: 'auto',
-          paddingRight: '5px'
+          paddingRight: '4px'
         }}>
           {item.opciones?.map((opt, idx) => {
             const tieneOferta = item.enOferta && opt.precioOriginal;
@@ -184,23 +186,23 @@ function MenuItem({ item, addToCart }) {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'flex-start',
-                  padding: '0.5rem 1rem',
-                  background: selectedOption === opt.nombre ? 'rgba(255, 215, 0, 0.1)' : 'rgba(0, 0, 0, 0.02)',
-                  borderRadius: 16,
+                  padding: '0.5rem 0.8rem',
+                  background: selectedOption === opt.nombre ? 'rgba(255, 215, 0, 0.08)' : 'transparent',
+                  borderRadius: 12,
                   border: selectedOption === opt.nombre 
-                    ? '1px solid var(--maracuya)' 
-                    : '1px solid rgba(0, 0, 0, 0.05)',
+                    ? '1px solid rgba(255, 215, 0, 0.3)' 
+                    : '1px solid rgba(0, 0, 0, 0.03)',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.15s ease'
                 }}
                 onMouseEnter={(e) => {
                   if (selectedOption !== opt.nombre) {
-                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (selectedOption !== opt.nombre) {
-                    e.currentTarget.style.background = 'rgba(0, 0, 0, 0.02)';
+                    e.currentTarget.style.background = 'transparent';
                   }
                 }}
               >
@@ -255,22 +257,23 @@ function MenuItem({ item, addToCart }) {
         <div style={{
           display: 'flex',
           justifyContent: 'space-around',
-          background: 'rgba(255, 215, 0, 0.05)',
-          padding: '0.5rem',
-          borderRadius: 20,
-          border: '1px solid rgba(255, 215, 0, 0.1)'
+          background: 'rgba(255, 215, 0, 0.03)',
+          padding: '0.6rem 0.5rem',
+          borderRadius: 16,
+          border: '1px solid rgba(255, 215, 0, 0.08)',
+          marginTop: '0.5rem'
         }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
-            <span style={{ fontSize: '1rem' }}>🥗</span>
-            <span style={{ fontWeight: '600', color: 'var(--verde-selva)' }}>{nutrition.calorias}</span> kcal
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem', fontWeight: '500' }}>
+            <span style={{ fontSize: '0.9rem' }}>🥗</span>
+            <span style={{ color: 'var(--verde-selva)' }}>{nutrition.calorias}</span>
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
-            <span style={{ fontSize: '1rem' }}>🥩</span>
-            <span style={{ fontWeight: '600', color: 'var(--verde-selva)' }}>{nutrition.proteina}</span>g
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem', fontWeight: '500' }}>
+            <span style={{ fontSize: '0.9rem' }}>🥩</span>
+            <span style={{ color: 'var(--verde-selva)' }}>{nutrition.proteina}g</span>
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}>
-            <span style={{ fontSize: '1rem' }}>🍚</span>
-            <span style={{ fontWeight: '600', color: 'var(--verde-selva)' }}>{nutrition.carbohidratos}</span>g
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem', fontWeight: '500' }}>
+            <span style={{ fontSize: '0.9rem' }}>🍚</span>
+            <span style={{ color: 'var(--verde-selva)' }}>{nutrition.carbohidratos}g</span>
           </span>
         </div>
 
@@ -278,8 +281,8 @@ function MenuItem({ item, addToCart }) {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          paddingTop: '0.8rem',
-          borderTop: '1px solid rgba(0, 0, 0, 0.05)'
+          paddingTop: '0.6rem',
+          borderTop: '1px solid rgba(0, 0, 0, 0.03)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             {selectedOption && selectedData && item.enOferta && selectedData.precioOriginal && (
@@ -303,34 +306,35 @@ function MenuItem({ item, addToCart }) {
           <button 
             style={{
               background: !selectedOption 
-                ? 'rgba(0, 0, 0, 0.1)' 
+                ? 'rgba(0, 0, 0, 0.08)' 
                 : 'linear-gradient(135deg, var(--mango) 0%, var(--maracuya) 100%)',
-              color: !selectedOption ? '#999' : 'var(--verde-selva)',
+              color: !selectedOption ? '#aaa' : 'var(--verde-selva)',
               border: 'none',
-              padding: '0.6rem 1.2rem',
-              borderRadius: 30,
+              padding: '0.5rem 1rem',
+              borderRadius: 24,
               fontWeight: '600',
-              fontSize: '0.9rem',
+              fontSize: '0.85rem',
               cursor: !selectedOption ? 'not-allowed' : 'pointer',
-              transition: 'all 0.2s ease',
-              boxShadow: !selectedOption ? 'none' : '0 4px 12px rgba(255, 215, 0, 0.3)'
+              transition: 'all 0.15s ease',
+              boxShadow: !selectedOption ? 'none' : '0 3px 10px rgba(255, 215, 0, 0.25)',
+              letterSpacing: '-0.3px'
             }}
             onClick={handleAddToCart}
             disabled={!selectedOption}
             onMouseEnter={(e) => {
               if (selectedOption) {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 16px rgba(255, 215, 0, 0.4)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 215, 0, 0.3)';
               }
             }}
             onMouseLeave={(e) => {
               if (selectedOption) {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 215, 0, 0.3)';
+                e.currentTarget.style.boxShadow = '0 3px 10px rgba(255, 215, 0, 0.25)';
               }
             }}
           >
-            Añadir
+            Agregar
           </button>
         </div>
       </div>

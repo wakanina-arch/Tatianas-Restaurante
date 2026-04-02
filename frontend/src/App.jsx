@@ -299,20 +299,20 @@ function MainApp() {
 function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerfil, onBackToWelcome, user }) {
   return (
     <header style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 1000,
-      background: 'rgba(255, 255, 255, 0.8)',
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
-      boxShadow: '0 2px 15px rgba(0, 0, 0, 0.05)',
-      borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
-      display: 'flex',
-      justifyContent: 'center',
-      height: '60px'
-    }}>
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  zIndex: 1000,
+  background: 'rgba(20, 10, 10, 0.75)',     // ← fondo oscuro como Welcome
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  boxShadow: '0 2px 15px rgba(0, 0, 0, 0.2)',
+  borderBottom: '1px solid rgba(255,215,0,0.15)',  // ← borde dorado sutil
+  display: 'flex',
+  justifyContent: 'center',
+  height: '60px'
+}}>
       
       <div style={{
         width: '100%',
@@ -382,17 +382,14 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             position: 'relative'
           }}>
             <span style={{
-              fontSize: '1.2rem',
-              fontWeight: '700',
-              background: 'linear-gradient(135deg, #0a1f0a 0%, #1a3b1a 50%, #2d4f2a 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              letterSpacing: '0.5px',
-              textShadow: '0 0 2px rgba(2, 30, 1, 0.8), 0 0 15px rgba(255, 215, 0, 0.3)',
-              animation: 'brilloTexto 2.5s infinite alternate',
-            }}>
-              ONE TO ONE
-            </span> 
+  fontSize: '1.2rem',
+  fontWeight: '700',
+  letterSpacing: '0.5px',
+}}>
+  <span style={{ color: '#B22222', textShadow: '0 0 3px rgba(178,34,34,0.5)' }}>ONE</span>{' '}
+  <span style={{ color: '#1a3b1a', textShadow: '0 0 3px rgba(26,59,26,0.5)' }}>TO</span>{' '}
+  <span style={{ color: '#FFD700', textShadow: '0 0 3px rgba(255,215,0,0.5)' }}>ONE</span>
+</span>
           </div>
         </div>
 
@@ -976,6 +973,18 @@ styleSheet.textContent = `
     opacity: 1 !important;
     color: #ff3b30;
   }
+    @keyframes brilloRojo {
+  0% { text-shadow: 0 0 2px rgba(178,34,34,0.3); }
+  100% { text-shadow: 0 0 12px rgba(178,34,34,0.8); }
+}
+@keyframes brilloVerde {
+  0% { text-shadow: 0 0 2px rgba(26,59,26,0.3); }
+  100% { text-shadow: 0 0 12px rgba(26,59,26,0.8); }
+}
+@keyframes brilloDorado {
+  0% { text-shadow: 0 0 2px rgba(255,215,0,0.3); }
+  100% { text-shadow: 0 0 12px rgba(255,215,0,0.8); }
+}
 `;
 
 if (typeof document !== 'undefined') {
