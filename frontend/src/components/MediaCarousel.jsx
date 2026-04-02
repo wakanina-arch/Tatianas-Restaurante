@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-export default function MediaCarousel({ items = [] }) {
-  const [index, setIndex] = useState(0);
+export default function MediaCarousel({ items = [], selectedIndex }) {
+  const [index, setIndex] = useState(selectedIndex || 0);
 
-  // Si cambian los items (al marcar un checkbox), volvemos al primer plato
+  // Si cambian los items o selectedIndex, volvemos al primer plato o al seleccionado
   useEffect(() => {
-    setIndex(0);
-  }, [items]);
+    setIndex(selectedIndex !== undefined ? selectedIndex : 0);
+  }, [items, selectedIndex]);
 
   if (!items || items.length === 0) return (
     <div style={styles.carouselContainer}>
@@ -24,8 +24,8 @@ export default function MediaCarousel({ items = [] }) {
         onError={(e) => e.target.src = 'https://via.placeholder.com'}
       />
 
-      {/* CONTROLES FLOTANTES (Solo si hay más de 1 imagen) */}
-      {items.length > 1 && (
+      {/* CONTROLES FLOTANTES (Solo si hay más de 1 imagen y no hay selección forzada) */}
+      {items.length > 1 && selectedIndex === undefined && (
         <>
           <button onClick={() => setIndex(i => (i - 1 + items.length) % items.length)} style={styles.navBtnLeft}>‹</button>
           <button onClick={() => setIndex(i => (i + 1) % items.length)} style={styles.navBtnRight}>›</button>

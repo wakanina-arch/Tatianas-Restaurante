@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function MenuDesplegable({ abierto, onClose, onSelectCategoria }) {
+export default function MenuDesplegable({ abierto, onClose, onSelectCategoria, comercioId }) {
   if (!abierto) return null;
 
   const categorias = [
@@ -23,15 +23,15 @@ export default function MenuDesplegable({ abierto, onClose, onSelectCategoria })
   };
   
   const handleClick = (cat) => {
-    console.log('🎯 Categoría seleccionada:', cat);
-    
-    if (cat.id === 'welcome') {
-      onSelectCategoria(null, true);
-    } else {
-      onSelectCategoria(cat.id, false);
-    }
-    onClose();
-  };
+  console.log('🎯 Categoría seleccionada:', cat, 'Comercio actual:', comercioId);
+  
+  if (cat.id === 'welcome') {
+    onSelectCategoria(null, null, true);
+  } else {
+    onSelectCategoria(cat.id, comercioId, false);  // ← usa comercioId
+  }
+  onClose();
+};
 
   return (
     <div style={styles.overlay} onClick={onClose}>

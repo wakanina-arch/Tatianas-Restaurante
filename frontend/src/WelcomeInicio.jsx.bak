@@ -1,4 +1,3 @@
-// WelcomeInicio.jsx - Versión con oráculo simplificado
 import React, { useState, useEffect } from 'react';
 import RegisterModal from './components/RegisterModal';
 
@@ -15,7 +14,8 @@ const FRASES_ORACULO = [
       "La pasión es el dragón que domas cada mañana.",
       "El hambre de éxito quema más que cualquier fogata.",
       "Tu espíritu es brasa que espera viento para avivarse.",
-      "El fuego no pregunta, transforma. Así será tu victoria."
+      "El fuego no pregunta, transforma. Así será tu victoria.",
+      "Si quieres ver el conjunto, tendrás que reconstruirme tú mismo, afirma ella"
     ]
   },
   
@@ -30,7 +30,8 @@ const FRASES_ORACULO = [
       "El mar que llevas dentro tiene mareas que ni tú comprendes.",
       "El hambre emocional solo se sacia en aguas profundas.",
       "El agua recuerda, el viento olvida. Tú decides qué ser.",
-      "La gota no compite con la roca, la rodea."
+      "La gota no compite con la roca, la rodea.",
+      "muchas obras de los antiguos se han convertido en fragmentos. muchas obras contemporáneas son fragmentos desde el momento en que se escriben."
     ]
   },
   
@@ -45,7 +46,8 @@ const FRASES_ORACULO = [
       "Respira hondo: el universo cabe en un suspiro.",
       "Tu mente es cielo despejado, no permitas nubes ajenas.",
       "El silencio del viento enseña más que cualquier grito.",
-      "Libre como el aire, pero con dirección de flecha."
+      "Libre como el aire, pero con dirección de flecha.",
+      "Aquellos que vagan atrapados en un laberinto, no saben como encontrar la salida."
     ]
   },
   
@@ -60,7 +62,8 @@ const FRASES_ORACULO = [
       "La montaña no busca cumbres, ella es cumbre.",
       "Todo fruto necesita tierra, tiempo y silencio.",
       "La paciencia es el ingrediente que el tiempo no puede comprar.",
-      "Como el barro en el torno, tu destino se moldea con tus manos."
+      "Como el barro en el torno, tu destino se moldea con tus manos.",
+      "En el balaústre mas alto de una gran escalera vi una mano gigantesca enfundada en su armadura."
     ]
   },
   
@@ -75,7 +78,8 @@ const FRASES_ORACULO = [
       "El guerrero sabe que la batalla externa es espejo de la interna.",
       "Tu mayor enemigo duerme en tu misma cama: es tu miedo.",
       "El triunfo no es meta, es camino de quien se atreve.",
-      "El inconsciente colectivo susurra: tú eres todos los que fueron."
+      "El inconsciente colectivo susurra: tú eres todos los que fueron.",
+      "Apacibles, consideradas y alegres danzas en los bosques durante la noche."
     ]
   }
 ];
@@ -93,41 +97,15 @@ const getFraseAleatoria = () => {
   };
 };
 
-export default function WelcomeInicio({ onSelectCategory }) {
+export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegistro, onDashboard }) {
   const [showRegister, setShowRegister] = useState(false);
-  const [user, setUser] = useState(null);
   
-  // ✅ Frase aleatoria que se genera una sola vez
+  // ✅ CORREGIDO: useState con función para generar frase UNA SOLA VEZ
   const [fraseData] = useState(() => {
     return getFraseAleatoria();
   });
 
-  const categorias = [
-  { id: 'Primero', label: 'COMPLEMENTOS', icon: '🍟' },
-  { id: 'Segundo', label: 'ENSALADAS', icon: '🥗' },
-  { id: 'Postre', label: 'BEBIDAS', icon: '🥤' },
-  { id: 'Otras', label: 'PIZZAS', icon: '🍕' }
-];
-
-
-  const handleCategorySelect = (categoryId) => {
-  console.log('🔵 Welcome enviando:', categoryId); // <-- Debe mostrar 'Primero'
-  onSelectCategory(categoryId, false);
-};
-
-  // Cargar usuario guardado
-  useEffect(() => {
-    const savedUser = localStorage.getItem('oneToOneUser');
-    if (savedUser) {
-      try { 
-        setUser(JSON.parse(savedUser)); 
-      } catch (e) { 
-        console.log(e); 
-      }
-    }
-  }, []);
-
-  // Guardar en localStorage para el ticket
+  // ✅ Guardar en localStorage para el ticket
   useEffect(() => {
     localStorage.setItem('fraseOraculo', JSON.stringify({
       texto: fraseData.texto,
@@ -136,15 +114,15 @@ export default function WelcomeInicio({ onSelectCategory }) {
     }));
   }, [fraseData]);
 
-  // Efecto para la respiración visual (ritmo natural)
+  // 🌟 Efecto para la respiración visual (ritmo natural)
   useEffect(() => {
     const interval = setInterval(() => {
       const card = document.getElementById('card-zensual');
       if (card) {
         card.style.transition = 'box-shadow 3s ease-in-out';
-        card.style.boxShadow = '0 15px 30px rgba(255,215,0,0.1)';
+        card.style.boxShadow = '0 20px 50px rgba(255,215,0,0.2)';
         setTimeout(() => {
-          card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.2)';
+          card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.6)';
         }, 3000);
       }
     }, 6000);
@@ -152,355 +130,157 @@ export default function WelcomeInicio({ onSelectCategory }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Determinar color del elemento para el oráculo
-  const getColorElemento = (elemento) => {
-    switch(elemento) {
-      case 'fuego': return '#FF4500';
-      case 'tierra': return '#CD7F32';
-      case 'agua': return '#4169E1';
-      case 'aire': return '#87CEEB';
-      case 'espiritu': return '#FFD700';
-      default: return '#FFD700';
-    }
-  };
-
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "radial-gradient(circle at 30% 30%, #8B4513, #2C1810)",      
-      display: "flex", 
-      alignItems: "center", 
-      justifyContent: "center",
-      padding: "2rem" // Más padding alrededor
-    }}>
-      <style>{`
-        @keyframes girar { 
-          from { transform: rotateY(0deg); } 
-          to { transform: rotateY(360deg); } 
+    <div style={styles.container}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes girarMoneda { 
+          0% { transform: rotateY(0deg); } 
+          100% { transform: rotateY(360deg); } 
         }
-        .moneda { 
-          width: 60px; /* Más pequeña */
-          height: 60px; 
-          cursor: pointer; 
-          perspective: 1000px; 
-          margin: 0 auto 12px; /* Menos margen */
-          animation: girar 8s linear infinite; 
+        @keyframes respirar {
+          0% { transform: scale(1); opacity: 0.8; }
+          50% { transform: scale(1.02); opacity: 1; }
+          100% { transform: scale(1); opacity: 0.8; }
+        }
+        @keyframes flotar {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-5px); }
+          100% { transform: translateY(0px); }
+        }
+        @keyframes brilloElemental {
+          0% { filter: drop-shadow(0 0 2px #FFD700); }
+          50% { filter: drop-shadow(0 0 8px #FF4500); }
+          100% { filter: drop-shadow(0 0 2px #FFD700); }
+        }
+        .moneda-container { 
+          width: 80px; height: 80px; cursor: pointer; 
+          perspective: 1000px; margin: 0 auto 1rem;
+          animation: flotar 4s ease-in-out infinite;
+        }
+        .moneda-giratoria { 
+          width: 100%; height: 100%; position: relative; 
           transform-style: preserve-3d; 
+          animation: girarMoneda 12s linear infinite;
+        }
+        .cara-moneda { 
+          position: absolute; width: 100%; height: 100%; 
+          border-radius: 50%; display: flex; align-items: center; 
+          justify-content: center; backface-visibility: hidden; 
+          border: 2px solid #FFD700; 
+        }
+        .cara-frontal { 
+          background: linear-gradient(145deg, #B22222, #8B0000); 
+          color: #FFD700; 
+          font-size: 2rem;
+          animation: brilloElemental 4s ease-in-out infinite;
+        }
+        .cara-trasera { 
+          background: #FFD700; 
+          color: #8B0000; 
+          font-size: 1.8rem; 
+          font-weight: bold; 
+          transform: rotateY(180deg);
+          border: 2px solid #8B0000;
+        }
+        .elemento-tierra {
           transition: all 0.3s ease;
         }
-        .moneda:hover {
-          transform: scale(1.05);
-          animation-play-state: paused;
-        }
-        .cara { 
-          position: absolute; 
-          width: 100%; 
-          height: 100%; 
-          border-radius: 50%; 
-          display: flex; 
-          align-items: center; 
-          justify-content: center; 
-          backface-visibility: hidden; 
-          border: 2px solid rgba(255, 215, 0, 0.4); /* Borde más sutil */
-          color: white; 
-          font-size: 1.8rem; /* Texto más pequeño */
-          backdropFilter: 'blur(4px)';
-          boxShadow: '0 4px 10px rgba(0,0,0,0.2)';
-        }
-        .trasera { 
-          transform: rotateY(180deg); 
-          background: rgba(139, 69, 19, 0.7); 
-        }
-        .frontal { 
-          background: rgba(205, 92, 92, 0.7); 
-        }
-        .categoria-btn {
-          padding: 0.7rem;
-          background: rgba(0, 0, 0, 0.2);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 20px;
-          cursor: pointer;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          transition: all 0.2s ease;
-          backdropFilter: 'blur(8px)';
-        }
-        .categoria-btn:hover {
-          background: rgba(255, 215, 0, 0.1);
+        .elemento-tierra:hover {
+          border-color: #CD7F32;
           transform: translateY(-2px);
-          border-color: rgba(255, 215, 0, 0.2);
         }
-      `}</style>
+        button {
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+        }
+      `}} />
 
-      <div id="card-zensual" style={{
-        background: "rgba(30, 20, 15, 0.5)", // Más transparente
-        backdropFilter: "blur(10px)", // Menos blur
-        WebkitBackdropFilter: "blur(10px)",
-        borderRadius: "40px", // Un poco menos
-        padding: "2rem 1.5rem", // Menos padding
-        maxWidth: "320px", // Más estrecho
-        width: "100%",
-        textAlign: "center",
-        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)", // Sombra más suave
-        border: "1px solid rgba(255, 255, 255, 0.05)"
-      }}>
-        
-        {/* MONEDA: TRIDENTE */}
-        <div className="moneda" onClick={() => setShowRegister(true)}>
-          <div className="cara frontal" style={{
-            background: "rgba(205, 92, 92, 0.6)",
-            backdropFilter: "blur(4px)"
-          }}>🔱</div>
-          <div className="cara trasera" style={{
-            background: "rgba(139, 69, 19, 0.6)",
-            backdropFilter: "blur(4px)"
-          }}>
-            {user ? user.nombre?.charAt(0).toUpperCase() : '👤'}
+      <div id="card-zensual" style={styles.card}>
+        {/* 🌞 ELEMENTO METAL - La moneda */}
+        <div className="moneda-container" onClick={() => setShowRegister(true)}>
+          <div className="moneda-giratoria">
+            <div className="cara-moneda cara-frontal">🔱</div>
+            <div className="cara-moneda cara-trasera">
+              {usuario ? usuario.nombre?.charAt(0).toUpperCase() : '?'}
+            </div>
           </div>
         </div>
-        
-        <h1 style={{ 
-          color: "white", 
-          fontSize: "2rem", // Más pequeño
-          margin: "0.2rem 0 0.1rem", 
-          fontFamily: "'Cormorant Garamond', serif", 
-          fontWeight: "600",
-          letterSpacing: "0.5px", // Menos espaciado
-          textShadow: "0 2px 4px rgba(0,0,0,0.2)"
-        }}>
-          ONE TO ONE
+
+        {/* 🔥 ELEMENTO FUEGO - Título */}
+        <h1 style={styles.titulo}>
+          <span style={{color: '#FF4500'}}>ONE</span> TO{' '}
+          <span style={{color: '#FFD700'}}>ONE</span>
         </h1>
         
-        <div style={{ 
-  color: "rgba(255, 215, 0, 0.7)",
-  fontSize: "0.75rem",
-  marginBottom: "1.2rem",
-  fontStyle: "italic",
-  fontWeight: "300"
-}}>
-  <div style={{
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "10px",
-    fontFamily: "'Segoe UI', sans-serif",
-    marginTop: "-0.8rem",
-    marginBottom: "1rem",
-    //width: "100%"
-  }}>
-    <span style={{
-    fontSize: "0.8rem",
-    color: "#FF4500", 
-    fontWeight: "600", 
-    letterSpacing: "1px",
-    margin: 0,
-    opacity: 0.7,
-    textShadow: "0 0 5px rgba(255, 69, 0, 0.3)" // Brillo naranja sutil
-    }}>Rapi</span>
-    
-   <svg width="70" height="30" viewBox="0 0 70 30">
-  
-  <defs>
-    <linearGradient id="aceroBrillante" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stopColor="#4A4A4A" />
-      <stop offset="30%" stopColor="#9E9E9E" />
-      <stop offset="50%" stopColor="#FFFFFF" />
-      <stop offset="70%" stopColor="#9E9E9E" />
-      <stop offset="100%" stopColor="#4A4A4A" />
-    </linearGradient>
-    
-    <filter id="destello">
-      <feGaussianBlur stdDeviation="1.2" result="blur" />
-      <feMerge>
-        <feMergeNode in="blur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-  </defs>
-  
-  {/* CAPA 1: Base sólida oscura (garantiza que se vea) */}
-  <line 
-     x1="20" y1="15" x2="45" y2="15" 
-    stroke="#3f3e3e" 
-    strokeWidth="4" 
-    strokeLinecap="round"
-  />
-  
-  {/* CAPA 2: Arte con brillo (el efecto bonito) */}
-  <line 
-    x1="20" y1="15" x2="45" y2="15" 
-    stroke="url(#aceroBrillante)" 
-    strokeWidth="3.5" 
-    strokeLinecap="round"
-    filter="url(#destello)"
-  />
-  
-  {/* Punta: base oscura */}
-  <polygon 
-    points="58,10 65,15 58,20" 
-    fill="#333333"
-  />
-  
-  {/* Punta: arte brillante */}
-  <polygon 
-    points="58,10 65,15 58,20" 
-    fill="url(#aceroBrillante)"
-    filter="url(#destello)"
-  />
-  
-  {/* Círculo decorativo */}
-  <circle cx="8" cy="15" r="3" fill="url(#aceroBrillante)" filter="url(#destello)" />
-  
-</svg>
-    
-    <span style={{
-    fontSize: "0.8rem",
-    color: "#FF4500", 
-    fontWeight: "600", 
-    letterSpacing: "1px",
-    margin: 0,
-    opacity: 0.7,
-    textShadow: "0 0 5px rgba(255, 69, 0, 0.3)" // Brillo naranja sutil
-    }}>Servi</span>
-  </div>
-</div>
-
-        {/* ===== 🎭 ORÁCULO - VERSIÓN SIMPLIFICADA ===== */}
-        <div style={{
-          background: "rgba(0, 0, 0, 0.2)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-          borderRadius: "28px",
-          padding: "1.2rem 1rem",
-          margin: "1.2rem 0",
-          boxShadow: "0 8px 20px -8px rgba(0, 0, 0, 0.3)",
-          transition: "all 0.3s ease",
-          border: "1px solid rgba(255, 215, 0, 0.1)"
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.boxShadow = `0 15px 30px -12px ${getColorElemento(fraseData.elemento)}30`;
-          e.currentTarget.style.borderColor = `${getColorElemento(fraseData.elemento)}30`;
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.boxShadow = "0 8px 20px -8px rgba(0, 0, 0, 0.3)";
-          e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.1)";
-        }}>
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "0.8rem",
-            marginBottom: "0.8rem",
-            fontSize: "1.5rem",
-            opacity: 0.8
-          }}>
-            <span style={{
-              fontSize: "2rem",
-              filter: `drop-shadow(0 0 8px ${getColorElemento(fraseData.elemento)}30)`,
-              transition: "all 0.3s ease"
-            }}>
-              {fraseData.icono}
-            </span>
-          </div>
-          <p style={{
-            margin: 0,
-            fontWeight: 300,
-            textShadow: "0 1px 2px rgba(0,0,0,0.2)",
-            color: "rgba(255, 255, 255, 0.9)",
-            fontSize: "0.85rem", // Más pequeño
-            lineHeight: 1.5,
-            letterSpacing: "0.2px",
-            fontStyle: "italic"
-          }}>
-            "{fraseData.texto}"
-          </p>
+        {/* 🌬️ ELEMENTO AIRE - Frase (con el icono del elemento) */}
+        <div style={styles.fraseContenedor}>
+          <span style={styles.elementoIcono}>{fraseData.icono}</span>
+          <p style={styles.fraseTexto}>"{fraseData.texto}"</p>
         </div>
 
-        {/* BOTONES CATEGORÍAS */}
-        <div style={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(2, 1fr)", 
-          gap: "0.6rem", // Menos gap
-          marginBottom: "1.2rem" // Menos margen
-        }}>
-          {categorias.map(cat => (
+        {/* 🌱 ELEMENTO MADERA - Categorías */}
+        <div style={styles.gridCategorias}>
+          {[
+            {id:'Primero', l:'PRIMEROS', i:'🍖', elemento: 'FUEGO'},
+            {id:'Segundo', l:'SEGUNDOS', i:'🥘', elemento: 'TIERRA'}, 
+            {id:'Bebidas', l:'BEBIDAS', i:'🍵', elemento: 'AGUA'},
+            {id:'Pizzas', l:'PIZZAS', i:'🍕', elemento: 'METAL'}
+          ].map(cat => (
             <button 
-              key={cat.id || 'todas'} 
+              key={cat.id} 
               onClick={() => onSelectCategory(cat.id)} 
-              style={{
-                padding: "0.7rem",
-                background: "rgba(0, 0, 0, 0.2)",
-                color: "white",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                borderRadius: "20px",
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                transition: "all 0.2s ease",
-                backdropFilter: "blur(4px)",
-                WebkitBackdropFilter: "blur(4px)"
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(255, 215, 0, 0.1)";
-                e.currentTarget.style.transform = "translateY(-1px)"; // Menos elevación
-                e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.2)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(0, 0, 0, 0.2)";
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
-              }}
+              style={styles.btnCat}
+              className="elemento-tierra"
             >
-              <span style={{ fontSize: "1.2rem", marginBottom: "0.1rem" }}>{cat.icon}</span>
-              <span style={{ fontSize: "0.65rem", fontWeight: "600", letterSpacing: "0.5px" }}>{cat.label}</span>
+              <span style={{
+                fontSize: "1.6rem",
+                filter: cat.elemento === 'FUEGO' ? 'drop-shadow(0 0 5px #FF4500)' :
+                        cat.elemento === 'AGUA' ? 'drop-shadow(0 0 5px #4169E1)' :
+                        cat.elemento === 'TIERRA' ? 'drop-shadow(0 0 5px #8B4513)' :
+                        'drop-shadow(0 0 5px #FFD700)'
+              }}>
+                {cat.i}
+              </span>
+              <span style={{
+                fontSize: "0.7rem", 
+                marginTop: "4px",
+                color: cat.elemento === 'FUEGO' ? '#FF4500' :
+                       cat.elemento === 'AGUA' ? '#87CEEB' :
+                       cat.elemento === 'TIERRA' ? '#CD7F32' :
+                       '#FFD700'
+              }}>
+                {cat.l}
+              </span>
+              <span style={{
+                fontSize: "0.5rem",
+                opacity: 0.6,
+                marginTop: "2px",
+                color: '#aaa'
+              }}>
+                {cat.elemento}
+              </span>
             </button>
           ))}
         </div>
 
-        {/* MENSAJE DE REGISTRO OPCIONAL */}
-        <p 
-          onClick={() => setShowRegister(true)} 
-          style={{
-  display: "inline-block",
-  color: "rgba(255, 255, 255, 0.5)", 
-  fontSize: "0.7rem", 
-  marginBottom: "1.2rem", 
-  paddingBottom: "0.1rem",
-  textDecoration: "none",
-  borderBottom: "1px dotted rgba(255, 215, 0, 0.2)",
-  transition: "all 0.2s ease",
-  /* --- CARPINTERÍA PARA IPHONE --- */
-  cursor: "pointer",
-  WebkitTapHighlightColor: "transparent", 
-  touchAction: "manipulation"
-}}
-
-          onMouseEnter={(e) => {
-            e.target.style.color = "rgba(255, 215, 0, 0.6)";
-            e.target.style.borderBottomColor = "rgba(255, 215, 0, 0.4)";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.color = "rgba(255, 255, 255, 0.5)";
-            e.target.style.borderBottomColor = "rgba(255, 215, 0, 0.2)";
-          }}
+        {/* 💧 ELEMENTO AGUA - Footer */}
+        <p style={styles.footer}>— DESDE EL BARRO —</p>
+   
+        {/* 🛡️ DASHBOARD - Botón para administradores */}
+        <button 
+          onClick={onDashboard} 
+          style={styles.btnDashboard}
         >
-          ✨ Regístrate para obtener descuentos exclusivos
-        </p>
-
-        <p style={{ 
-          fontSize: "0.6rem", // Más pequeño
-          color: "#FF4500", 
-          fontWeight: "600", 
-          textTransform: "uppercase", 
-          letterSpacing: "1px", // Menos espaciado
-          margin: 0,
-          opacity: 0.7
-        }}>
-          EL SABOR DE LA TIERRA
-        </p>
+          🛡️ DASHBOARD ADMIN
+        </button>
+        
+        {/* 🌑 Elemento VACÍO */}
+        <div style={{
+          width: '50px',
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, #FFD700, transparent)',
+          margin: '8px auto 0'
+        }} />
       </div>
 
       <RegisterModal 
@@ -508,10 +288,121 @@ export default function WelcomeInicio({ onSelectCategory }) {
         onClose={() => setShowRegister(false)} 
         onRegister={(u) => { 
           localStorage.setItem('oneToOneUser', JSON.stringify(u)); 
-          setUser(u); 
-          setShowRegister(false); 
+          window.location.reload(); 
         }} 
       />
     </div>
   );
 }
+
+const styles = {
+  container: { 
+    height: "100dvh",
+    width: "100vw",
+    background: "radial-gradient(circle at 30% 30%, #2a0a0a 0%, #0a0a0a 100%)", 
+    display: "flex", 
+    alignItems: "center", 
+    justifyContent: "center", 
+    overflow: "hidden",
+    position: "fixed",
+    top: 0,
+    left: 0
+  },
+  card: { 
+    padding: "1.5rem 1rem", 
+    borderRadius: "32px", 
+    width: "83%",
+    maxWidth: "350px",
+    height: "auto",
+    maxHeight: "83dvh",
+    textAlign: "center", 
+    background: "rgba(20, 10, 10, 0.65)", 
+    backdropFilter: "blur(20px)", 
+    WebkitBackdropFilter: "blur(20px)",
+    border: "1px solid rgba(255,215,0,0.2)",
+    boxShadow: "0 20px 40px rgba(0,0,0,0.6)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    transition: "box-shadow 0.5s ease"
+  },
+  titulo: { 
+    color: "#fff", 
+    fontSize: "1.6rem", 
+    margin: "0.2rem 0 0.5rem", 
+    fontFamily: "'Cormorant Garamond', serif", 
+    letterSpacing: '4px',
+    textTransform: "uppercase",
+    fontWeight: 300,
+    textShadow: "2px 2px 4px rgba(0,0,0,0.5)"
+  },
+  fraseContenedor: { 
+    flex: 1, 
+    display: "flex", 
+    flexDirection: "column",
+    alignItems: "center", 
+    justifyContent: "center", 
+    margin: "0.8rem 0",
+    padding: "0 15px",
+    minHeight: "100px",
+    borderLeft: "2px solid rgba(255,215,0,0.2)",
+    borderRight: "2px solid rgba(255,215,0,0.2)",
+  },
+  elementoIcono: {
+    fontSize: "2rem",
+    marginBottom: "5px"
+  },
+  fraseTexto: { 
+    color: "#FFD700", 
+    fontSize: "0.85rem", 
+    fontStyle: "italic", 
+    lineHeight: "1.5",
+    margin: 0,
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 400,
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)"
+  },
+  gridCategorias: { 
+    display: "grid", 
+    gridTemplateColumns: "repeat(2, 1fr)", 
+    gap: "0.8rem",
+    marginTop: "0.8rem"
+  },
+  btnCat: { 
+    padding: "0.8rem 0.2rem", 
+    background: "rgba(0,0,0,0.4)", 
+    color: "white", 
+    border: "1px solid rgba(255,215,0,0.15)", 
+    borderRadius: "20px", 
+    display: "flex", 
+    flexDirection: "column", 
+    alignItems: "center",
+    gap: "2px",
+    backdropFilter: "blur(5px)",
+    cursor: "pointer",
+    transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+  },
+  footer: { 
+    marginTop: "1.2rem", 
+    fontSize: "0.55rem", 
+    color: "#FFD700", 
+    letterSpacing: "4px", 
+    opacity: 0.5,
+    fontFamily: "'Cormorant Garamond', serif"
+  },
+  btnDashboard: {
+    background: "linear-gradient(135deg, #FFD700, #FF4500)",
+    border: "none",
+    padding: "8px 16px",
+    borderRadius: "30px",
+    color: "#1a0a0a",
+    fontWeight: "bold",
+    fontSize: "0.8rem",
+    cursor: "pointer",
+    marginBottom: "10px",
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+    transition: "all 0.3s ease",
+    boxShadow: "0 2px 8px rgba(255,215,0,0.3)"
+  }
+};
