@@ -329,7 +329,27 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
         {/* Logo ONE TO ONE (centro) */}
         <div style={styles.logoContainer} onClick={onBackToWelcome}>
           <span style={styles.logoIcon}>🔱</span>
-          <span style={styles.logoText}>ONE TO ONE</span>
+          <span style={{
+    fontSize: '1.2rem',
+    fontWeight: '700',
+    color: '#B22222',  // rojo místico
+    textShadow: '0 0 5px rgba(178,34,34,0.5), 0 0 10px rgba(178,34,34,0.3)',
+    animation: 'brilloRojo 2.5s infinite alternate',
+  }}>ONE</span>{' '}
+  <span style={{
+    fontSize: '1.2rem',
+    fontWeight: '700',
+    color: '#1a3b1a',  // verde selva
+    textShadow: '0 0 5px rgba(26,59,26,0.5), 0 0 10px rgba(26,59,26,0.3)',
+    animation: 'brilloVerde 2.5s infinite alternate',
+  }}>TO</span>{' '}
+  <span style={{
+    fontSize: '1.2rem',
+    fontWeight: '700',
+    color: '#FFD700',  // dorado
+    textShadow: '0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(255,215,0,0.3)',
+    animation: 'brilloDorado 2.5s infinite alternate',
+  }}>ONE</span>
         </div>
 
         {/* Iconos derecha */}
@@ -338,6 +358,12 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
             🛒
             {itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
           </NavButton>
+          {/* Dashboard (solo visible para admin) */}
+  {user?.rol === 'admin_restaurante' && (
+    <NavButton page="admin" currentPage={currentPage} setCurrentPage={setCurrentPage}>
+      DSH
+    </NavButton>
+  )}
           <button onClick={onOpenPerfil} style={styles.perfilBtn}>
             👤
             {user && <span style={styles.userDot} />}
