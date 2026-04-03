@@ -7,9 +7,9 @@ import AdminPage from './AdminPage';
 import { CartProvider, useCart } from './CartContext';
 import PaymentModal from './PaymentModal';
 import WelcomeInicio from './WelcomeInicio';
-import MenuDesplegable from './layouts/MenuDesplegable';
+//import MenuDesplegable from './layouts/MenuDesplegable';
 import RegisterModal from './components/RegisterModal';
-import HomePage from './HomePage';  // ← Importamos el nuevo HomePage
+import HomePage from './pages/HomePage';  // ← Importamos el nuevo HomePage
 
 // ============================================
 // CONFIGURACIÓN GLOBAL
@@ -151,6 +151,17 @@ function MainApp() {
   const { itemCount } = useCart();
   const [currentPage, setCurrentPage] = useState('home');
   const [user, setUser] = useState(null);
+  const COMERCIOS = [
+  { id: 1, nombre: "En su punto", imagen: "/casas/en_su_punto.JPG" },
+  { id: 2, nombre: "Ceremoniales", imagen: "/casas/Ceremoniales.JPG" },
+  { id: 3, nombre: "Como en casa", imagen: "/casas/Como_en_casa.JPG" },
+  { id: 4, nombre: "Gusto", imagen: "/casas/IMG_4552.JPG" },
+  { id: 5, nombre: "Candela Obscura", imagen: "/casas/IMG_4555.JPG" },
+  { id: 6, nombre: "Kattapa", imagen: "/casas/Kattapa.JPG" },
+  { id: 7, nombre: "Llap Grill", imagen: "/casas/Llap_Grill.JPG" },
+  { id: 8, nombre: "Pollo a la leña", imagen: "/casas/Pollo_a_la_leña.JPG" },
+  { id: 9, nombre: "Tradicional", imagen: "/casas/Tradicional.JPG" },
+];
   const [showWelcome, setShowWelcome] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -239,12 +250,12 @@ function MainApp() {
             user={user}
           />
           
-          <MenuDesplegable 
-            abierto={menuAbierto}
-            onClose={() => setMenuAbierto(false)}
-              onSelectCategoria={handleSelectCategory}
-              comercioId={selectedComercio}
-          />
+          {/* <MenuDesplegable 
+  abierto={menuAbierto}
+  onClose={() => setMenuAbierto(false)}
+  onSelectCategoria={handleSelectCategory}
+  comercioId={selectedComercio}
+/> */}
           
           <RegisterModal 
             open={perfilAbierto}
@@ -257,9 +268,14 @@ function MainApp() {
         <main className="main-content" style={{ paddingTop: '100px' }}>
   {currentPage === 'home' && (
   <HomePage 
+    comercio={COMERCIOS.find(c => c.id === selectedComercio)}
     platillos={itemsToShow}
-    selectedCategory={selectedCategory}
-    comercioId={selectedComercio}  // ← pasamos el id
+    user={user}
+    itemCount={itemCount}
+    onOpenMenu={() => setMenuAbierto(true)}
+    onOpenPerfil={() => setPerfilAbierto(true)}
+    onBackToWelcome={handleBackToWelcome}
+    NavBarComponent={NavBar}
   />
 )}
 
@@ -298,206 +314,125 @@ function MainApp() {
 // ============================================
 function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerfil, onBackToWelcome, user }) {
   return (
-    <header style={{
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
-  zIndex: 1000,
-  background: 'rgba(20, 10, 10, 0.75)',     // ← fondo oscuro como Welcome
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
-  boxShadow: '0 2px 15px rgba(0, 0, 0, 0.2)',
-  borderBottom: '1px solid rgba(255,215,0,0.15)',  // ← borde dorado sutil
-  display: 'flex',
-  justifyContent: 'center',
-  height: '60px'
-}}>
-      
-      <div style={{
-        width: '100%',
-        padding: '0 1rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}>
-        
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
-          <button
-            onClick={onOpenMenu} 
-            style={{  
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 4,
-              padding: '10px'
-            }}  
-          >
-            <div style={{ width: 22, height: 2, background: 'var(--verde-selva)', borderRadius: 2 }} />
-            <div style={{ width: 16, height: 2, background: 'var(--maracuya)', borderRadius: 2 }} />
-            <div style={{ width: 22, height: 2, background: 'var(--morado-primario)', borderRadius: 2 }} />
-          </button>
-        </div>
-
-        <div style={{
-          flex: 2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 6,
-          whiteSpace: 'nowrap',
-          cursor: 'pointer'
-        }}
-        onClick={onBackToWelcome}
-        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
-        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+    <header style={styles.header}>
+      <div style={styles.headerContent}>
+        {/* Botón Volver (izquierda) */}
+        <button
+          onClick={onBackToWelcome}
+          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
+          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+          style={styles.backBtn}
         >
-          <span style={{
-            fontSize: '1.4rem',
-            filter: 'drop-shadow(0 2px 4px rgba(1, 64, 14, 0.2))',
-            animation: 'brilloMistico 3s infinite alternate',
-            position: 'relative',
-            zIndex: 2
-          }}>
-            🔱
-            <span style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '30px',
-              height: '30px',
-              borderRadius: '50%',
-              zIndex: -1,
-              animation: 'pulso 2s infinite'
-            }} />
-          </span>
+          ←
+        </button>
 
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            lineHeight: 1.1,
-            position: 'relative'
-          }}>
-            <span style={{
-  fontSize: '1.2rem',
-  fontWeight: '700',
-  letterSpacing: '0.5px',
-}}>
-  <span style={{ color: '#B22222', textShadow: '0 0 3px rgba(178,34,34,0.5)' }}>ONE</span>{' '}
-  <span style={{ color: '#1a3b1a', textShadow: '0 0 3px rgba(26,59,26,0.5)' }}>TO</span>{' '}
-  <span style={{ color: '#FFD700', textShadow: '0 0 3px rgba(255,215,0,0.5)' }}>ONE</span>
-</span>
-          </div>
+        {/* Logo ONE TO ONE (centro) */}
+        <div style={styles.logoContainer} onClick={onBackToWelcome}>
+          <span style={styles.logoIcon}>🔱</span>
+          <span style={styles.logoText}>ONE TO ONE</span>
         </div>
 
-        <div style={{ 
-          flex: 1, 
-          display: 'flex', 
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          gap: '8px'
-        }}>
-          
-          <NavButton 
-            page="carrito" 
-            currentPage={currentPage} 
-            setCurrentPage={setCurrentPage}
-          >
-            <span style={{ fontSize: '1.1rem', opacity: 1 }}>🛒</span>
-            {itemCount > 0 && (
-              <span style={{
-                position: 'absolute',
-                top: -3,
-                right: -3,
-                background: '#ff3b30',
-                color: 'white',
-                width: 16,
-                height: 16,
-                borderRadius: '50%',
-                fontSize: '0.65rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1.5px solid white',
-                fontWeight: '600'
-              }}>
-                {itemCount}
-              </span>
-            )}
+        {/* Iconos derecha */}
+        <div style={styles.rightIcons}>
+          <NavButton page="carrito" currentPage={currentPage} setCurrentPage={setCurrentPage}>
+            🛒
+            {itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
           </NavButton>
-
-          <button
-            onClick={onOpenPerfil}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              borderRadius: 40,
-              padding: '0.4rem 0.5rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.2rem',
-              transition: 'background 0.2s ease',
-              position: 'relative',
-              opacity: 0.9
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-            }}
-          >
+          <button onClick={onOpenPerfil} style={styles.perfilBtn}>
             👤
-            {user && (
-              <span style={{
-                position: 'absolute',
-                bottom: 0,
-                right: 0,
-                width: 10,
-                height: 10,
-                background: '#34c759',
-                borderRadius: '50%',
-                border: '2px solid white'
-              }} />
-            )}
-          </button>
-
-          <button
-            onClick={() => setCurrentPage('admin')}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              borderRadius: 30,
-              padding: '0.3rem 0.6rem',
-              cursor: 'pointer',
-              fontSize: '0.7rem',
-              fontWeight: '600',
-              letterSpacing: '0.5px',
-              color: '#8e8e93',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(142, 142, 147, 0.1)';
-              e.currentTarget.style.color = '#6366f1';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.color = '#8e8e93';
-            }}
-          >
-            DSH
+            {user && <span style={styles.userDot} />}
           </button>
         </div>
       </div>
     </header>
   );
 }
-  
+
+const styles = {
+  header: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    background: 'rgba(20, 10, 10, 0.75)',
+    backdropFilter: 'blur(20px)',
+    borderBottom: '1px solid rgba(255,215,0,0.15)',
+    height: '60px',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  headerContent: {
+    width: '100%',
+    padding: '0 16px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  backBtn: {
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '1.3rem',
+    color: '#FFD700',
+    padding: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    borderRadius: '30px',
+    transition: 'all 0.2s ease',
+  },
+  logoContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    cursor: 'pointer',
+  },
+  logoIcon: {
+    fontSize: '1.3rem',
+  },
+  logoText: {
+    fontSize: '1rem',
+    fontWeight: '700',
+    background: 'linear-gradient(135deg, #FF4500, #FFD700)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+  },
+  rightIcons: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  badge: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    background: '#FF4500',
+    color: 'white',
+    borderRadius: '50%',
+    width: '16px',
+    height: '16px',
+    fontSize: '0.6rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  perfilBtn: {
+    background: 'transparent',
+    border: 'none',
+    fontSize: '1.2rem',
+    cursor: 'pointer',
+    position: 'relative',
+  },
+  userDot: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: '8px',
+    height: '8px',
+    background: '#34c759',
+    borderRadius: '50%',
+  },
+};
 // ============================================
 // BOTÓN DE NAVEGACIÓN (reutilizable)
 // ============================================
@@ -581,22 +516,22 @@ function CartPage({ addLog, setPendingOrders, user, onVolverAlMenu }) {
 
   if (cartItems.length === 0) {
     return (
-      <section style={styles.container}>
-        <div style={styles.emptyCard}>
-          <span style={styles.emptyIcon}>🛒</span>
-          <h2 style={styles.emptyTitle}>Tu Carrito</h2>
-          <p style={styles.emptyText}>Tu carrito está vacío. ¡Agrega platos deliciosos!</p>
+      <section style={cartStyles.container}>
+        <div style={cartStyles.emptyCard}>
+          <span style={cartStyles.emptyIcon}>🛒</span>
+          <h2 style={cartStyles.emptyTitle}>Tu Carrito</h2>
+          <p style={cartStyles.emptyText}>Tu carrito está vacío. ¡Agrega platos deliciosos!</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section style={styles.container}>
-      <h2 style={styles.pageTitle}>Revisa tu Carrito 🔱</h2>
+    <section style={cartStyles.container}>
+      <h2 style={cartStyles.pageTitle}>Revisa tu Carrito 🔱</h2>
       
-      <div style={styles.cartCard}>
-        <div style={styles.itemsList}>
+      <div style={cartStyles.cartCard}>
+        <div style={cartStyles.itemsList}>
           {cartItems.map((item) => (
             <CartItem
               key={item.id}
@@ -630,35 +565,35 @@ function CartItem({ item, onRemove, onUpdateQuantity }) {
   const cantidad = item.cantidad || 1;
 
   return (
-    <div style={styles.cartItem}>
-      <div style={styles.itemInfo}>
-        <h4 style={styles.itemName}>{item.nombre}</h4>
-        <p style={styles.itemPrice}>${item.precio.toFixed(2)} c/u</p>
+    <div style={cartStyles.cartItem}>
+      <div style={cartStyles.itemInfo}>
+        <h4 style={cartStyles.itemName}>{item.nombre}</h4>
+        <p style={cartStyles.itemPrice}>${item.precio.toFixed(2)} c/u</p>
       </div>
       
-      <div style={styles.itemActions}>
-        <div style={styles.quantityControl}>
+      <div style={cartStyles.itemActions}>
+        <div style={cartStyles.quantityControl}>
           <button 
             onClick={() => onUpdateQuantity(item.id, cantidad - 1)}
             disabled={cantidad <= 1}
-            style={cantidad <= 1 ? styles.qtyBtnDisabled : styles.qtyBtn}
+            style={cantidad <= 1 ? cartStyles.qtyBtnDisabled : cartStyles.qtyBtn}
           >
             −
           </button>
-          <span style={styles.qtyValue}>{cantidad}</span>
+          <span style={cartStyles.qtyValue}>{cantidad}</span>
           <button 
             onClick={() => onUpdateQuantity(item.id, cantidad + 1)}
-            style={styles.qtyBtn}
+            style={cartStyles.qtyBtn}
           >
             +
           </button>
         </div>
 
-        <div style={styles.itemTotal}>${(item.precio * cantidad).toFixed(2)}</div>
+        <div style={cartStyles.itemTotal}>${(item.precio * cantidad).toFixed(2)}</div>
 
         <button 
           onClick={() => onRemove(item.id)}
-          style={styles.removeBtn}
+          style={cartStyles.removeBtn}
         >
           🗑️
         </button>
@@ -669,45 +604,45 @@ function CartItem({ item, onRemove, onUpdateQuantity }) {
 
 function CartSummary({ total, onCheckout, user, onVolver }) {
   return (
-    <div style={styles.summaryCard}>
-      <h3 style={styles.summaryTitle}>Resumen</h3>
+    <div style={cartStyles.summaryCard}>
+      <h3 style={cartStyles.summaryTitle}>Resumen</h3>
       
-      <div style={styles.summaryRow}>
+      <div style={cartStyles.summaryRow}>
         <span>Subtotal</span>
         <span>${total}</span>
       </div>
-      <div style={styles.summaryRow}>
+      <div style={cartStyles.summaryRow}>
         <span>Envío</span>
         <span style={{ color: '#34c759' }}>Gratis</span>
       </div>
       
       {!user && (
-        <div style={styles.promoBox}>
-          <p style={styles.promoText}>✨ ¿Eres cliente frecuente?</p>
-          <button style={styles.promoBtn}>
+        <div style={cartStyles.promoBox}>
+          <p style={cartStyles.promoText}>✨ ¿Eres cliente frecuente?</p>
+          <button style={cartStyles.promoBtn}>
             Regístrate y obtén 10% OFF
           </button>
         </div>
       )}
       
       {user && (
-        <div style={styles.memberBadge}>
+        <div style={cartStyles.memberBadge}>
           🎉 10% de descuento para miembros
         </div>
       )}
       
-      <div style={styles.totalRow}>
+      <div style={cartStyles.totalRow}>
         <span>Total</span>
-        <span style={styles.totalAmount}>${total}</span>
+        <span style={cartStyles.totalAmount}>${total}</span>
       </div>
       
-      <button onClick={onCheckout} style={styles.checkoutBtn}>
+      <button onClick={onCheckout} style={cartStyles.checkoutBtn}>
         Proceder al Pago
       </button>
       
       <button
         onClick={onVolver}
-        style={styles.backBtn}
+        style={cartStyles.backBtn}
         onMouseEnter={(e) => {
           e.currentTarget.style.background = 'rgba(1, 64, 14, 0.05)';
           e.currentTarget.style.borderColor = '#FF8C42';
@@ -728,7 +663,7 @@ function CartSummary({ total, onCheckout, user, onVolver }) {
 // ============================================
 // ESTILOS CRISTAL ESMERILADO (GLASSMORPHISM)
 // ============================================
-const styles = {
+const cartStyles = {
   container: {
     maxWidth: 600,
     margin: '0 auto',
