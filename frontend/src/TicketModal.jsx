@@ -70,7 +70,7 @@ export default function TicketModal({ open, onClose, order }) {
             rel="noopener noreferrer" 
             style={styles.link}
           >
-            tatianas-restaurante.vercel.app
+            🔱 One To One.app
           </a>
         </div>
       </div>

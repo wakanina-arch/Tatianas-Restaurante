@@ -76,21 +76,21 @@ export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegist
     color: '#B22222',  // rojo místico
     textShadow: '0 0 5px rgba(178,34,34,0.5), 0 0 10px rgba(178,34,34,0.3)',
     animation: 'brilloRojo 2.5s infinite alternate',
-  }}>ONE</span>{' '}
+  }}>One</span>{' '}
   <span style={{
     fontSize: '1.4rem',
     fontWeight: '700',
     color: '#1a3b1a',  // verde selva
     textShadow: '0 0 5px rgba(26,59,26,0.5), 0 0 10px rgba(26,59,26,0.3)',
     animation: 'brilloVerde 2.5s infinite alternate',
-  }}>TO</span>{' '}
+  }}>To</span>{' '}
   <span style={{
     fontSize: '1.4rem',
     fontWeight: '700',
     color: '#FFD700',  // dorado
     textShadow: '0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(255,215,0,0.3)',
     animation: 'brilloDorado 2.5s infinite alternate',
-  }}>ONE</span>
+  }}>One</span>
 </h1>
         </h1>
         <div style={styles.fraseContainer}>
