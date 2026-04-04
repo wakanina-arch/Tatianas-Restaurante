@@ -3,7 +3,7 @@ import { useCart } from './CartContext';
 import TicketModal from './TicketModal';
 
 export default function PaymentModal({ open, onClose, total, addLog, setPendingOrders }) {
-  const [step, setStep] = useState(0);  // ← Cambiar a 0 para empezar con resumen
+  const [step, setStep] = useState(1);  // ← Directamente en paso 1 (formulario de pago)
   const [form, setForm] = useState({
     nombre: '',
     email: '',
@@ -93,12 +93,7 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
         <div style={styles.modal} onClick={e => e.stopPropagation()}>
           <div style={styles.header}>
             <h2 style={styles.title}>
-              {step === 0 ? (
-                <>
-                  <span style={styles.titleIcon}>🛒</span>
-                  Resumen de Compra
-                </>
-              ) : step === 1 ? (
+              {step === 1 ? (
                 <>
                   <span style={styles.titleIcon}>💳</span>
                   Pago Seguro
@@ -113,32 +108,7 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
             <button onClick={onClose} style={styles.closeBtn}>✕</button>
           </div>
 
-          {step === 0 && (
-            <div style={styles.summaryStep}>
-              <h3 style={styles.summaryTitle}>Tu Pedido</h3>
-              <div style={styles.itemsList}>
-                {cartItems.map((item) => (
-                  <div key={item.id} style={styles.summaryItem}>
-                    <div style={styles.itemInfo}>
-                      <span style={styles.itemName}>{item.nombre}</span>
-                      <span style={styles.itemQty}>x{item.cantidad || 1}</span>
-                    </div>
-                    <span style={styles.itemPrice}>${(item.precio * (item.cantidad || 1)).toFixed(2)}</span>
-                  </div>
-                ))}
-              </div>
-              <div style={styles.summaryTotal}>
-                <span>Total:</span>
-                <span style={styles.totalAmount}>${total}</span>
-              </div>
-              <button 
-                onClick={() => setStep(1)}
-                style={styles.continueBtn}
-              >
-                Continuar al Pago
-              </button>
-            </div>
-          )}
+          {/* PASO 0 REMOVIDO - El resumen se muestra en CartPage/CartSummary */}
 
           {step === 1 && (
             <form onSubmit={handleSubmit} style={styles.form}>

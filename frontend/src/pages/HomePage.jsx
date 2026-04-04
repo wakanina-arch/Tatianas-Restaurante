@@ -58,14 +58,22 @@ export default function HomePage({
   useEffect(() => {
     const observador = new IntersectionObserver(
       (entradas) => {
+        // Solo detectar cuando un elemento entra por la PARTE SUPERIOR
         entradas.forEach((entrada) => {
-          if (entrada.isIntersecting) {
+          // Si el elemento está intersectando y el ratio es alto (> 50%)
+          // significa que está completamente visible
+          if (entrada.isIntersecting && entrada.intersectionRatio > 0.5) {
             const id = entrada.target.dataset.categoria;
-            if (id) setCategoriaActiva(id);
+            if (id) {
+              setCategoriaActiva(id);
+            }
           }
         });
       },
-      { threshold: 0.3 }
+      { 
+        threshold: [0.5],  // Solo cuando está >50% visible
+        rootMargin: '-60px 0px -50% 0px'  // Detecta cuando llega a TOP
+      }
     );
 
     Object.values(seccionesRef.current).forEach((el) => {
@@ -92,6 +100,8 @@ export default function HomePage({
           categorias={categorias}
           categoriaActiva={categoriaActiva}
           onSelectCategoria={scrollASeccion}
+          setCurrentPage={setCurrentPage}
+          user={user}
         />
       </div>
       

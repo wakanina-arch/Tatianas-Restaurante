@@ -19,18 +19,18 @@ export default function TicketModal({ open, onClose, order }) {
           <span style={styles.printText}>Imprimir<br />Ticket</span>
         </div>
 
-        {/* TRIDENTE COMO LOGO */}
-        <div style={styles.tridenteContainer}>
-          <span style={styles.tridenteIcon}>🔱</span>
+        {/* QR CODE - TOP (PRIMERO) */}
+        <div style={styles.qrContainer}>
+          <CodigoQR valor={order.numero || order.ordenId || "OTO-001"} tamaño={100} />
+        </div>
+        
+        {/* ORDER NUMBER */}
+        <div style={styles.orderInfo}>
+          <span style={styles.orderLabel}>Nº DE PEDIDO:</span>
+          <span style={styles.orderNumber}>{order.numero || order.ordenId || "OTO-001"}</span>
         </div>
 
-        {/* 🌟 FRASE ESPIRITUAL */}
-        <div style={styles.fraseEspiritual}>
-          <div style={styles.elementoIcono}>{icono}</div>
-          <p style={styles.fraseTexto}>"{texto}"</p>
-        </div>
-
-        {/* Resumen de compra */}
+        {/* RESUMEN DE COMPRA */}
         <div style={styles.summaryCard}>
           <h3 style={styles.summaryTitle}>Resumen de Compra</h3>
           <div style={styles.itemsList}>
@@ -47,14 +47,15 @@ export default function TicketModal({ open, onClose, order }) {
           </div>
         </div>
 
-        {/* QR usando CodigoQR */}
-        <div style={styles.qrContainer}>
-          <CodigoQR valor={order.numero || order.ordenId || "OTO-001"} tamaño={100} />
+        {/* TRIDENTE COMO LOGO */}
+        <div style={styles.tridenteContainer}>
+          <span style={styles.tridenteIcon}>🔱</span>
         </div>
-        
-        <div style={styles.orderInfo}>
-          <span style={styles.orderLabel}>Nº de pedido:</span>
-          <span style={styles.orderNumber}>{order.numero || order.ordenId || "OTO-001"}</span>
+
+        {/* 🌟 FRASE ESPIRITUAL - YELLOW BOX */}
+        <div style={styles.fraseEspiritual}>
+          <div style={styles.elementoIcono}>{icono}</div>
+          <p style={styles.fraseTexto}>"{texto}"</p>
         </div>
 
         {/* Botón finalizar */}

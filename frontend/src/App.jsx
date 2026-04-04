@@ -391,26 +391,6 @@ function MainApp() {
                   {itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
                 </button>
 
-                {/* DSH - Admin */}
-                {user?.rol === 'admin_restaurante' && (
-                  <button 
-                    onClick={() => setCurrentPage('admin')}
-                    style={styles.dshBtn}
-                    title="Dashboard Admin"
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.15)';
-                      e.currentTarget.style.textShadow = '0 0 10px #00ffd9';
-                      e.currentTarget.style.transition = 'all 0.2s ease';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.textShadow = 'none';
-                    }}
-                  >
-                    DSH
-                  </button>
-                )}
-
                 {/* Perfil */}
                 <button 
                   onClick={() => setPerfilAbierto(true)}
