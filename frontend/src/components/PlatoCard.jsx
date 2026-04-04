@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 export default function PlatoCard({ plato, onUpdateCart }) {
   const [cantidad, setCantidad] = useState(0);
-  const precio = plato.opciones?.[0]?.precio || plato.precio || 0;
-  const imagen = plato.imagenes?.[0] || plato.imagen || '/img/placeholder.jpg';
+  const precio = plato.precio || 0;
+  const imagen = plato.imagen || plato.imagenes?.[0] || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22 font-size=%2214%22 fill=%22%23999%22%3ESin imagen%3C/text%3E%3C/svg%3E';
 
   const incrementar = () => {
     const nueva = cantidad + 1;
@@ -29,7 +29,7 @@ export default function PlatoCard({ plato, onUpdateCart }) {
       <img src={imagen} alt={plato.nombre} style={styles.imagen} />
       <div style={styles.info}>
         <h3 style={styles.titulo}>{plato.nombre}</h3>
-        <p style={styles.descripcion}>{plato.descripcion || plato.historia}</p>
+        <p style={styles.descripcion}>{plato.descripcion || 'Deliciosa opción para tu paladar'}</p>
         <div style={styles.fila}>
           <span style={styles.precio}>${precio.toFixed(2)}</span>
           
@@ -44,7 +44,23 @@ export default function PlatoCard({ plato, onUpdateCart }) {
                 <button onClick={decrementar} style={styles.botonAccion}>-</button>
               )}
               <span style={styles.cantidad}>{cantidad}</span>
-              <button onClick={incrementar} style={styles.botonAccion}>+</button>
+              <button 
+  onClick={() => {
+    console.log('➕ Botón + clickeado');
+    const nueva = cantidad + 1;
+    console.log('Nueva cantidad:', nueva);
+    setCantidad(nueva);
+    if (onUpdateCart) {
+      console.log('Llamando a onUpdateCart con:', plato.nombre, nueva);
+      onUpdateCart(plato, nueva);
+    } else {
+      console.error('onUpdateCart NO está definida');
+    }
+  }} 
+  style={styles.botonSimple}
+>
+  <span style={styles.masIcono}>+</span>
+</button>
             </div>
           )}
         </div>

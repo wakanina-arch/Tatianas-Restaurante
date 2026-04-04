@@ -50,7 +50,8 @@ const styles = {
   tabActivo: {
     background: 'rgba(255,215,0,0.15)',
     color: '#FFD700',
-    borderBottom: '1px solid #FFD700',
+    border: '1px solid #FFD700',
+    borderRadius: '30px',
   },
   icono: {
     fontSize: '1rem',

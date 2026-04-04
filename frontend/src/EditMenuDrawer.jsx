@@ -25,17 +25,17 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     Primero: [
       '/img/Complementos/Alitas1.png',
       '/img/Complementos/Alitas2.png',
-      '/img/Complementos/Bistec convinado.png',
-      '/img/Complementos/Bowl Patatas fritas.png',
+      '/img/Complementos/Bistec%20convinado.png',
+      '/img/Complementos/Bowl%20Patatas%20fritas.png',
       '/img/Complementos/Combos.png',
-      '/img/Complementos/Nachos con queso.png'
+      '/img/Complementos/Nachos%20con%20queso.png'
     ],
     Segundo: [
-      '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
-      '/img/Ensaladas/Ensalada Caprese.jpg',
-      '/img/Ensaladas/Ensalada César.jpg',
-      '/img/Ensaladas/Ensalada Coleslaw.jpg',
-      '/img/Ensaladas/Ensalada Griega.jpg'
+      '/img/Ensaladas/Ensalada%20Alemana%20de%20Patata.jpg',
+      '/img/Ensaladas/Ensalada%20Caprese.jpg',
+      '/img/Ensaladas/Ensalada%20César.jpg',
+      '/img/Ensaladas/Ensalada%20Coleslaw.jpg',
+      '/img/Ensaladas/Ensalada%20Griega.jpg'
     ],
     Bebidas: [
       '/img/Bebidas/AguaMineral.jpg',
@@ -53,6 +53,30 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
       '/img/Pizzas/Hawaiana.jpg',
       '/img/Pizzas/Margherita.jpg',
       '/img/Pizzas/Rustica.jpg'
+    ],
+    Entrantes: [
+      '/img/entrantes/Margherita.jpg',
+      '/img/entrantes/Pepperoni.jpg',
+      '/img/entrantes/Rustica.jpg',
+    ],
+    Picoteo: [
+      '/img/picoteo/Alitas2.png',
+      '/img/picoteo/Bowl%20Patatas%20fritas.png',
+      '/img/picoteo/Nachos%20con%20queso.png',
+    ],
+    Gourmet: [
+      '/img/gourmet/Bistec%20convinado.png',
+      '/img/gourmet/Pollo%20broster.png',
+      '/img/gourmet/Tabla%20flamenca.png',
+    ],
+    Monstruos: [
+      '/img/monstruos/frente1.JPG',
+      '/img/monstruos/nodle.jpg',
+    ],
+    Postres: [
+      '/img/postres/EnsaladaMimosa.jpg',
+      '/img/postres/ZumoDeFrutas.jpg',
+      '/img/postres/ZumosVerdes.jpg',
     ]
   });
 }, []);

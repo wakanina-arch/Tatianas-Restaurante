@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import ComercioHeader from '../components/ComercioHeader';
 import CategoriaTabs from '../components/CategoriaTabs';
 import PlatoCard from '../components/PlatoCard';
+import { useCart } from '../CartContext';
+
 
 export default function HomePage({ 
   comercio, 
@@ -11,24 +13,30 @@ export default function HomePage({
   onOpenPerfil, 
   onOpenMenu, 
   onBackToWelcome,
-  NavBarComponent 
+  setCurrentPage
 }) {
   const [categoriaActiva, setCategoriaActiva] = useState('Primero');
   const [platoSeleccionado, setPlatoSeleccionado] = useState(null);
   const [carrito, setCarrito] = useState({});
   const seccionesRef = useRef({});
+  const { addToCart } = useCart();
 
   const categorias = [
-    { id: 'Primero', nombre: 'COMPLEMENTOS', icono: '🍟' },
-    { id: 'Segundo', nombre: 'ENSALADAS', icono: '🥗' },
-    { id: 'Bebidas', nombre: 'BEBIDAS', icono: '🥤' },
-    { id: 'Pizzas', nombre: 'PIZZAS', icono: '🍕' },
-  ];
+  { id: 'Primero', nombre: 'PRIMEROS', icono: '🍟' },
+  { id: 'Segundo', nombre: 'SEGUNDOS', icono: '🥗' },
+  { id: 'Bebidas', nombre: 'BEBIDAS', icono: '🥤' },
+  { id: 'Pizzas', nombre: 'PIZZAS', icono: '🍕' },
+  { id: 'Entrantes', nombre: 'ENTRANTES', icono: '🍤' },
+  { id: 'Picoteo', nombre: 'PICOTEO', icono: '🍢' },
+  { id: 'Gourmet', nombre: 'GOURMET', icono: '🍷' },
+  { id: 'Monstruos', nombre: 'MONSTRUOS', icono: '🧟' },
+  { id: 'Postres', nombre: 'POSTRES', icono: '🍰' },
+];
 
   const platillosPorCategoria = (categoriaId) => {
-    const categoria = platillos.find(p => p.nombre === categoriaId);
-    return categoria?.opciones || [];
-  };
+  const categoria = platillos.find(p => p.nombre === categoriaId);
+  return categoria?.opciones || [];
+};
 
   const scrollASeccion = (categoriaId) => {
     setCategoriaActiva(categoriaId);
@@ -36,11 +44,16 @@ export default function HomePage({
   };
 
   const updateCarrito = (plato, cantidad) => {
-    setCarrito(prev => ({
-      ...prev,
-      [plato.nombre]: cantidad
-    }));
-  };
+  if (cantidad > 0) {
+    addToCart({
+      id: plato.id || `${plato.nombre}-${Date.now()}`,
+      nombre: plato.nombre,
+      precio: plato.precio,
+      cantidad: cantidad,
+      imagen: plato.imagen || plato.imagenes?.[0],
+    });
+  }
+};
 
   useEffect(() => {
     const observador = new IntersectionObserver(
@@ -93,26 +106,15 @@ export default function HomePage({
           >
             <h3 style={styles.seccionTitulo}>{cat.nombre}</h3>
             {platillosPorCategoria(cat.id).map((plato, idx) => (
-              <PlatoCard
-                key={`${cat.id}-${idx}`}
-                plato={{ ...plato, nombre: plato.nombre }}
-                onUpdateCart={updateCarrito}
-              />
-            ))}
-          </div>
-        ))}
+      <PlatoCard 
+  key={`${cat.id}-${idx}`} 
+  plato={plato} 
+  onUpdateCart={updateCarrito} 
+/>
+    ))}
+  </div>
+))}
       </div>
-
-      {/* Footer */}
-      <NavBarComponent
-        currentPage="home"
-        setCurrentPage={() => {}}
-        itemCount={Object.values(carrito).reduce((a, b) => a + b, 0)}
-        onOpenMenu={onOpenMenu}
-        onOpenPerfil={onOpenPerfil}
-        onBackToWelcome={onBackToWelcome}
-        user={user}
-      />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { useCart } from './CartContext';
 import TicketModal from './TicketModal';
 
 export default function PaymentModal({ open, onClose, total, addLog, setPendingOrders }) {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);  // ← Cambiar a 0 para empezar con resumen
   const [form, setForm] = useState({
     nombre: '',
     email: '',
@@ -83,7 +83,7 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
     setShowTicket(false);
     clearCart();
     onClose();                  // ← Cerrar PaymentModal
-    setStep(1);
+    setStep(0);
   };
 
   return (
@@ -93,7 +93,12 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
         <div style={styles.modal} onClick={e => e.stopPropagation()}>
           <div style={styles.header}>
             <h2 style={styles.title}>
-              {step === 1 ? (
+              {step === 0 ? (
+                <>
+                  <span style={styles.titleIcon}>🛒</span>
+                  Resumen de Compra
+                </>
+              ) : step === 1 ? (
                 <>
                   <span style={styles.titleIcon}>💳</span>
                   Pago Seguro
@@ -107,6 +112,33 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
             </h2>
             <button onClick={onClose} style={styles.closeBtn}>✕</button>
           </div>
+
+          {step === 0 && (
+            <div style={styles.summaryStep}>
+              <h3 style={styles.summaryTitle}>Tu Pedido</h3>
+              <div style={styles.itemsList}>
+                {cartItems.map((item) => (
+                  <div key={item.id} style={styles.summaryItem}>
+                    <div style={styles.itemInfo}>
+                      <span style={styles.itemName}>{item.nombre}</span>
+                      <span style={styles.itemQty}>x{item.cantidad || 1}</span>
+                    </div>
+                    <span style={styles.itemPrice}>${(item.precio * (item.cantidad || 1)).toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={styles.summaryTotal}>
+                <span>Total:</span>
+                <span style={styles.totalAmount}>${total}</span>
+              </div>
+              <button 
+                onClick={() => setStep(1)}
+                style={styles.continueBtn}
+              >
+                Continuar al Pago
+              </button>
+            </div>
+          )}
 
           {step === 1 && (
             <form onSubmit={handleSubmit} style={styles.form}>
@@ -328,6 +360,73 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '1rem'
+  },
+  summaryStep: {
+    padding: '1.5rem',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem'
+  },
+  summaryTitle: {
+    fontSize: '1.2rem',
+    fontWeight: '600',
+    color: '#01400e',
+    margin: 0
+  },
+  itemsList: {
+    background: 'rgba(0, 0, 0, 0.02)',
+    borderRadius: 16,
+    padding: '1rem',
+    maxHeight: '200px',
+    overflowY: 'auto'
+  },
+  summaryItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '0.5rem 0',
+    borderBottom: '1px solid rgba(0, 0, 0, 0.05)'
+  },
+  itemInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.2rem'
+  },
+  itemName: {
+    fontSize: '0.9rem',
+    fontWeight: '500',
+    color: '#01400e'
+  },
+  itemQty: {
+    fontSize: '0.7rem',
+    color: '#666'
+  },
+  itemPrice: {
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    color: '#FF8C42'
+  },
+  summaryTotal: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '1rem 0',
+    borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+    fontSize: '1.1rem',
+    fontWeight: '700',
+    color: '#01400e'
+  },
+  continueBtn: {
+    width: '100%',
+    padding: '0.8rem',
+    background: 'linear-gradient(135deg, #01400e 0%, #2a6b2f 100%)',
+    color: 'white',
+    border: 'none',
+    borderRadius: 30,
+    fontWeight: '600',
+    fontSize: '0.9rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease'
   },
   inputGroup: {
     display: 'flex',

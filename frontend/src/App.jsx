@@ -107,7 +107,113 @@ const DEFAULT_MENU_ITEMS = [
       { nombre: 'Hamburguesa', precio: 0.00, calorias: 320, proteina: 5, carbohidratos: 48, descripcion: '...' },
       { nombre: 'HotDog', precio: 0.00, calorias: 180, proteina: 3, carbohidratos: 25, descripcion: '...' }
   ]
-}
+  },
+  {
+  id: 5,
+  nombre: 'Entrantes', // 👈 Debe coincidir con el id
+  imagenes: [
+    '/img/entrantes/Margherita.jpg',
+    '/img/entrantes/Pepperoni.jpg',
+    '/img/entrantes/Rustica.jpg',
+  ],
+  video: null,
+    precio: 0.00,
+    region: 'Mundo',
+    historia: 'Superfood del mundo...',
+    proteina: 0,
+    calorias: 0,
+    carbohidratos: 0,
+    opciones: [
+      { nombre: 'Margherita', precio: 12.00, imagen: '/img/entrantes/Margherita.jpg', descripcion: 'Pizza clásica italiana' },
+      { nombre: 'Pepperoni', precio: 14.00, imagen: '/img/entrantes/Pepperoni.jpg', descripcion: 'Pizza con pepperoni' },
+      { nombre: 'Rústica', precio: 13.00, imagen: '/img/entrantes/Rustica.jpg', descripcion: 'Pizza rústica' }
+    ]
+  },
+  {
+  id: 6,
+  nombre: 'Picoteo', // 👈 Debe coincidir con el id
+  imagenes: [
+    '/img/picoteo/Alitas2.png',
+    '/img/picoteo/Bowl Patatas fritas.png',
+    '/img/picoteo/Nachos con queso.png',
+    '/img/picoteo/Palomitas de maíz.png',
+  ],
+  video: null,
+    precio: 0.00,
+    region: 'Mundo',
+    historia: 'Superfood del mundo...',
+    proteina: 0,
+    calorias: 0,
+    carbohidratos: 0,
+    opciones: [
+      { nombre: 'Alitas', precio: 8.00, imagen: '/img/picoteo/Alitas2.png', descripcion: 'Alitas de pollo crujientes' },
+      { nombre: 'Patatas Fritas', precio: 5.00, imagen: '/img/picoteo/Bowl%20Patatas%20fritas.png', descripcion: 'Bowl de patatas fritas' },
+      { nombre: 'Nachos', precio: 7.00, imagen: '/img/picoteo/Nachos%20con%20queso.png', descripcion: 'Nachos con queso' },
+      { nombre: 'Palomitas', precio: 4.00, imagen: '/img/picoteo/Palomitas%20de%20maíz.png', descripcion: 'Palomitas de maíz' }
+    ]
+  },
+  {
+  id: 7,
+  nombre: 'Gourmet', // 👈 Debe coincidir con el id
+  imagenes: [
+    '/img/gourmet/Bistec%20convinado.png',
+    '/img/gourmet/Pollo%20broster.png',
+    '/img/gourmet/Tabla%20flamenca.png',
+  ],
+  video: null,
+    precio: 0.00,
+    region: 'Mundo',
+    historia: 'Superfood del mundo...',
+    proteina: 0,
+    calorias: 0,
+    carbohidratos: 0,
+    opciones: [
+      { nombre: 'Bistec Convinado', precio: 18.00, imagen: '/img/gourmet/Bistec%20convinado.png', descripcion: 'Bistec combinado gourmet' },
+      { nombre: 'Pollo Broster', precio: 15.00, imagen: '/img/gourmet/Pollo%20broster.png', descripcion: 'Pollo broster especial' },
+      { nombre: 'Tabla Flamenca', precio: 20.00, imagen: '/img/gourmet/Tabla%20flamenca.png', descripcion: 'Tabla flamenca para compartir' }
+    ]
+  },
+  {
+  id: 8,
+  nombre: 'Monstruos', // 👈 Debe coincidir con el id
+  imagenes: [
+    '/img/monstruos/frente1.JPG',
+    '/img/monstruos/nodle.jpg',
+  ],
+  video: null,
+    precio: 0.00,
+    region: 'Mundo',
+    historia: 'Superfood del mundo...',
+    proteina: 0,
+    calorias: 0,
+    carbohidratos: 0,
+    opciones: [
+      { nombre: 'Frente 1', precio: 16.00, imagen: '/img/monstruos/frente1.JPG', descripcion: 'Plato especial frente 1' },
+      { nombre: 'Nodle', precio: 14.00, imagen: '/img/monstruos/nodle.jpg', descripcion: 'Delicioso nodle' }
+    ]
+  },
+  {
+  id: 9,
+  nombre: 'Postres', // 👈 Debe coincidir con el id
+  imagenes: [
+    '/img/postres/Ensalada%20Mimosa.jpg',
+    '/img/postres/ZumoDeFrutas.jpg',
+    '/img/postres/ZumosVerdes.jpg',
+  ],
+  video: null,
+    precio: 0.00,
+    region: 'Mundo',
+    historia: 'Superfood del mundo...',
+    proteina: 0,
+    calorias: 0,
+    carbohidratos: 0,
+    opciones: [
+      { nombre: 'Ensalada Mimosa', precio: 6.00, imagen: '/img/postres/Ensalada%20Mimosa.jpg', descripcion: 'Ensalada fresca mimosa' },
+      { nombre: 'Zumo de Frutas', precio: 4.00, imagen: '/img/postres/ZumoDeFrutas.jpg', descripcion: 'Zumo natural de frutas' },
+      { nombre: 'Zumos Verdes', precio: 5.00, imagen: '/img/postres/ZumosVerdes.jpg', descripcion: 'Zumos verdes saludables' }
+    ]
+  },
+
 ];
 
 // ============================================
@@ -170,19 +276,13 @@ function MainApp() {
 
   // Cargar usuario al iniciar
   useEffect(() => {
-    const savedUser = localStorage.getItem('oneToOneUser');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (e) {
-        console.log('Error cargando usuario:', e);
-      }
-    }
-  }, []);
+  // Forzar admin para pruebas (eliminar después)
+  const adminUser = { nombre: "Admin", rol: "admin_restaurante" };
+  localStorage.setItem('oneToOneUser', JSON.stringify(adminUser));
+  setUser(adminUser);
+}, []);
 
   const handleSelectCategory = (categoryLabel, comercioId = null, volverAWelcome = false) => {
-  console.log('🎭 Categoría:', categoryLabel, 'Comercio:', comercioId);
-  
   if (volverAWelcome) {
     setShowWelcome(true);
     setSelectedCategory(null);
@@ -212,16 +312,12 @@ function MainApp() {
   const addLog = (entry) => setLog((prev) => [...prev, { ...entry, timestamp: new Date().toISOString() }]);
 
   useEffect(() => {
-    console.log('showWelcome:', showWelcome);
-    console.log('selectedCategory:', selectedCategory);
-    console.log('currentPage:', currentPage);
+    // Estado actualizado
   }, [showWelcome, selectedCategory, currentPage]);
 
   const itemsToShow = menuItems.length > 0 ? menuItems : DEFAULT_MENU_ITEMS;
 
   const handleRegister = (userData, modo) => {
-    console.log('📝 RegisterModal - handleRegister:', { userData, modo });
-    
     if (modo === 'logout') {
       setUser(null);
       localStorage.removeItem('oneToOneUser');
@@ -237,18 +333,103 @@ function MainApp() {
         <WelcomeInicio onSelectCategory={handleSelectCategory} />
       ) : (
         <>
-          <NavBar
-            currentPage={currentPage} 
-            setCurrentPage={setCurrentPage} 
-            itemCount={itemCount}
-            onOpenMenu={() => setMenuAbierto(true)}
-            onOpenPerfil={() => {
-              console.log('🟢 MainApp: onOpenPerfil ejecutado');
-              setPerfilAbierto(true);
-            }}
-            onBackToWelcome={handleBackToWelcome}
-            user={user}
-          />
+          {/* HEADER - REEMPLAZANDO NavBar */}
+          <header style={styles.header}>
+            <div style={styles.headerContent}>
+              {/* Botón Volver (izquierda) */}
+              <button
+                onClick={handleBackToWelcome}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                style={styles.backBtn}
+              >
+                ←
+              </button>
+
+              {/* Logo ONE TO ONE (centro) */}
+              <div style={styles.logoContainer} onClick={handleBackToWelcome}>
+                <span style={styles.logoIcon}>🔱</span>
+                <span style={{
+          fontSize: '1.2rem',
+          fontWeight: '700',
+          color: '#B22222',
+          textShadow: '0 0 5px rgba(178,34,34,0.5), 0 0 10px rgba(178,34,34,0.3)',
+          animation: 'brilloRojo 2.5s infinite alternate',
+        }}>One</span>{' '}
+        <span style={{
+          fontSize: '1.2rem',
+          fontWeight: '700',
+          color: '#1a3b1a',
+          textShadow: '0 0 5px rgba(26,59,26,0.5), 0 0 10px rgba(26,59,26,0.3)',
+          animation: 'brilloVerde 2.5s infinite alternate',
+        }}>To</span>{' '}
+        <span style={{
+          fontSize: '1.2rem',
+          fontWeight: '700',
+          color: '#FFD700',
+          textShadow: '0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(255,215,0,0.3)',
+          animation: 'brilloDorado 2.5s infinite alternate',
+        }}>One</span>
+              </div>
+
+              {/* Iconos derecha */}
+              <div style={styles.rightIcons}>
+                {/* Carrito */}
+                <button 
+                  onClick={() => setCurrentPage('carrito')}
+                  style={styles.iconBtn}
+                  title="Mi Carrito"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.2)';
+                    e.currentTarget.style.transition = 'transform 0.2s ease';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  🛒
+                  {itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
+                </button>
+
+                {/* DSH - Admin */}
+                {user?.rol === 'admin_restaurante' && (
+                  <button 
+                    onClick={() => setCurrentPage('admin')}
+                    style={styles.dshBtn}
+                    title="Dashboard Admin"
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.15)';
+                      e.currentTarget.style.textShadow = '0 0 10px #00ffd9';
+                      e.currentTarget.style.transition = 'all 0.2s ease';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.textShadow = 'none';
+                    }}
+                  >
+                    DSH
+                  </button>
+                )}
+
+                {/* Perfil */}
+                <button 
+                  onClick={() => setPerfilAbierto(true)}
+                  style={styles.iconBtn}
+                  title="Mi Perfil"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.2)';
+                    e.currentTarget.style.transition = 'transform 0.2s ease';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  👤
+                  {user && <span style={styles.userDot} />}
+                </button>
+              </div>
+            </div>
+          </header>
           
           {/* <MenuDesplegable 
   abierto={menuAbierto}
@@ -265,7 +446,7 @@ function MainApp() {
             usuario={user}
           />
           
-        <main className="main-content" style={{ paddingTop: '100px' }}>
+        <main className="main-content" style={{ paddingTop: '100px', minHeight: 'calc(100vh - 100px)', width: '100%' }}>
   {currentPage === 'home' && (
   <HomePage 
     comercio={COMERCIOS.find(c => c.id === selectedComercio)}
@@ -275,17 +456,16 @@ function MainApp() {
     onOpenMenu={() => setMenuAbierto(true)}
     onOpenPerfil={() => setPerfilAbierto(true)}
     onBackToWelcome={handleBackToWelcome}
-    NavBarComponent={NavBar}
+    setCurrentPage={setCurrentPage}
   />
 )}
-
 
             {currentPage === 'carrito' && (
               <CartPage 
                 addLog={addLog} 
                 setPendingOrders={setPendingOrders}
-                  user={user}
-                  onVolverAlMenu={() => setCurrentPage('home')}
+                user={user}
+                onVolverAlMenu={() => setCurrentPage('home')}
               />
             )}
             {currentPage === 'admin' && (
@@ -354,21 +534,29 @@ function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerf
 
         {/* Iconos derecha */}
         <div style={styles.rightIcons}>
-          <NavButton page="carrito" currentPage={currentPage} setCurrentPage={setCurrentPage}>
-            🛒
-            {itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
-          </NavButton>
-          {/* Dashboard (solo visible para admin) */}
-  {user?.rol === 'admin_restaurante' && (
-    <NavButton page="admin" currentPage={currentPage} setCurrentPage={setCurrentPage}>
-      DSH
-    </NavButton>
-  )}
-          <button onClick={onOpenPerfil} style={styles.perfilBtn}>
-            👤
-            {user && <span style={styles.userDot} />}
-          </button>
-        </div>
+  {/* Carrito */}
+  <button 
+    onClick={() => setCurrentPage('carrito')}
+    style={styles.iconBtn}
+  >
+    🛒
+    {itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
+  </button>
+
+  {/* DSH - visible siempre por ahora */}
+  <button 
+    onClick={() => setCurrentPage('admin')}
+    style={styles.dshBtn}
+  >
+    DSH
+  </button>
+
+  {/* Perfil */}
+  <button onClick={onOpenPerfil} style={styles.iconBtn}>
+    👤
+    {user && <span style={styles.userDot} />}
+  </button>
+</div>
       </div>
     </header>
   );
@@ -441,6 +629,8 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    pointerEvents: 'none',
+    zIndex: 1,
   },
   perfilBtn: {
     background: 'transparent',
@@ -458,6 +648,32 @@ const styles = {
     background: '#34c759',
     borderRadius: '50%',
   },
+  iconBtn: {
+    background: 'transparent',
+    border: 'none',
+    fontSize: '1.3rem',
+    cursor: 'pointer',
+    position: 'relative',
+    padding: '8px',
+    transition: 'all 0.2s ease',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dshBtn: {
+    background: 'transparent',
+    border: 'none',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    color: '#00ffd9',
+    padding: '8px 12px',
+    letterSpacing: '1px',
+    transition: 'all 0.2s ease',
+    borderRadius: '6px',
+    position: 'relative',
+  },
 };
 // ============================================
 // BOTÓN DE NAVEGACIÓN (reutilizable)
@@ -465,9 +681,13 @@ const styles = {
 function NavButton({ page, currentPage, setCurrentPage, children }) {
   const isActive = currentPage === page;
   
+  const handleClick = () => {
+    setCurrentPage(page);
+  };
+  
   return (
     <button
-      onClick={() => setCurrentPage(page)}
+      onClick={handleClick}
       style={{
         background: isActive 
           ? 'linear-gradient(135deg, var(--morado-primario) 0%, #8b5cf6 100%)'
@@ -484,7 +704,8 @@ function NavButton({ page, currentPage, setCurrentPage, children }) {
         alignItems: 'center',
         gap: '0.3rem',
         position: 'relative',
-        boxShadow: isActive ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none'
+        boxShadow: isActive ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none',
+        zIndex: 100
       }}
       onMouseEnter={(e) => {
         if (!isActive) {
@@ -547,6 +768,12 @@ function CartPage({ addLog, setPendingOrders, user, onVolverAlMenu }) {
           <span style={cartStyles.emptyIcon}>🛒</span>
           <h2 style={cartStyles.emptyTitle}>Tu Carrito</h2>
           <p style={cartStyles.emptyText}>Tu carrito está vacío. ¡Agrega platos deliciosos!</p>
+          <button 
+            onClick={onVolverAlMenu}
+            style={{...cartStyles.backBtn, marginTop: '1rem'}}
+          >
+            🍽️ Volver al Menú
+          </button>
         </div>
       </section>
     );
@@ -694,7 +921,9 @@ const cartStyles = {
     maxWidth: 600,
     margin: '0 auto',
     padding: '1rem',
-    width: '100%'
+    width: '100%',
+    display: 'block',
+    minHeight: '100%'
   },
   pageTitle: {
     fontSize: '1.6rem',

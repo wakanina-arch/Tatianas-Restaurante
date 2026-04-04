@@ -70,7 +70,7 @@ export default function TicketModal({ open, onClose, order }) {
             rel="noopener noreferrer" 
             style={styles.link}
           >
-            🔱 One To One.app
+            🔱 OneToOne.app
           </a>
         </div>
       </div>

@@ -65,8 +65,8 @@ export const CartProvider = ({ children }) => {
     }, 0).toFixed(2);
   }, [cartItems]);
 
-  // Contar items
-  const itemCount = cartItems.length;
+  // Contar items totales (suma de cantidades)
+  const itemCount = cartItems.reduce((sum, item) => sum + (item.cantidad || 1), 0);
 
   const value = {
     cartItems,
