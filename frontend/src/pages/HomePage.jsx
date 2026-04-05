@@ -22,15 +22,14 @@ export default function HomePage({
   const { addToCart } = useCart();
 
   const categorias = [
-  { id: 'Primero', nombre: 'PRIMEROS', icono: '🍟' },
-  { id: 'Segundo', nombre: 'SEGUNDOS', icono: '🥗' },
-  { id: 'Bebidas', nombre: 'BEBIDAS', icono: '🥤' },
-  { id: 'Pizzas', nombre: 'PIZZAS', icono: '🍕' },
-  { id: 'Entrantes', nombre: 'ENTRANTES', icono: '🍤' },
   { id: 'Picoteo', nombre: 'PICOTEO', icono: '🍢' },
-  { id: 'Gourmet', nombre: 'GOURMET', icono: '🍷' },
-  { id: 'Monstruos', nombre: 'MONSTRUOS', icono: '🧟' },
+  { id: 'Aperturas', nombre: 'APERTURAS', icono: '🍤' },
+  { id: 'Gourmets', nombre: 'GOURMETS', icono: '🍷' },
+  { id: 'Escuderos', nombre: 'ESCUDEROS', icono: '🥘' },
+  { id: 'Zombies', nombre: 'ZOMBIES', icono: '🍕' },
+  { id: 'FastFurious', nombre: 'FAST&FURIOUS', icono: '🏎️' },
   { id: 'Postres', nombre: 'POSTRES', icono: '🍰' },
+  { id: 'Bebidas', nombre: 'BEBIDAS', icono: '🥤' },
 ];
 
   const platillosPorCategoria = (categoriaId) => {

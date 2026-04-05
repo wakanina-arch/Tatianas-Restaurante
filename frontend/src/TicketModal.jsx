@@ -13,11 +13,43 @@ export default function TicketModal({ open, onClose, order }) {
         
         {/* Botón de impresión */}
         <div style={styles.printContainer}>
-          <button style={styles.printBtn} onClick={() => window.print()}>
-            <span style={styles.printIcon}>🖨️</span>
-          </button>
-          <span style={styles.printText}>Imprimir<br />Ticket</span>
-        </div>
+  <button 
+    style={styles.printBtn} 
+    onClick={() => {
+      // Generar contenido del ticket
+      const ticketContent = `
+        ONE TO ONE - DESDE EL BARRO
+        ============================
+        Nº Pedido: ${order.numero || order.ordenId || 'OTO-001'}
+        Fecha: ${new Date().toLocaleString()}
+        
+        RESUMEN DEL PEDIDO:
+        ${order.items?.map(item => `  ${item.cantidad} x ${item.nombre} = $${(item.precio * item.cantidad).toFixed(2)}`).join('\n')}
+        
+        TOTAL: $${order.total?.toFixed(2)}
+        
+        ¡Gracias por tu compra!
+      `;
+      
+      // Crear archivo para descargar
+      const blob = new Blob([ticketContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ticket_${order.numero || order.ordenId || 'OTO-001'}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      // Aquí luego puedes añadir la lógica para guardar en la nube o enviar por email
+      alert('✅ Revisa tu correo eléctronico; WhatsApp!');
+    }}
+  >
+    <span style={styles.printIcon}>💾</span>
+  </button>
+  <span style={styles.printText}>Imprimir<br />Ticket</span>
+</div>
 
         {/* QR CODE - TOP (PRIMERO) */}
         <div style={styles.qrContainer}>

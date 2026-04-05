@@ -23,197 +23,76 @@ const STORAGE_KEYS = {
 const DEFAULT_MENU_ITEMS = [
   {
     id: 1,
-    nombre: 'Primero',
-    imagenes: [
-      '/img/Complementos/Alitas1.png',
-      '/img/Complementos/Alitas2.png',
-      '/img/Complementos/Bistec convinado.png',
-    ],
-    video: null,
-    precio: 0.00,
-    region: 'Andes',
-    historia: 'Plato típico andino...',
-    calorias: 0,
-    proteina: 0,
-    carbohidratos: 0,
+    nombre: 'Picoteo',
     opciones: [
-      { nombre: 'Menestra', precio: 0.00, calorias: 320, proteina: 8, carbohidratos: 45, descripcion: '...' },
-      { nombre: 'Guatita', precio: 0.00, calorias: 480, proteina: 22, carbohidratos: 35, descripcion: '...' },
-      { nombre: 'Pollo', precio: 0.00, calorias: 280, proteina: 25, carbohidratos: 15, descripcion: '...' }
+      { nombre: 'Alitas BBQ', precio: 8.50, descripcion: 'Alitas glaseadas con salsa BBQ' },
+      { nombre: 'Patatas Bravas', precio: 5.50, descripcion: 'Patatas con salsa brava' },
+      { nombre: 'Nachos con queso', precio: 7.50, descripcion: 'Nachos con queso fundido' },
     ]
   },
   {
     id: 2,
-    nombre: 'Segundo',
-    imagenes: [
-      '/img/Ensaladas/Ensalada Alemana de Patata.jpg',
-      '/img/Ensaladas/Ensalada Caprese.jpg',
-      '/img/Ensaladas/Ensalada César.jpg',
-    ],
-    video: null,
-    precio: 0.00,
-    region: 'Costa',
-    historia: 'Tradicional plato costero...',
-    calorias: 0,
-    proteina: 0,
-    carbohidratos: 0,
+    nombre: 'Aperturas',
     opciones: [
-      { nombre: 'Pescado', precio: 0.00, calorias: 220, proteina: 28, carbohidratos: 12, descripcion: '...' },
-      { nombre: 'Camarón', precio: 0.00, calorias: 180, proteina: 24, carbohidratos: 8, descripcion: '...' },
-      { nombre: 'Mixto', precio: 0.00, calorias: 200, proteina: 26, carbohidratos: 10, descripcion: '...' }
+      { nombre: 'Croquetas de jamón', precio: 6.50, descripcion: 'Croquetas caseras de jamón' },
+      { nombre: 'Calamares a la romana', precio: 8.00, descripcion: 'Calamares frescos rebozados' },
+      { nombre: 'Gambas al ajillo', precio: 9.50, descripcion: 'Gambas salteadas con ajo' },
     ]
   },
   {
     id: 3,
+    nombre: 'Gourmets',
+    opciones: [
+      { nombre: 'Solomillo al foie', precio: 24.00, descripcion: 'Solomillo con foie micuit' },
+      { nombre: 'Carpaccio de res', precio: 16.00, descripcion: 'Carpaccio con parmesano' },
+      { nombre: 'Vieiras gratinadas', precio: 18.00, descripcion: 'Vieiras con gratin de queso' },
+    ]
+  },
+  {
+    id: 4,
+    nombre: 'Escuderos',
+    opciones: [
+      { nombre: 'Ensalada César', precio: 11.50, descripcion: 'Lechuga, pollo, crutones, parmesano' },
+      { nombre: 'Ensalada Caprese', precio: 10.00, descripcion: 'Tomate, mozzarella, albahaca' },
+      { nombre: 'Ensalada Waldorf', precio: 10.50, descripcion: 'Manzana, nueces, apio' },
+    ]
+  },
+  {
+    id: 5,
+    nombre: 'Zombies',
+    opciones: [
+      { nombre: 'Pizza Carbonara', precio: 13.50, descripcion: 'Salsa carbonara, queso, bacon' },
+      { nombre: 'Pizza Pepperoni', precio: 13.50, descripcion: 'Pepperoni, queso, salsa de tomate' },
+      { nombre: 'Hamburguesa Monstruosa', precio: 15.00, descripcion: 'Doble carne, queso, bacon' },
+    ]
+  },
+  {
+    id: 6,
+    nombre: 'FastFurious',
+    opciones: [
+      { nombre: 'Hamburguesa Clásica', precio: 10.00, descripcion: 'Carne, lechuga, tomate, cebolla' },
+      { nombre: 'Perrito Caliente', precio: 6.00, descripcion: 'Salchicha, pan, salsas' },
+      { nombre: 'Wrap de pollo', precio: 8.50, descripcion: 'Pollo, lechuga, salsa ranch' },
+    ]
+  },
+  {
+    id: 7,
+    nombre: 'Postres',
+    opciones: [
+      { nombre: 'Tarta de queso', precio: 5.00, descripcion: 'Tarta de queso casera' },
+      { nombre: 'Brownie con helado', precio: 5.50, descripcion: 'Brownie de chocolate con helado' },
+      { nombre: 'Flan casero', precio: 4.00, descripcion: 'Flan tradicional con caramelo' },
+    ]
+  },
+  {
+    id: 8,
     nombre: 'Bebidas',
-    imagenes: [
-      '/img/Bebidas/AguaMineral.jpg',
-      '/img/Bebidas/CervezaClub.jpg',
-      '/img/Bebidas/CervezaGuinness.jpg',
-      '/img/Bebidas/CervezaHeineken.jpg',
-    ],
-    video: null,
-    precio: 0.00,
-    region: 'Puno',
-    historia: 'Superfood andino...',
-    proteina: 0,
-    calorias: 0,
-    carbohidratos: 0,
     opciones: [
-      { nombre: 'Flan', precio: 0.00, calorias: 250, proteina: 6, carbohidratos: 40, descripcion: '...' },
-      { nombre: 'Pudín', precio: 0.00, calorias: 320, proteina: 5, carbohidratos: 48, descripcion: '...' },
-      { nombre: 'Helado', precio: 0.00, calorias: 180, proteina: 3, carbohidratos: 25, descripcion: '...' }
+      { nombre: 'Coca Cola', precio: 2.50, descripcion: 'Refresco de cola' },
+      { nombre: 'Cerveza', precio: 3.50, descripcion: 'Cerveza rubia' },
+      { nombre: 'Agua mineral', precio: 1.50, descripcion: 'Agua mineral' },
     ]
   },
-  {
-  id: 4,
-  nombre: 'Pizzas', // 👈 Debe coincidir con el id
-  imagenes: [
-    '/img/Pizzas/Carbonara.jpg',
-    '/img/Pizzas/Champinones.jpg',
-    '/img/Pizzas/Cuatro-Quesos.jpg',
-    '/img/Pizzas/Hawaiana.jpg',
-    '/img/Pizzas/Margherita.jpg',
-  ],
-  video: null,
-    precio: 0.00,
-    region: 'Mundo',
-    historia: 'Superfood del mundo...',
-    proteina: 0,
-    calorias: 0,
-    carbohidratos: 0,
-    opciones: [
-      { nombre: 'Pizza', precio: 0.00, calorias: 250, proteina: 6, carbohidratos: 40, descripcion: '...' },
-      { nombre: 'Hamburguesa', precio: 0.00, calorias: 320, proteina: 5, carbohidratos: 48, descripcion: '...' },
-      { nombre: 'HotDog', precio: 0.00, calorias: 180, proteina: 3, carbohidratos: 25, descripcion: '...' }
-  ]
-  },
-  {
-  id: 5,
-  nombre: 'Entrantes', // 👈 Debe coincidir con el id
-  imagenes: [
-    '/img/entrantes/Margherita.jpg',
-    '/img/entrantes/Pepperoni.jpg',
-    '/img/entrantes/Rustica.jpg',
-  ],
-  video: null,
-    precio: 0.00,
-    region: 'Mundo',
-    historia: 'Superfood del mundo...',
-    proteina: 0,
-    calorias: 0,
-    carbohidratos: 0,
-    opciones: [
-      { nombre: 'Margherita', precio: 12.00, imagen: '/img/entrantes/Margherita.jpg', descripcion: 'Pizza clásica italiana' },
-      { nombre: 'Pepperoni', precio: 14.00, imagen: '/img/entrantes/Pepperoni.jpg', descripcion: 'Pizza con pepperoni' },
-      { nombre: 'Rústica', precio: 13.00, imagen: '/img/entrantes/Rustica.jpg', descripcion: 'Pizza rústica' }
-    ]
-  },
-  {
-  id: 6,
-  nombre: 'Picoteo', // 👈 Debe coincidir con el id
-  imagenes: [
-    '/img/picoteo/Alitas2.png',
-    '/img/picoteo/Bowl Patatas fritas.png',
-    '/img/picoteo/Nachos con queso.png',
-    '/img/picoteo/Palomitas de maíz.png',
-  ],
-  video: null,
-    precio: 0.00,
-    region: 'Mundo',
-    historia: 'Superfood del mundo...',
-    proteina: 0,
-    calorias: 0,
-    carbohidratos: 0,
-    opciones: [
-      { nombre: 'Alitas', precio: 8.00, imagen: '/img/picoteo/Alitas2.png', descripcion: 'Alitas de pollo crujientes' },
-      { nombre: 'Patatas Fritas', precio: 5.00, imagen: '/img/picoteo/Bowl%20Patatas%20fritas.png', descripcion: 'Bowl de patatas fritas' },
-      { nombre: 'Nachos', precio: 7.00, imagen: '/img/picoteo/Nachos%20con%20queso.png', descripcion: 'Nachos con queso' },
-      { nombre: 'Palomitas', precio: 4.00, imagen: '/img/picoteo/Palomitas%20de%20maíz.png', descripcion: 'Palomitas de maíz' }
-    ]
-  },
-  {
-  id: 7,
-  nombre: 'Gourmet', // 👈 Debe coincidir con el id
-  imagenes: [
-    '/img/gourmet/Bistec%20convinado.png',
-    '/img/gourmet/Pollo%20broster.png',
-    '/img/gourmet/Tabla%20flamenca.png',
-  ],
-  video: null,
-    precio: 0.00,
-    region: 'Mundo',
-    historia: 'Superfood del mundo...',
-    proteina: 0,
-    calorias: 0,
-    carbohidratos: 0,
-    opciones: [
-      { nombre: 'Bistec Convinado', precio: 18.00, imagen: '/img/gourmet/Bistec%20convinado.png', descripcion: 'Bistec combinado gourmet' },
-      { nombre: 'Pollo Broster', precio: 15.00, imagen: '/img/gourmet/Pollo%20broster.png', descripcion: 'Pollo broster especial' },
-      { nombre: 'Tabla Flamenca', precio: 20.00, imagen: '/img/gourmet/Tabla%20flamenca.png', descripcion: 'Tabla flamenca para compartir' }
-    ]
-  },
-  {
-  id: 8,
-  nombre: 'Monstruos', // 👈 Debe coincidir con el id
-  imagenes: [
-    '/img/monstruos/frente1.JPG',
-    '/img/monstruos/nodle.jpg',
-  ],
-  video: null,
-    precio: 0.00,
-    region: 'Mundo',
-    historia: 'Superfood del mundo...',
-    proteina: 0,
-    calorias: 0,
-    carbohidratos: 0,
-    opciones: [
-      { nombre: 'Frente 1', precio: 16.00, imagen: '/img/monstruos/frente1.JPG', descripcion: 'Plato especial frente 1' },
-      { nombre: 'Nodle', precio: 14.00, imagen: '/img/monstruos/nodle.jpg', descripcion: 'Delicioso nodle' }
-    ]
-  },
-  {
-  id: 9,
-  nombre: 'Postres', // 👈 Debe coincidir con el id
-  imagenes: [
-    '/img/postres/Ensalada%20Mimosa.jpg',
-    '/img/postres/ZumoDeFrutas.jpg',
-    '/img/postres/ZumosVerdes.jpg',
-  ],
-  video: null,
-    precio: 0.00,
-    region: 'Mundo',
-    historia: 'Superfood del mundo...',
-    proteina: 0,
-    calorias: 0,
-    carbohidratos: 0,
-    opciones: [
-      { nombre: 'Ensalada Mimosa', precio: 6.00, imagen: '/img/postres/Ensalada%20Mimosa.jpg', descripcion: 'Ensalada fresca mimosa' },
-      { nombre: 'Zumo de Frutas', precio: 4.00, imagen: '/img/postres/ZumoDeFrutas.jpg', descripcion: 'Zumo natural de frutas' },
-      { nombre: 'Zumos Verdes', precio: 5.00, imagen: '/img/postres/ZumosVerdes.jpg', descripcion: 'Zumos verdes saludables' }
-    ]
-  },
-
 ];
 
 // ============================================
