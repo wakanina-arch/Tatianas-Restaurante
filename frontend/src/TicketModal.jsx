@@ -9,52 +9,104 @@ export default function TicketModal({ open, onClose, order }) {
 
   return (
     <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+      <div className="ticket-content" style={styles.modal} onClick={e => e.stopPropagation()}>
         
         {/* Botón de impresión */}
         <div style={styles.printContainer}>
   <button 
     style={styles.printBtn} 
-    onClick={() => {
-      // Generar contenido del ticket
-      const ticketContent = `
-        ONE TO ONE - DESDE EL BARRO
-        ============================
-        Nº Pedido: ${order.numero || order.ordenId || 'OTO-001'}
-        Fecha: ${new Date().toLocaleString()}
-        
-        RESUMEN DEL PEDIDO:
-        ${order.items?.map(item => `  ${item.cantidad} x ${item.nombre} = $${(item.precio * item.cantidad).toFixed(2)}`).join('\n')}
-        
-        TOTAL: $${order.total?.toFixed(2)}
-        
-        ¡Gracias por tu compra!
+    onClick={async () => {
+      // Esperar un momento para asegurar que el QR está renderizado
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      // Capturar el QR como imagen
+      const qrCanvas = document.querySelector('#ticket-qr canvas');
+      let qrImageData = '';
+      
+      if (qrCanvas) {
+        qrImageData = qrCanvas.toDataURL('image/png');
+      } else {
+        console.error('No se encontró el canvas del QR');
+      }
+      
+      // Obtener el HTML del ticket actual
+      const ticketElement = document.querySelector('.ticket-content');
+      if (!ticketElement) {
+        alert('No se pudo capturar el ticket');
+        return;
+      }
+      
+      // Clonar el ticket
+      const ticketClone = ticketElement.cloneNode(true);
+      
+      // Reemplazar el QR original por la imagen capturada
+      if (qrImageData) {
+        const qrContainer = ticketClone.querySelector('#ticket-qr');
+        if (qrContainer) {
+          qrContainer.innerHTML = `<img src="${qrImageData}" style="width: 100px; height: 100px; border-radius: 12px;" />`;
+        }
+      }
+      
+      // Obtener todos los estilos de la página
+      const estilos = Array.from(document.querySelectorAll('style')).map(style => style.innerHTML).join('');
+      
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>Ticket ${order.numero || order.ordenId || 'OTO-001'}</title>
+          <style>${estilos}</style>
+          <style>
+            body {
+              margin: 0;
+              padding: 20px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              min-height: 100vh;
+              background: #f5f5f5;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            }
+            .ticket-content {
+              max-width: 360px;
+              margin: 0 auto;
+              background: white;
+              border-radius: 32px;
+              overflow: hidden;
+              box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            }
+          </style>
+        </head>
+        <body>
+          ${ticketClone.outerHTML}
+        </body>
+        </html>
       `;
       
-      // Crear archivo para descargar
-      const blob = new Blob([ticketContent], { type: 'text/plain' });
+      // Crear archivo HTML para descargar
+      const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `ticket_${order.numero || order.ordenId || 'OTO-001'}.txt`;
+      a.download = `ticket_${order.numero || order.ordenId || 'OTO-001'}.html`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
-      // Aquí luego puedes añadir la lógica para guardar en la nube o enviar por email
-      alert('✅ Revisa tu correo eléctronico; WhatsApp!');
+      alert('✅ Revisa tu correo electrónico; WhatsApp!');
     }}
   >
-    <span style={styles.printIcon}>💾</span>
+    <span style={styles.printIcon}>📬</span>
   </button>
-  <span style={styles.printText}>Imprimir<br />Ticket</span>
+  <span style={styles.printText}>Imprime<br />Ticket</span>
 </div>
 
         {/* QR CODE - TOP (PRIMERO) */}
-        <div style={styles.qrContainer}>
-          <CodigoQR valor={order.numero || order.ordenId || "OTO-001"} tamaño={100} />
-        </div>
+        <div id="ticket-qr" style={styles.qrContainer}>
+  <CodigoQR valor={order.numero || order.ordenId || "OTO-001"} tamaño={100} />
+</div>
         
         {/* ORDER NUMBER */}
         <div style={styles.orderInfo}>
