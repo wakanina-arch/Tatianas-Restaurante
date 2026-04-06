@@ -7,15 +7,15 @@ import AdminPage from './AdminPage';
 import { CartProvider, useCart } from './CartContext';
 import PaymentModal from './PaymentModal';
 import WelcomeInicio from './WelcomeInicio';
-//import MenuDesplegable from './layouts/MenuDesplegable';
 import RegisterModal from './components/RegisterModal';
-import HomePage from './pages/HomePage';  // ← Importamos el nuevo HomePage
+import HomePage from './pages/HomePage';
+import LoginComercio from './pages/LoginComercio';
+import AdminComercio from './pages/AdminComercio';
 
 // ============================================
 // CONFIGURACIÓN GLOBAL
 // ============================================
 const STORAGE_KEYS = {
-  MENU: 'restaurante_menu',
   PENDING: 'restaurante_pending',
   LOGS: 'restaurante_logs'
 };
@@ -136,52 +136,29 @@ function MainApp() {
   const { itemCount } = useCart();
   const [currentPage, setCurrentPage] = useState('home');
   const [user, setUser] = useState(null);
+  const [selectedComercioAdmin, setSelectedComercioAdmin] = useState(null);
   const COMERCIOS = [
-  { id: 1, nombre: "En su punto", imagen: "/casas/en_su_punto.JPG" },
-  { id: 2, nombre: "Ceremoniales", imagen: "/casas/Ceremoniales.JPG" },
-  { id: 3, nombre: "Como en casa", imagen: "/casas/Como_en_casa.JPG" },
-  { id: 4, nombre: "Gusto", imagen: "/casas/IMG_4552.JPG" },
-  { id: 5, nombre: "Candela Obscura", imagen: "/casas/IMG_4555.JPG" },
-  { id: 6, nombre: "Kattapa", imagen: "/casas/Kattapa.JPG" },
-  { id: 7, nombre: "Llap Grill", imagen: "/casas/Llap_Grill.JPG" },
-  { id: 8, nombre: "Pollo a la leña", imagen: "/casas/Pollo_a_la_leña.JPG" },
-  { id: 9, nombre: "Tradicional", imagen: "/casas/Tradicional.JPG" },
-];
+    { id: 1, nombre: "En su punto", imagen: "/casas/en_su_punto.JPG" },
+    { id: 2, nombre: "Ceremoniales", imagen: "/casas/Ceremoniales.JPG" },
+    { id: 3, nombre: "Como en casa", imagen: "/casas/Como_en_casa.JPG" },
+    { id: 4, nombre: "Gusto", imagen: "/casas/IMG_4552.JPG" },
+    { id: 5, nombre: "Candela Obscura", imagen: "/casas/IMG_4555.JPG" },
+    { id: 6, nombre: "Kattapa", imagen: "/casas/Kattapa.JPG" },
+    { id: 7, nombre: "Llap Grill", imagen: "/casas/Llap_Grill.JPG" },
+    { id: 8, nombre: "Pollo a la leña", imagen: "/casas/Pollo_a_la_leña.JPG" },
+    { id: 9, nombre: "Tradicional", imagen: "/casas/Tradicional.JPG" },
+  ];
+
   const [showWelcome, setShowWelcome] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [perfilAbierto, setPerfilAbierto] = useState(false);
   const [selectedComercio, setSelectedComercio] = useState(null);
 
-  // Cargar usuario al iniciar
-  useEffect(() => {
-  // Forzar admin para pruebas (eliminar después)
-  const adminUser = { nombre: "Admin", rol: "admin_restaurante" };
-  localStorage.setItem('oneToOneUser', JSON.stringify(adminUser));
-  setUser(adminUser);
-}, []);
+  // Obtener clave de localStorage para el menú del comercio
+  const getMenuKey = (comercioId) => `menu_comercio_${comercioId || 'default'}`;
+  const [menuItems, setMenuItems] = useLocalStorage(getMenuKey(selectedComercio), DEFAULT_MENU_ITEMS);
 
-  const handleSelectCategory = (categoryLabel, comercioId = null, volverAWelcome = false) => {
-  if (volverAWelcome) {
-    setShowWelcome(true);
-    setSelectedCategory(null);
-    setCurrentPage('home');
-    return;
-  }
-  
-  setSelectedCategory(categoryLabel);
-  setSelectedComercio(comercioId);  // ← guardamos el comercio seleccionado
-  setShowWelcome(false);
-  setCurrentPage('home');
-};
-
-  const handleBackToWelcome = () => {
-    setShowWelcome(true);
-    setSelectedCategory(null);
-    setCurrentPage('home');
-  };
-
-  const [menuItems, setMenuItems] = useLocalStorage(STORAGE_KEYS.MENU, DEFAULT_MENU_ITEMS);
   const [pendingOrders, setPendingOrders] = useLocalStorage(STORAGE_KEYS.PENDING, []);
   const [log, setLog] = useLocalStorage(STORAGE_KEYS.LOGS, []);
   const [finishedOrders, setFinishedOrders] = useState([]);
@@ -190,11 +167,24 @@ function MainApp() {
   const handleSaveMenu = (updatedMenu) => setMenuItems(updatedMenu);
   const addLog = (entry) => setLog((prev) => [...prev, { ...entry, timestamp: new Date().toISOString() }]);
 
-  useEffect(() => {
-    // Estado actualizado
-  }, [showWelcome, selectedCategory, currentPage]);
+  const handleSelectCategory = (categoryLabel, comercioId = null, volverAWelcome = false) => {
+    if (volverAWelcome) {
+      setShowWelcome(true);
+      setSelectedCategory(null);
+      setCurrentPage('home');
+      return;
+    }
+    setSelectedCategory(categoryLabel);
+    setSelectedComercio(comercioId);
+    setShowWelcome(false);
+    setCurrentPage('home');
+  };
 
-  const itemsToShow = menuItems.length > 0 ? menuItems : DEFAULT_MENU_ITEMS;
+  const handleBackToWelcome = () => {
+    setShowWelcome(true);
+    setSelectedCategory(null);
+    setCurrentPage('home');
+  };
 
   const handleRegister = (userData, modo) => {
     if (modo === 'logout') {
@@ -208,120 +198,74 @@ function MainApp() {
 
   return (
     <div className="app">
+      {currentPage === 'comercio-login' && (
+        <LoginComercio
+          onLogin={(id) => {
+            setSelectedComercioAdmin(id);
+            setCurrentPage('comercio-admin');
+          }}
+          onBack={() => setCurrentPage('home')}
+        />
+      )}
+
+      {currentPage === 'comercio-admin' && selectedComercioAdmin && (
+        <AdminComercio
+          comercioId={selectedComercioAdmin}
+          menuItems={menuItems}
+          onSaveMenu={handleSaveMenu}
+          onBack={() => setCurrentPage('home')}
+        />
+      )}
+
       {showWelcome ? (
-        <WelcomeInicio onSelectCategory={handleSelectCategory} />
+        <WelcomeInicio
+          onSelectCategory={handleSelectCategory}
+          onAccesoComercio={() => setCurrentPage('comercio-login')}
+        />
       ) : (
         <>
-          {/* HEADER - REEMPLAZANDO NavBar */}
           <header style={styles.header}>
             <div style={styles.headerContent}>
-              {/* Botón Volver (izquierda) */}
-              <button
-                onClick={handleBackToWelcome}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                style={styles.backBtn}
-              >
-                ←
-              </button>
-
-              {/* Logo ONE TO ONE (centro) */}
+              <button onClick={handleBackToWelcome} style={styles.backBtn}>←</button>
               <div style={styles.logoContainer} onClick={handleBackToWelcome}>
                 <span style={styles.logoIcon}>🔱</span>
-                <span style={{
-          fontSize: '1.2rem',
-          fontWeight: '700',
-          color: '#B22222',
-          textShadow: '0 0 5px rgba(178,34,34,0.5), 0 0 10px rgba(178,34,34,0.3)',
-          animation: 'brilloRojo 2.5s infinite alternate',
-        }}>One</span>{' '}
-        <span style={{
-          fontSize: '1.2rem',
-          fontWeight: '700',
-          color: '#1a3b1a',
-          textShadow: '0 0 5px rgba(26,59,26,0.5), 0 0 10px rgba(26,59,26,0.3)',
-          animation: 'brilloVerde 2.5s infinite alternate',
-        }}>To</span>{' '}
-        <span style={{
-          fontSize: '1.2rem',
-          fontWeight: '700',
-          color: '#FFD700',
-          textShadow: '0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(255,215,0,0.3)',
-          animation: 'brilloDorado 2.5s infinite alternate',
-        }}>One</span>
+                <span style={styles.logoText}>ONE TO ONE</span>
               </div>
-
-              {/* Iconos derecha */}
               <div style={styles.rightIcons}>
-                {/* Carrito */}
-                <button 
-                  onClick={() => setCurrentPage('carrito')}
-                  style={styles.iconBtn}
-                  title="Mi Carrito"
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.2)';
-                    e.currentTarget.style.transition = 'transform 0.2s ease';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                >
-                  🛒
-                  {itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
+                <button onClick={() => setCurrentPage('carrito')} style={styles.iconBtn}>
+                  🛒{itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
                 </button>
-
-                {/* Perfil */}
-                <button 
-                  onClick={() => setPerfilAbierto(true)}
-                  style={styles.iconBtn}
-                  title="Mi Perfil"
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.2)';
-                    e.currentTarget.style.transition = 'transform 0.2s ease';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                >
-                  👤
-                  {user && <span style={styles.userDot} />}
+                <button onClick={() => setPerfilAbierto(true)} style={styles.iconBtn}>
+                  👤{user && <span style={styles.userDot} />}
                 </button>
               </div>
             </div>
           </header>
-          
-          {/* <MenuDesplegable 
-  abierto={menuAbierto}
-  onClose={() => setMenuAbierto(false)}
-  onSelectCategoria={handleSelectCategory}
-  comercioId={selectedComercio}
-/> */}
-          
-          <RegisterModal 
+
+          <RegisterModal
             open={perfilAbierto}
             onClose={() => setPerfilAbierto(false)}
             onRegister={handleRegister}
             modo="editar"
             usuario={user}
           />
-          
-        <main className="main-content" style={{ paddingTop: '100px', minHeight: 'calc(100vh - 100px)', width: '100%' }}>
-  {currentPage === 'home' && (
-  <HomePage 
-    comercio={COMERCIOS.find(c => c.id === selectedComercio)}
-    platillos={itemsToShow}
-    user={user}
-    itemCount={itemCount}
-    onOpenMenu={() => setMenuAbierto(true)}
-    onOpenPerfil={() => setPerfilAbierto(true)}
-    onBackToWelcome={handleBackToWelcome}
-    setCurrentPage={setCurrentPage}
-  />
-)}
 
+          <main style={{ paddingTop: '100px', minHeight: 'calc(100vh - 100px)', width: '100%' }}>
+            {currentPage === 'home' && (
+              <HomePage
+                comercio={COMERCIOS.find(c => c.id === selectedComercio)}
+                platillos={menuItems}
+                user={user}
+                itemCount={itemCount}
+                onOpenMenu={() => setMenuAbierto(true)}
+                onOpenPerfil={() => setPerfilAbierto(true)}
+                onBackToWelcome={handleBackToWelcome}
+                setCurrentPage={setCurrentPage}
+              />
+            )}
             {currentPage === 'carrito' && (
-              <CartPage 
-                addLog={addLog} 
+              <CartPage
+                addLog={addLog}
                 setPendingOrders={setPendingOrders}
                 user={user}
                 onVolverAlMenu={() => setCurrentPage('home')}
@@ -347,80 +291,7 @@ function MainApp() {
   );
 }
 
-// ============================================
-// HEADER SUPERIOR FLOTANTE - FULL WIDTH
-// Franja de lado a lado de la pantalla
-// ============================================
-function NavBar({ currentPage, setCurrentPage, itemCount, onOpenMenu, onOpenPerfil, onBackToWelcome, user }) {
-  return (
-    <header style={styles.header}>
-      <div style={styles.headerContent}>
-        {/* Botón Volver (izquierda) */}
-        <button
-          onClick={onBackToWelcome}
-          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
-          onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-          style={styles.backBtn}
-        >
-          ←
-        </button>
-
-        {/* Logo ONE TO ONE (centro) */}
-        <div style={styles.logoContainer} onClick={onBackToWelcome}>
-          <span style={styles.logoIcon}>🔱</span>
-          <span style={{
-    fontSize: '1.2rem',
-    fontWeight: '700',
-    color: '#B22222',  // rojo místico
-    textShadow: '0 0 5px rgba(178,34,34,0.5), 0 0 10px rgba(178,34,34,0.3)',
-    animation: 'brilloRojo 2.5s infinite alternate',
-  }}>One</span>{' '}
-  <span style={{
-    fontSize: '1.2rem',
-    fontWeight: '700',
-    color: '#1a3b1a',  // verde selva
-    textShadow: '0 0 5px rgba(26,59,26,0.5), 0 0 10px rgba(26,59,26,0.3)',
-    animation: 'brilloVerde 2.5s infinite alternate',
-  }}>To</span>{' '}
-  <span style={{
-    fontSize: '1.2rem',
-    fontWeight: '700',
-    color: '#FFD700',  // dorado
-    textShadow: '0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(255,215,0,0.3)',
-    animation: 'brilloDorado 2.5s infinite alternate',
-  }}>One</span>
-        </div>
-
-        {/* Iconos derecha */}
-        <div style={styles.rightIcons}>
-  {/* Carrito */}
-  <button 
-    onClick={() => setCurrentPage('carrito')}
-    style={styles.iconBtn}
-  >
-    🛒
-    {itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
-  </button>
-
-  {/* DSH - visible siempre por ahora */}
-  <button 
-    onClick={() => setCurrentPage('admin')}
-    style={styles.dshBtn}
-  >
-    DSH
-  </button>
-
-  {/* Perfil */}
-  <button onClick={onOpenPerfil} style={styles.iconBtn}>
-    👤
-    {user && <span style={styles.userDot} />}
-  </button>
-</div>
-      </div>
-    </header>
-  );
-}
-
+// Estilos del header
 const styles = {
   header: {
     position: 'fixed',
@@ -449,10 +320,6 @@ const styles = {
     fontSize: '1.3rem',
     color: '#FFD700',
     padding: '8px',
-    display: 'flex',
-    alignItems: 'center',
-    borderRadius: '30px',
-    transition: 'all 0.2s ease',
   },
   logoContainer: {
     display: 'flex',
@@ -460,9 +327,7 @@ const styles = {
     gap: '8px',
     cursor: 'pointer',
   },
-  logoIcon: {
-    fontSize: '1.3rem',
-  },
+  logoIcon: { fontSize: '1.3rem' },
   logoText: {
     fontSize: '1rem',
     fontWeight: '700',
@@ -470,10 +335,14 @@ const styles = {
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
   },
-  rightIcons: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
+  rightIcons: { display: 'flex', alignItems: 'center', gap: '8px' },
+  iconBtn: {
+    background: 'transparent',
+    border: 'none',
+    fontSize: '1.3rem',
+    cursor: 'pointer',
+    position: 'relative',
+    padding: '8px',
   },
   badge: {
     position: 'absolute',
@@ -488,15 +357,6 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    pointerEvents: 'none',
-    zIndex: 1,
-  },
-  perfilBtn: {
-    background: 'transparent',
-    border: 'none',
-    fontSize: '1.2rem',
-    cursor: 'pointer',
-    position: 'relative',
   },
   userDot: {
     position: 'absolute',
@@ -507,113 +367,10 @@ const styles = {
     background: '#34c759',
     borderRadius: '50%',
   },
-  iconBtn: {
-    background: 'transparent',
-    border: 'none',
-    fontSize: '1.3rem',
-    cursor: 'pointer',
-    position: 'relative',
-    padding: '8px',
-    transition: 'all 0.2s ease',
-    borderRadius: '8px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dshBtn: {
-    background: 'transparent',
-    border: 'none',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    color: '#00ffd9',
-    padding: '8px 12px',
-    letterSpacing: '1px',
-    transition: 'all 0.2s ease',
-    borderRadius: '6px',
-    position: 'relative',
-  },
 };
-// ============================================
-// BOTÓN DE NAVEGACIÓN (reutilizable)
-// ============================================
-function NavButton({ page, currentPage, setCurrentPage, children }) {
-  const isActive = currentPage === page;
-  
-  const handleClick = () => {
-    setCurrentPage(page);
-  };
-  
-  return (
-    <button
-      onClick={handleClick}
-      style={{
-        background: isActive 
-          ? 'linear-gradient(135deg, var(--morado-primario) 0%, #8b5cf6 100%)'
-          : 'transparent',
-        border: 'none',
-        borderRadius: '40px',
-        padding: '0.5rem 1rem',
-        fontSize: '0.95rem',
-        fontWeight: isActive ? '600' : '500',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        color: isActive ? 'white' : 'var(--gris-texto)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.3rem',
-        position: 'relative',
-        boxShadow: isActive ? '0 4px 12px rgba(99, 102, 241, 0.3)' : 'none',
-        zIndex: 100
-      }}
-      onMouseEnter={(e) => {
-        if (!isActive) {
-          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!isActive) {
-          e.currentTarget.style.background = 'transparent';
-        }
-      }}
-    >
-      {children}
-    </button>
-  );
-}
 
 // ============================================
-// ELIMINADO: HomePage (se movió a HomePage.jsx)
-// ELIMINADO: MenuItem (se movió a components/MenuItem.jsx)
-// ============================================
-
-function buildMediaItems(item) {
-  const items = [];
-  const FALLBACK_IMAGES = [
-    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400',
-    'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400',
-    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400',
-  ];
-
-  if (!item.imagenes || item.imagenes.length === 0) {
-    FALLBACK_IMAGES.forEach(url => {
-      items.push({ tipo: 'imagen', url });
-    });
-  } else {
-    item.imagenes.forEach(url => {
-      if (url) items.push({ tipo: 'imagen', url });
-    });
-  }
-
-  if (item.video) {
-    items.push({ tipo: 'video', url: item.video });
-  }
-
-  return items;
-}
-
-// ============================================
-// CARRITO - ESTILO CRISTAL ESMERILADO (ORIGINAL MEJORADO)
+// CARRITO - ESTILO CRISTAL ESMERILADO
 // ============================================
 function CartPage({ addLog, setPendingOrders, user, onVolverAlMenu }) {
   const { cartItems, removeFromCart, updateQuantity, calculateTotal } = useCart();
@@ -627,12 +384,7 @@ function CartPage({ addLog, setPendingOrders, user, onVolverAlMenu }) {
           <span style={cartStyles.emptyIcon}>🛒</span>
           <h2 style={cartStyles.emptyTitle}>Tu Carrito</h2>
           <p style={cartStyles.emptyText}>Tu carrito está vacío. ¡Agrega platos deliciosos!</p>
-          <button 
-            onClick={onVolverAlMenu}
-            style={{...cartStyles.backBtn, marginTop: '1rem'}}
-          >
-            🍽️ Volver al Menú
-          </button>
+          <button onClick={onVolverAlMenu} style={{ ...cartStyles.backBtn, marginTop: '1rem' }}>🍽️ Volver al Menú</button>
         </div>
       </section>
     );
@@ -641,74 +393,35 @@ function CartPage({ addLog, setPendingOrders, user, onVolverAlMenu }) {
   return (
     <section style={cartStyles.container}>
       <h2 style={cartStyles.pageTitle}>Revisa tu Carrito 🔱</h2>
-      
       <div style={cartStyles.cartCard}>
         <div style={cartStyles.itemsList}>
           {cartItems.map((item) => (
-            <CartItem
-              key={item.id}
-              item={item}
-              onRemove={removeFromCart}
-              onUpdateQuantity={updateQuantity}
-            />
+            <CartItem key={item.id} item={item} onRemove={removeFromCart} onUpdateQuantity={updateQuantity} />
           ))}
         </div>
-        
-        <CartSummary
-          total={total}
-          onCheckout={() => setPayOpen(true)}
-          user={user}
-          onVolver={onVolverAlMenu}
-        />
+        <CartSummary total={total} onCheckout={() => setPayOpen(true)} user={user} onVolver={onVolverAlMenu} />
       </div>
-
-      <PaymentModal
-        open={payOpen}
-        onClose={() => setPayOpen(false)}
-        total={total}
-        addLog={addLog}
-        setPendingOrders={setPendingOrders}
-      />
+      <PaymentModal open={payOpen} onClose={() => setPayOpen(false)} total={total} addLog={addLog} setPendingOrders={setPendingOrders} />
     </section>
   );
 }
 
 function CartItem({ item, onRemove, onUpdateQuantity }) {
   const cantidad = item.cantidad || 1;
-
   return (
     <div style={cartStyles.cartItem}>
       <div style={cartStyles.itemInfo}>
         <h4 style={cartStyles.itemName}>{item.nombre}</h4>
         <p style={cartStyles.itemPrice}>${item.precio.toFixed(2)} c/u</p>
       </div>
-      
       <div style={cartStyles.itemActions}>
         <div style={cartStyles.quantityControl}>
-          <button 
-            onClick={() => onUpdateQuantity(item.id, cantidad - 1)}
-            disabled={cantidad <= 1}
-            style={cantidad <= 1 ? cartStyles.qtyBtnDisabled : cartStyles.qtyBtn}
-          >
-            −
-          </button>
+          <button onClick={() => onUpdateQuantity(item.id, cantidad - 1)} disabled={cantidad <= 1} style={cantidad <= 1 ? cartStyles.qtyBtnDisabled : cartStyles.qtyBtn}>−</button>
           <span style={cartStyles.qtyValue}>{cantidad}</span>
-          <button 
-            onClick={() => onUpdateQuantity(item.id, cantidad + 1)}
-            style={cartStyles.qtyBtn}
-          >
-            +
-          </button>
+          <button onClick={() => onUpdateQuantity(item.id, cantidad + 1)} style={cartStyles.qtyBtn}>+</button>
         </div>
-
         <div style={cartStyles.itemTotal}>${(item.precio * cantidad).toFixed(2)}</div>
-
-        <button 
-          onClick={() => onRemove(item.id)}
-          style={cartStyles.removeBtn}
-        >
-          🗑️
-        </button>
+        <button onClick={() => onRemove(item.id)} style={cartStyles.removeBtn}>🗑️</button>
       </div>
     </div>
   );
@@ -718,324 +431,59 @@ function CartSummary({ total, onCheckout, user, onVolver }) {
   return (
     <div style={cartStyles.summaryCard}>
       <h3 style={cartStyles.summaryTitle}>Resumen</h3>
-      
-      <div style={cartStyles.summaryRow}>
-        <span>Subtotal</span>
-        <span>${total}</span>
-      </div>
-      <div style={cartStyles.summaryRow}>
-        <span>Envío</span>
-        <span style={{ color: '#34c759' }}>Gratis</span>
-      </div>
-      
+      <div style={cartStyles.summaryRow}><span>Subtotal</span><span>${total}</span></div>
+      <div style={cartStyles.summaryRow}><span>Envío</span><span style={{ color: '#34c759' }}>Gratis</span></div>
       {!user && (
         <div style={cartStyles.promoBox}>
           <p style={cartStyles.promoText}>✨ ¿Eres cliente frecuente?</p>
-          <button style={cartStyles.promoBtn}>
-            Regístrate y obtén 10% OFF
-          </button>
+          <button style={cartStyles.promoBtn}>Regístrate y obtén 10% OFF</button>
         </div>
       )}
-      
-      {user && (
-        <div style={cartStyles.memberBadge}>
-          🎉 10% de descuento para miembros
-        </div>
-      )}
-      
-      <div style={cartStyles.totalRow}>
-        <span>Total</span>
-        <span style={cartStyles.totalAmount}>${total}</span>
-      </div>
-      
-      <button onClick={onCheckout} style={cartStyles.checkoutBtn}>
-        Proceder al Pago
-      </button>
-      
-      <button
-        onClick={onVolver}
-        style={cartStyles.backBtn}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'rgba(1, 64, 14, 0.05)';
-          e.currentTarget.style.borderColor = '#FF8C42';
-          e.currentTarget.style.color = '#FF8C42';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'transparent';
-          e.currentTarget.style.borderColor = 'rgba(255, 179, 71, 0.3)';
-          e.currentTarget.style.color = '#01400e';
-        }}
-      >
-        🍽️ Seguir Comprando
-      </button>
+      {user && <div style={cartStyles.memberBadge}>🎉 10% de descuento para miembros</div>}
+      <div style={cartStyles.totalRow}><span>Total</span><span style={cartStyles.totalAmount}>${total}</span></div>
+      <button onClick={onCheckout} style={cartStyles.checkoutBtn}>Proceder al Pago</button>
+      <button onClick={onVolver} style={cartStyles.backBtn}>🍽️ Seguir Comprando</button>
     </div>
   );
 }
 
-// ============================================
-// ESTILOS CRISTAL ESMERILADO (GLASSMORPHISM)
-// ============================================
 const cartStyles = {
-  container: {
-    maxWidth: 600,
-    margin: '0 auto',
-    padding: '1rem',
-    width: '100%',
-    display: 'block',
-    minHeight: '100%'
-  },
-  pageTitle: {
-    fontSize: '1.6rem',
-    fontWeight: '600',
-    color: '#039921',
-    marginBottom: '1.5rem',
-    textAlign: 'center'
-  },
-  cartCard: {
-    background: 'rgba(255, 255, 255, 0.7)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    borderRadius: 32,
-    padding: '1.2rem',
-    border: '1px solid rgba(255, 255, 255, 0.5)',
-    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.05)'
-  },
-  itemsList: {
-    marginBottom: '1.5rem'
-  },
-  cartItem: {
-    padding: '1rem 0',
-    borderBottom: '1px solid rgba(0, 0, 0, 0.05)'
-  },
-  itemInfo: {
-    marginBottom: '0.5rem'
-  },
-  itemName: {
-    margin: 0,
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#01400e'
-  },
-  itemPrice: {
-    margin: '0.2rem 0 0',
-    fontSize: '0.8rem',
-    color: '#666'
-  },
-  itemActions: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '1rem'
-  },
-  quantityControl: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    background: 'rgba(0, 0, 0, 0.03)',
-    padding: '0.2rem 0.2rem',
-    borderRadius: 30
-  },
-  qtyBtn: {
-    background: 'transparent',
-    border: 'none',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    cursor: 'pointer',
-    fontSize: '1.2rem',
-    color: '#FF8C42',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  qtyBtnDisabled: {
-    background: 'transparent',
-    border: 'none',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    cursor: 'not-allowed',
-    fontSize: '1.2rem',
-    color: '#ccc',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  qtyValue: {
-    minWidth: 32,
-    textAlign: 'center',
-    fontWeight: '600',
-    fontSize: '0.9rem'
-  },
-  itemTotal: {
-    fontWeight: '700',
-    color: '#FF8C42',
-    fontSize: '0.9rem',
-    minWidth: '70px'
-  },
-  removeBtn: {
-    background: 'none',
-    border: 'none',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    opacity: 0.5,
-    transition: 'opacity 0.2s ease',
-    padding: '4px'
-  },
-  summaryCard: {
-    borderTop: '1px solid rgba(0, 0, 0, 0.05)',
-    paddingTop: '1rem'
-  },
-  summaryTitle: {
-    margin: '0 0 1rem 0',
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#01400e'
-  },
-  summaryRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '0.5rem',
-    fontSize: '0.85rem',
-    color: '#666'
-  },
-  promoBox: {
-    background: 'rgba(255, 215, 0, 0.08)',
-    borderRadius: 20,
-    padding: '0.8rem',
-    margin: '1rem 0',
-    textAlign: 'center'
-  },
-  promoText: {
-    fontSize: '0.75rem',
-    color: '#666',
-    margin: '0 0 0.5rem 0'
-  },
-  promoBtn: {
-    background: 'transparent',
-    border: '1px solid #FF8C42',
-    borderRadius: 30,
-    padding: '0.3rem 0.8rem',
-    fontSize: '0.7rem',
-    color: '#FF8C42',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease'
-  },
-  memberBadge: {
-    background: 'rgba(255, 215, 0, 0.08)',
-    borderRadius: 20,
-    padding: '0.5rem',
-    margin: '1rem 0',
-    textAlign: 'center',
-    fontSize: '0.75rem',
-    fontWeight: '600',
-    color: '#01400e'
-  },
-  totalRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '1rem 0',
-    fontSize: '1.1rem',
-    fontWeight: '700',
-    color: '#01400e',
-    paddingTop: '0.5rem',
-    borderTop: '1px solid rgba(255, 179, 71, 0.2)'
-  },
-  totalAmount: {
-    color: '#FF8C42',
-    fontSize: '1.2rem'
-  },
-  checkoutBtn: {
-    width: '100%',
-    padding: '0.8rem',
-    background: 'linear-gradient(135deg, #01400e 0%, #2a6b2f 100%)',
-    color: 'white',
-    border: 'none',
-    borderRadius: 40,
-    fontWeight: '600',
-    fontSize: '0.9rem',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    marginBottom: '0.5rem'
-  },
-  backBtn: {
-    width: '100%',
-    padding: '0.8rem',
-    background: 'transparent',
-    border: '1px solid rgba(255, 179, 71, 0.3)',
-    borderRadius: 40,
-    fontWeight: '500',
-    fontSize: '0.9rem',
-    color: '#666',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease'
-  },
-  emptyContainer: {
-    maxWidth: 600,
-    margin: '0 auto',
-    padding: '2rem',
-    textAlign: 'center'
-  },
-  emptyCard: {
-    background: 'rgba(255, 255, 255, 0.7)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    borderRadius: 32,
-    padding: '2rem',
-    border: '1px solid rgba(255, 255, 255, 0.5)'
-  },
-  emptyIcon: {
-    fontSize: '3rem',
-    display: 'block',
-    marginBottom: '1rem'
-  },
-  emptyTitle: {
-    fontSize: '1.2rem',
-    color: '#01400e',
-    marginBottom: '0.5rem'
-  },
-  emptyText: {
-    fontSize: '0.85rem',
-    color: '#666'
-  }
+  container: { maxWidth: 600, margin: '0 auto', padding: '1rem', width: '100%' },
+  pageTitle: { fontSize: '1.6rem', fontWeight: '600', color: '#039921', marginBottom: '1.5rem', textAlign: 'center' },
+  cartCard: { background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(20px)', borderRadius: 32, padding: '1.2rem', border: '1px solid rgba(255,255,255,0.5)' },
+  itemsList: { marginBottom: '1.5rem' },
+  cartItem: { padding: '1rem 0', borderBottom: '1px solid rgba(0,0,0,0.05)' },
+  itemInfo: { marginBottom: '0.5rem' },
+  itemName: { margin: 0, fontSize: '1rem', fontWeight: '600', color: '#01400e' },
+  itemPrice: { margin: '0.2rem 0 0', fontSize: '0.8rem', color: '#666' },
+  itemActions: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' },
+  quantityControl: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0,0,0,0.03)', padding: '0.2rem 0.2rem', borderRadius: 30 },
+  qtyBtn: { background: 'transparent', border: 'none', width: 32, height: 32, borderRadius: 16, cursor: 'pointer', fontSize: '1.2rem', color: '#FF8C42' },
+  qtyBtnDisabled: { background: 'transparent', border: 'none', width: 32, height: 32, borderRadius: 16, cursor: 'not-allowed', fontSize: '1.2rem', color: '#ccc' },
+  qtyValue: { minWidth: 32, textAlign: 'center', fontWeight: '600', fontSize: '0.9rem' },
+  itemTotal: { fontWeight: '700', color: '#FF8C42', fontSize: '0.9rem', minWidth: '70px' },
+  removeBtn: { background: 'none', border: 'none', fontSize: '1rem', cursor: 'pointer', opacity: 0.5, padding: '4px' },
+  summaryCard: { borderTop: '1px solid rgba(0,0,0,0.05)', paddingTop: '1rem' },
+  summaryTitle: { margin: '0 0 1rem 0', fontSize: '1rem', fontWeight: '600', color: '#01400e' },
+  summaryRow: { display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#666' },
+  promoBox: { background: 'rgba(255,215,0,0.08)', borderRadius: 20, padding: '0.8rem', margin: '1rem 0', textAlign: 'center' },
+  promoText: { fontSize: '0.75rem', color: '#666', margin: '0 0 0.5rem 0' },
+  promoBtn: { background: 'transparent', border: '1px solid #FF8C42', borderRadius: 30, padding: '0.3rem 0.8rem', fontSize: '0.7rem', color: '#FF8C42', fontWeight: '600', cursor: 'pointer' },
+  memberBadge: { background: 'rgba(255,215,0,0.08)', borderRadius: 20, padding: '0.5rem', margin: '1rem 0', textAlign: 'center', fontSize: '0.75rem', fontWeight: '600', color: '#01400e' },
+  totalRow: { display: 'flex', justifyContent: 'space-between', margin: '1rem 0', fontSize: '1.1rem', fontWeight: '700', color: '#01400e', paddingTop: '0.5rem', borderTop: '1px solid rgba(255,179,71,0.2)' },
+  totalAmount: { color: '#FF8C42', fontSize: '1.2rem' },
+  checkoutBtn: { width: '100%', padding: '0.8rem', background: 'linear-gradient(135deg, #01400e 0%, #2a6b2f 100%)', color: 'white', border: 'none', borderRadius: 40, fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', marginBottom: '0.5rem' },
+  backBtn: { width: '100%', padding: '0.8rem', background: 'transparent', border: '1px solid rgba(255,179,71,0.3)', borderRadius: 40, fontWeight: '500', fontSize: '0.9rem', color: '#666', cursor: 'pointer' },
+  emptyCard: { background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(20px)', borderRadius: 32, padding: '2rem', textAlign: 'center' },
+  emptyIcon: { fontSize: '3rem', display: 'block', marginBottom: '1rem' },
+  emptyTitle: { fontSize: '1.2rem', color: '#01400e', marginBottom: '0.5rem' },
+  emptyText: { fontSize: '0.85rem', color: '#666' },
 };
 
-// Efectos hover
 const styleSheet = document.createElement('style');
 styleSheet.textContent = `
-  .checkout-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(1, 64, 14, 0.3);
-  }
-  
-  .clear-btn:hover {
-    border-color: #FF8C42;
-    color: #FF8C42;
-  }
-  
-  .promo-btn:hover {
-    background: rgba(255, 140, 66, 0.1);
-  }
-  
-  .remove-btn:hover {
-    opacity: 1 !important;
-    color: #ff3b30;
-  }
-    @keyframes brilloRojo {
-  0% { text-shadow: 0 0 2px rgba(178,34,34,0.3); }
-  100% { text-shadow: 0 0 12px rgba(178,34,34,0.8); }
-}
-@keyframes brilloVerde {
-  0% { text-shadow: 0 0 2px rgba(26,59,26,0.3); }
-  100% { text-shadow: 0 0 12px rgba(26,59,26,0.8); }
-}
-@keyframes brilloDorado {
-  0% { text-shadow: 0 0 2px rgba(255,215,0,0.3); }
-  100% { text-shadow: 0 0 12px rgba(255,215,0,0.8); }
-}
+  .checkout-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(1,64,14,0.3); }
+  .promo-btn:hover { background: rgba(255,140,66,0.1); }
+  .remove-btn:hover { opacity: 1 !important; color: #ff3b30; }
 `;
-
-if (typeof document !== 'undefined') {
-  document.head.appendChild(styleSheet);
-}
+if (typeof document !== 'undefined') document.head.appendChild(styleSheet);

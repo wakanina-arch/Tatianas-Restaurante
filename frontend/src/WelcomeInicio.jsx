@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import RegisterModal from './components/RegisterModal';
 
 // FRASES DEL ORÁCULO
 const FRASES_ORACULO = [
@@ -34,8 +33,7 @@ const COMERCIOS = [
   { id: 9, nombre: "Tradicional", imagen: "/casas/Tradicional.JPG" },
 ];
 
-export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegistro }) {
-  const [showRegister, setShowRegister] = useState(false);
+export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegistro, onAccesoComercio }) {
   const [fraseData] = useState(() => getFraseAleatoria());
 
   useEffect(() => {
@@ -56,7 +54,11 @@ export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegist
       <div style={styles.hero}>
         <div style={styles.headerRow}>
           <span style={styles.suscripcionTexto}>Suscripción</span>
-            <div style={styles.moneda} onClick={() => setShowRegister(true)}>
+            <div 
+              style={styles.moneda} 
+              onClick={() => onAccesoComercio && onAccesoComercio()}
+              title="Acceso a comercios"
+            >
               🔱
             </div>
             <span style={styles.opcionalTexto}>Opcional</span>
@@ -117,15 +119,6 @@ export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegist
           </div>
         ))}
       </div>
-
-      <RegisterModal
-        open={showRegister}
-        onClose={() => setShowRegister(false)}
-        onRegister={(u) => {
-          localStorage.setItem('oneToOneUser', JSON.stringify(u));
-          window.location.reload();
-        }}
-      />
     </div>
   );
 }

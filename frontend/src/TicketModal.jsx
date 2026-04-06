@@ -69,17 +69,24 @@ export default function TicketModal({ open, onClose, order }) {
               font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             }
             .ticket-content {
-              max-width: 360px;
-              margin: 0 auto;
-              background: white;
-              border-radius: 32px;
-              overflow: hidden;
-              box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            }
+  max-width: 400px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+}
           </style>
         </head>
         <body>
-          ${ticketClone.outerHTML}
+          body {
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
         </body>
         </html>
       `;
@@ -104,9 +111,7 @@ export default function TicketModal({ open, onClose, order }) {
 </div>
 
         {/* QR CODE - TOP (PRIMERO) */}
-        <div id="ticket-qr" style={styles.qrContainer}>
-  <CodigoQR valor={order.numero || order.ordenId || "OTO-001"} tamaño={100} />
-</div>
+        <CodigoQR valor={order.numero || order.ordenId || "OTO-001"} tamaño={130} />
         
         {/* ORDER NUMBER */}
         <div style={styles.orderInfo}>
@@ -312,12 +317,16 @@ const styles = {
     fontWeight: "700"
   },
   qrContainer: {
-    marginBottom: "0.8rem",
-    padding: "0.5rem",
-    background: "white",
-    borderRadius: "20px",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.03)"
-  },
+//   marginBottom: '1rem',
+padding: '10px',
+//   background: 'rgba(255, 255, 255, 0.2)',
+//   backdropFilter: 'blur(10px)',
+//   WebkitBackdropFilter: 'blur(10px)',
+//   borderRadius: '20px',
+//   display: 'inline-block',
+//   border: '1px solid rgba(255, 255, 255, 0.3)',
+//   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+},
   orderInfo: {
     textAlign: "center",
     marginBottom: "1rem"
@@ -384,6 +393,11 @@ styleSheet.textContent = `
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2) !important;
   }
+    #ticket-qr canvas, #ticket-qr img {
+  width: 200px !important;
+  height: 200px !important;
+  border-radius: 16px;
+}
   
   .finish-btn:hover {
     transform: translateY(-2px);

@@ -1,22 +1,17 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 
-export default function CodigoQR({ valor, tamaño = 120 }) {
-  const qrRef = useRef();
-
+export default function CodigoQR({ valor, tamaño = 130 }) {
   return (
     <div style={styles.container}>
       <QRCodeCanvas
-        ref={qrRef}
         value={valor}
         size={tamaño}
-        bgColor="#1a0a0a"        // fondo oscuro (gótico)
-        fgColor="#FFD700"        // dorado místico
+        bgColor="#250e0e"
+fgColor="#F5F5F5"
         level="H"
         includeMargin={true}
       />
-      <div style={styles.glow} />
-      <span style={styles.sigil}>🜍</span>  {/* Símbolo místico */}
     </div>
   );
 }
@@ -26,28 +21,20 @@ const styles = {
     position: 'relative',
     display: 'inline-block',
     padding: '8px',
-    background: 'linear-gradient(135deg, #2a0a0a, #1a0a0a)',
-    borderRadius: '20px',
-    boxShadow: '0 0 15px rgba(255,215,0,0.3)',
+    //background: 'linear-gradient(135deg, rgba(26, 10, 10, 0.7), rgba(26, 10, 10, 0.9))',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
+    //borderRadius: '24px',
+    boxShadow: '0 0 15px rgba(255,255,255,0.1), 0 0 0 1px rgba(255,255,255,0.15) inset',
   },
-  glow: {
+  smoke: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    borderRadius: '20px',
-    boxShadow: 'inset 0 0 10px rgba(255,215,0,0.2)',
+    borderRadius: '24px',
+    background: 'radial-gradient(circle at 30% 40%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%)',
     pointerEvents: 'none',
-  },
-  sigil: {
-    position: 'absolute',
-    bottom: '-12px',
-    right: '-8px',
-    fontSize: '1rem',
-    color: '#FFD700',
-    opacity: 0.6,
-    fontFamily: 'serif',
-    textShadow: '0 0 4px #FFD700',
   },
 };
