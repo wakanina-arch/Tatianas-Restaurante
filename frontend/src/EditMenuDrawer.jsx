@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // ============================================
 // EDIT MENU DRAWER - EDICIÓN SIMPLE DE PLATOS
@@ -9,12 +9,17 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
   const [items, setItems] = useState(menuItems || []);
   const [saving, setSaving] = useState(false);
   const [categoriasExpandidas, setCategoriasExpandidas] = useState({});
+  const [imageErrores, setImageErrores] = useState({}); // Nuevo estado para errores de imagen
 
   const [imagenesPorCategoria, setImagenesPorCategoria] = useState({
-    Primero: [],
-    Segundo: [],
-    Postre: [],
-    Otras: []
+    Picoteo: [],
+    Aperturas: [],
+    Gourmets: [],
+    Escuderos: [],
+    Zombies: [],
+    FastFurious: [],
+    Postres: [],
+    Bebidas: []
   });
   
   // ============================================
@@ -22,14 +27,79 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
   // ============================================
  useEffect(() => {
   setImagenesPorCategoria({
-    Picoteo: ['/img/Picoteo/Margherita.jpg', '/img/Picoteo/Pepperoni.jpg', '/img/Picoteo/Rustica.jpg'],
-    Aperturas: ['/img/Aperturas/Margherita.jpg', '/img/Aperturas/Pepperoni.jpg', '/img/Aperturas/Rustica.jpg'],
-    Gourmets: ['/img/Gourmets/Bistec%20convinado.png', '/img/Gourmets/Pollo%20broster.png', '/img/Gourmets/Tabla%20flamenca.png'],
-    Escuderos: ['/img/Escuderos/Ensalada%20Alemana%20de%20Patata.jpg', '/img/Escuderos/Ensalada%20Caprese.jpg', '/img/Escuderos/Ensalada%20C%C3%A9sar.jpg'],
-    Zombies: ['/img/Zombies/Carbonara.jpg', '/img/Zombies/Margherita.jpg', '/img/Zombies/Pepperoni.jpg'],
-    FastFurious: ['/img/FastFurious/frente1.JPG', '/img/FastFurious/nodle.jpg'],
-    Postres: ['/img/Postres/AguaMineral.jpg', '/img/Postres/CervezaClub.jpg'],
-    Bebidas: ['/img/Bebidas/AguaMineral.jpg', '/img/Bebidas/CervezaClub.jpg']
+    Picoteo: [
+      '/img/Picoteo/Alitas2.png',
+      '/img/Picoteo/Bolon%20de%20Verde.JPG',
+      '/img/Picoteo/Bowl%20Patatas%20fritas.png',
+      '/img/Picoteo/Nachos%20con%20queso.png',
+      '/img/Picoteo/Palomitas%20de%20ma%C3%ADz.png',
+      '/img/Picoteo/Patacones%20con%20Queso.JPG',
+    ],
+    Aperturas: [
+      '/img/Aperturas/Ceviche%20de%20Camaron.JPG',
+      '/img/Aperturas/Locro%20de%20Papa.JPG',
+      '/img/Aperturas/Mote%20Pillo.JPG',
+      '/img/Aperturas/Pincho%20de%20verduras.png',
+      '/img/Aperturas/Tigrillo.JPG',
+    ],
+    Gourmets: [
+      '/img/Gourmets/Bistec%20convinado.png',
+      '/img/Gourmets/Cuy%20Asado.JPG',
+      '/img/Gourmets/Encebollado.JPG',
+      '/img/Gourmets/Encocado%20de%20Pescado.JPG',
+      '/img/Gourmets/Estofado%20de%20Pollo.JPG',
+      '/img/Gourmets/Pollo%20broster.png',
+      '/img/Gourmets/Tabla%20flamenca.png',
+    ],
+    Escuderos: [
+      '/img/Escuderos/Ensalada%20Alemana%20de%20Patata.jpg',
+      '/img/Escuderos/Ensalada%20Caprese.jpg',
+      '/img/Escuderos/Ensalada%20C%C3%A9sar.jpg',
+      '/img/Escuderos/Ensalada%20Coleslaw.jpg',
+      '/img/Escuderos/Ensalada%20Griega.jpg',
+      '/img/Escuderos/Ensalada%20Mimosa.jpg',
+      '/img/Escuderos/Ensalada%20Nizarda.jpg',
+      '/img/Escuderos/Ensalada%20Tabal%C3%A9.jpg',
+      '/img/Escuderos/Ensalada%20Waldorf.jpg',
+      '/img/Escuderos/Ensaladilla%20Rusa.jpg',
+    ],
+    Zombies: [
+      '/img/Zombies/Carbonara.jpg',
+      '/img/Zombies/Champinones.jpg',
+      '/img/Zombies/Cuatro-Quesos.jpg',
+      '/img/Zombies/Hawaiana.jpg',
+      '/img/Zombies/Margherita.jpg',
+      '/img/Zombies/Marinera.jpg',
+      '/img/Zombies/Napolitana.jpg',
+      '/img/Zombies/Papas%20con%20cuero.JPG',
+      '/img/Zombies/Pepperoni.jpg',
+      '/img/Zombies/Rustica.jpg',
+    ],
+    FastFurious: [
+      '/img/FastFurious/Ceviche%20de%20Camaron.JPG',
+      '/img/FastFurious/Combos.png',
+      '/img/FastFurious/Humitas.JPG',
+      '/img/FastFurious/LLapingachos.JPG',
+      '/img/FastFurious/Pincho%20de%20verduras.png',
+      '/img/FastFurious/Tabla%20flamenca.png',
+      '/img/FastFurious/Tonga.JPG',
+    ],
+    Postres: [
+      '/img/Postres/Dulce%20de%20Tomate.JPG',
+      '/img/Postres/Helado%20de%20Paila.JPG',
+      '/img/Postres/ZumoDeFrutas.jpg',
+      '/img/Postres/ZumosVerdes.jpg',
+    ],
+    Bebidas: [
+      '/img/Bebidas/AguaMineral.jpg',
+      '/img/Bebidas/CervezaClub.jpg',
+      '/img/Bebidas/CervezaGuinness.jpg',
+      '/img/Bebidas/CervezaHeineken.jpg',
+      '/img/Bebidas/CocaCola.jpg',
+      '/img/Bebidas/Fanta.jpg',
+      '/img/Bebidas/Guarana.jpg',
+      '/img/Bebidas/Pepsi.jpg',
+    ],
   });
 }, []);
 
@@ -57,12 +127,6 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     }));
   };
 
-  const handleCategoryChange = (idx, value) => {
-    const updated = [...items];
-    updated[idx] = { ...updated[idx], nombre: value };
-    setItems(updated);
-  };
-
   const handleOptionChange = (itemIdx, optIdx, field, value) => {
     const updated = [...items];
     if (!updated[itemIdx].opciones) updated[itemIdx].opciones = [];
@@ -78,15 +142,21 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
   // Función para decodificar URL y obtener nombre legible
   const getNombreDesdeUrl = (url) => {
     try {
-      const nombreArchivo = decodeURIComponent(url.split('/').pop().split('.'));
-      return nombreArchivo.replace(/[-_]/g, ' ');
+      // Obtener solo el nombre del archivo
+      let nombreArchivo = url.split('/').pop();
+      // Decodificar caracteres especiales (%20 = espacio, %C3%A9 = é, etc)
+      nombreArchivo = decodeURIComponent(nombreArchivo);
+      // Remover extensión
+      nombreArchivo = nombreArchivo.split('.')[0];
+      return nombreArchivo;
     } catch (e) {
-      return '';
+      console.error('Error decodificando URL:', url, e);
+      return 'Imagen';
     }
   };
 
   // Nueva función: seleccionar nombre desde catálogo de imágenes
-  const handleSelectNombreDesdeImagen = (itemIdx, optIdx, imagenUrl, categoria) => {
+  const handleSelectNombreDesdeImagen = (itemIdx, optIdx, imagenUrl) => {
     const nombreLimpio = getNombreDesdeUrl(imagenUrl);
     
     handleOptionChange(itemIdx, optIdx, 'nombre', nombreLimpio);
@@ -139,51 +209,71 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     }));
   };
 
-  const handleRemoveCategory = (idx) => {
-    if (window.confirm('¿Estás seguro de eliminar esta categoría?')) {
-      setItems(items.filter((_, i) => i !== idx));
-      
-      const newExpandidas = { ...categoriasExpandidas };
-      delete newExpandidas[idx];
-      setCategoriasExpandidas(newExpandidas);
-    }
-  };
-
   // ============================================
   // RENDERIZADO DE PREVISUALIZACIÓN
   // ============================================
 
+  const handleImageError = (url) => {
+    setImageErrores(prev => ({
+      ...prev,
+      [url]: true
+    }));
+  };
+
   const renderPreview = (url) => {
-    if (!url) return (
-      <div style={styles.previewPlaceholder}>
-        <span style={styles.previewPlaceholderIcon}>🖼️</span>
-        <span>Sin imagen</span>
-      </div>
-    );
-    
+    const tieneError = imageErrores[url] === true;
+
+    if (!url) {
+      return (
+        <div style={styles.previewPlaceholder}>
+          <span style={styles.previewPlaceholderIcon}>🖼️</span>
+          <span>Sin imagen</span>
+        </div>
+      );
+    }
+
+    if (tieneError) {
+      return (
+        <div style={styles.previewError}>
+          <div style={styles.previewErrorIcon}>❌</div>
+          <div style={styles.previewErrorText}>
+            No se pudo cargar la imagen
+          </div>
+          <div style={styles.previewErrorUrl}>
+            {url.substring(0, 40)}...
+          </div>
+          <button
+            type="button"
+            style={styles.previewRetryBtn}
+            onClick={() => {
+              setImageErrores(prev => {
+                const newObj = { ...prev };
+                delete newObj[url];
+                return newObj;
+              });
+            }}
+          >
+            Reintentar
+          </button>
+        </div>
+      );
+    }
+
     return (
       <div style={styles.previewContainer}>
         <img 
           src={url} 
           alt="Preview" 
           style={styles.previewMedia} 
-          onError={(e) => {
-            e.target.style.display = 'none';
-            const parent = e.target.parentElement;
-            parent.innerHTML = `
-              <div style="
-                padding: 1rem; 
-                text-align: center; 
-                color: #ff3b30; 
-                font-size: 0.8rem;
-                background: rgba(255, 59, 48, 0.05);
-                border-radius: 12px;
-              ">
-                ❌ No se pudo cargar la imagen<br>
-                <span style="font-size: 0.7rem; color: #999;">${url.substring(0, 30)}...</span>
-              </div>
-            `;
-          }} 
+          onError={() => handleImageError(url)}
+          onLoad={() => {
+            // Limpiar error si carga correctamente
+            setImageErrores(prev => {
+              const newObj = { ...prev };
+              delete newObj[url];
+              return newObj;
+            });
+          }}
         />
       </div>
     );
@@ -369,7 +459,7 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
                                 />
                               </div>
 
-                              {renderPreview(opt.imagen)}
+                              {renderPreview(opt.imagen, idx, oidx)}
                             </div>
                           </div>
                         ))
@@ -719,6 +809,45 @@ const styles = {
     objectFit: 'cover',
     borderRadius: '16px',
     border: '1px solid var(--maracuya)'
+  },
+  previewError: {
+    margin: '0.5rem 0',
+    padding: '1rem',
+    background: 'rgba(255, 59, 48, 0.08)',
+    borderRadius: '16px',
+    border: '2px solid #ff3b30',
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '0.5rem'
+  },
+  previewErrorIcon: {
+    fontSize: '1.5rem'
+  },
+  previewErrorText: {
+    color: '#ff3b30',
+    fontWeight: '600',
+    fontSize: '0.8rem'
+  },
+  previewErrorUrl: {
+    fontSize: '0.65rem',
+    color: '#999',
+    fontFamily: 'monospace',
+    lineBreak: 'anywhere',
+    maxWidth: '100%'
+  },
+  previewRetryBtn: {
+    marginTop: '0.5rem',
+    padding: '0.4rem 0.8rem',
+    background: '#ff3b30',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '0.7rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease'
   },
   previewPlaceholder: {
     height: '60px',
