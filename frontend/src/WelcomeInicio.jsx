@@ -20,7 +20,6 @@ const getFraseAleatoria = () => {
   };
 };
 
-// COMERCIOS desde la carpeta /casas
 const COMERCIOS = [
   { id: 1, nombre: "En su punto", imagen: "/casas/en_su_punto.JPG" },
   { id: 2, nombre: "Ceremoniales", imagen: "/casas/Ceremoniales.JPG" },
@@ -33,7 +32,7 @@ const COMERCIOS = [
   { id: 9, nombre: "Tradicional", imagen: "/casas/Tradicional.JPG" },
 ];
 
-export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegistro, onAccesoComercio }) {
+export default function WelcomeInicio({ onSelectCategory, onAccesoComercio }) {
   const [fraseData] = useState(() => getFraseAleatoria());
 
   useEffect(() => {
@@ -45,56 +44,28 @@ export default function WelcomeInicio({ onSelectCategory, usuario, onAbrirRegist
   }, [fraseData]);
 
   const handleComercioClick = (comercio) => {
-  console.log('Comercio seleccionado:', comercio.nombre);
-  onSelectCategory('Primero', comercio.id);  // ← pasamos el id del comercio
-};
+    console.log('Comercio seleccionado:', comercio.nombre);
+    onSelectCategory('Primero', comercio.id);
+  };
 
   return (
     <div style={styles.container}>
       <div style={styles.hero}>
-        <div style={styles.headerRow}>
-          <span style={styles.suscripcionTexto}>Suscripción</span>
-            <div 
-              style={styles.moneda} 
-              onClick={() => onAccesoComercio && onAccesoComercio()}
-              title="Acceso a comercios"
-            >
-              🔱
-            </div>
-            <span style={styles.opcionalTexto}>Opcional</span>
-          </div>
+        {/* Moneda central (único elemento funcional) */}
+        <div 
+          style={styles.moneda} 
+          onClick={() => onAccesoComercio && onAccesoComercio()}
+          title="Acceso a comercios"
+        >
+          🔱
+        </div>
+
         <h1 style={styles.titulo}>
-          <div style={{
-  textAlign: 'center',
-  fontSize: '1.6rem',
-  margin: '0 0 8px 0',
-  fontFamily: "'Cormorant Garamond', serif",
-  letterSpacing: '4px',
-  fontWeight: 300,
-}}>
-  <span style={{
-    fontSize: '1.4rem',
-    fontWeight: '700',
-    color: '#B22222',  // rojo místico
-    textShadow: '0 0 5px rgba(178,34,34,0.5), 0 0 10px rgba(178,34,34,0.3)',
-    animation: 'brilloRojo 2.5s infinite alternate',
-  }}>ONE</span>{' '}
-  <span style={{
-    fontSize: '1.4rem',
-    fontWeight: '700',
-    color: '#1a3b1a',  // verde selva
-    textShadow: '0 0 5px rgba(26,59,26,0.5), 0 0 10px rgba(26,59,26,0.3)',
-    animation: 'brilloVerde 2.5s infinite alternate',
-  }}>TO</span>{' '}
-  <span style={{
-    fontSize: '1.4rem',
-    fontWeight: '700',
-    color: '#FFD700',  // dorado
-    textShadow: '0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(255,215,0,0.3)',
-    animation: 'brilloDorado 2.5s infinite alternate',
-  }}>ONE</span>
-</div>
+          <span style={styles.one}>ONE</span>{' '}
+          <span style={styles.to}>TO</span>{' '}
+          <span style={styles.oneEnd}>ONE</span>
         </h1>
+
         <div style={styles.fraseContainer}>
           <span style={styles.fraseIcono}>{fraseData.icono}</span>
           <p style={styles.fraseTexto}>"{fraseData.texto}"</p>
@@ -138,58 +109,59 @@ const styles = {
     background: 'rgba(20, 10, 10, 0.75)',
     backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
-    padding: '15px 20px',
+    padding: '20px 16px',
     borderBottom: '1px solid rgba(255,215,0,0.2)',
-  },
-  headerRow: {
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     alignItems: 'center',
-    marginBottom: '15px',
-  },
-  suscripcionTexto: {
-    color: '#FFD700',
-    fontSize: '0.7rem',
-    fontWeight: '500',
-    opacity: 0.8,
-    textAlign: 'center',
-  },
-  logoContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
+    gap: '12px',
   },
   moneda: {
-  fontSize: '2rem',           // ← un poco más grande
-  cursor: 'pointer',
-  transition: 'all 0.3s ease',
-  animation: 'flotar 3s ease-in-out infinite, pulso 2s ease-in-out infinite',
-  textShadow: '0 0 5px rgba(255,215,0,0.5)',
-  '&:hover': {
-    transform: 'scale(1.1)',
-    textShadow: '0 0 15px rgba(255,215,0,0.8)',
-  }
-},
-  opcionalTexto: {
-    color: '#FFD700',
-    fontSize: '0.65rem',
-    opacity: 0.6,
-    textAlign: 'center',
+    fontSize: '2.2rem',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    animation: 'flotar 3s ease-in-out infinite, pulso 2s ease-in-out infinite',
+    textShadow: '0 0 5px rgba(255,215,0,0.5)',
+    display: 'inline-block',
+    '&:hover': {
+      transform: 'scale(1.1)',
+      textShadow: '0 0 15px rgba(255,215,0,0.8)',
+    },
   },
   titulo: {
-    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '4px',
+    margin: 0,
+  },
+  one: {
     fontSize: '1.4rem',
-    margin: '0 0 8px 0',
-    fontFamily: "'Cormorant Garamond', serif",
-    letterSpacing: '3px',
-    fontWeight: 300,
+    fontWeight: '700',
+    color: '#B22222',
+    textShadow: '0 0 5px rgba(178,34,34,0.5), 0 0 10px rgba(178,34,34,0.3)',
+    animation: 'brilloRojo 2.5s infinite alternate',
+  },
+  to: {
+    fontSize: '1.4rem',
+    fontWeight: '700',
+    color: '#1a3b1a',
+    textShadow: '0 0 5px rgba(26,59,26,0.5), 0 0 10px rgba(26,59,26,0.3)',
+    animation: 'brilloVerde 2.5s infinite alternate',
+  },
+  oneEnd: {
+    fontSize: '1.4rem',
+    fontWeight: '700',
+    color: '#FFD700',
+    textShadow: '0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(255,215,0,0.3)',
+    animation: 'brilloDorado 2.5s infinite alternate',
   },
   fraseContainer: {
     textAlign: 'center',
     padding: '0 15px',
   },
   fraseIcono: {
-    fontSize: '1.3rem',
+    fontSize: '1.2rem',
     display: 'block',
     marginBottom: '4px',
   },
@@ -222,7 +194,6 @@ const styles = {
   },
 };
 
-// Añadir animación
 const styleSheet = document.createElement('style');
 styleSheet.textContent = `
   @keyframes flotar {
@@ -230,13 +201,25 @@ styleSheet.textContent = `
     50% { transform: translateY(-3px); }
     100% { transform: translateY(0px); }
   }
+  @keyframes pulso {
+    0%, 100% { text-shadow: 0 0 0px rgba(255,215,0,0); }
+    50% { text-shadow: 0 0 12px rgba(255,215,0,0.8); }
+  }
+  @keyframes brilloRojo {
+    0% { text-shadow: 0 0 2px rgba(178,34,34,0.3); }
+    100% { text-shadow: 0 0 12px rgba(178,34,34,0.8); }
+  }
+  @keyframes brilloVerde {
+    0% { text-shadow: 0 0 2px rgba(26,59,26,0.3); }
+    100% { text-shadow: 0 0 12px rgba(26,59,26,0.8); }
+  }
+  @keyframes brilloDorado {
+    0% { text-shadow: 0 0 2px rgba(255,215,0,0.3); }
+    100% { text-shadow: 0 0 12px rgba(255,215,0,0.8); }
+  }
   .comercio-card:hover {
     transform: scale(1.02);
   }
-    @keyframes pulso {
-  0%, 100% { text-shadow: 0 0 0px rgba(255,215,0,0); }
-  50% { text-shadow: 0 0 12px rgba(255,215,0,0.8); }
-}
 `;
 if (typeof document !== 'undefined') {
   document.head.appendChild(styleSheet);
