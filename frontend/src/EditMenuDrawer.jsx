@@ -333,22 +333,6 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
                     style={styles.imageOptionThumb}
                     onError={(e) => e.target.style.display = 'none'}
                   />
-                  {img.tipo === 'personal' && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEliminarImagenPersonalizada(img.id);
-                        }}
-                        style={styles.deleteImageBtn}
-                        title="Eliminar"
-                      >
-                        ✕
-                      </button>
-                      <div style={styles.imageBadge}>📸</div>
-                    </>
-                  )}
                 </div>
                 <span style={styles.imageOptionName}>
                   {img.nombre.substring(0, 10)}
