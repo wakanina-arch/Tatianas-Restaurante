@@ -40,7 +40,9 @@ router.post('/', upload.single('imagen'), async (req, res) => {
     console.log(`📤 Procesando imagen para comercio ${comercioId}...`);
 
     // Crear directorio si no existe
-    const publicPath = path.join(path.dirname(__dirname), 'public', 'img', comercioId);
+    // __dirname es /backend/src/routes, necesitamos /backend/public/img/[comercioId]
+    const publicPath = path.join(path.dirname(path.dirname(__dirname)), 'public', 'img', comercioId);
+    console.log(`📁 Guardando en: ${publicPath}`);
     if (!fs.existsSync(publicPath)) {
       fs.mkdirSync(publicPath, { recursive: true });
     }
