@@ -13,6 +13,7 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
   const [imageErrores, setImageErrores] = useState({});
   const [imagenesPersonales, setImagenesPersonales] = useState([]);
   const [imagenAñadidaReciente, setImagenAñadidaReciente] = useState(null);
+  const [recargarImagenes, setRecargarImagenes] = useState(0); // Trigger para recargar
   
   // Cargar imágenes personales desde localStorage
   useEffect(() => {
@@ -20,6 +21,13 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
       cargarImagenesPersonales();
     }
   }, [comercioId, open]);
+
+  // Recargar cuando se dispara el trigger
+  useEffect(() => {
+    if (comercioId && recargarImagenes > 0) {
+      cargarImagenesPersonales();
+    }
+  }, [recargarImagenes, comercioId]);
 
   const cargarImagenesPersonales = () => {
     try {
@@ -326,7 +334,7 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
           {comercioId && (
             <ImageUploader 
               comercioId={comercioId}
-              onImageUploaded={() => cargarImagenesPersonales()}
+              onImageUploaded={() => setRecargarImagenes(prev => prev + 1)}
               compact={true}
             />
           )}
