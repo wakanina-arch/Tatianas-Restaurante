@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import ImageUploader from './components/ImageUploader';
 
 // ============================================
 // EDIT MENU DRAWER - EDICIÓN SIMPLE DE PLATOS
@@ -313,7 +312,7 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
     return (
       <div style={styles.imageSelector}>
         <label style={styles.labelImagenes}>
-          {todasLasImagenes.length > 0 ? '🖼️ Mis imágenes disponibles:' : '📷 Sube imágenes o selecciona del catálogo'}
+          {todasLasImagenes.length > 0 ? '🖼️ Selector de Imágenes' : '📷 Sube imágenes o selecciona del catálogo'}
         </label>
 
         {todasLasImagenes.length > 0 ? (
@@ -369,14 +368,6 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
 
         {/* Contenido del formulario */}
         <div style={styles.content}>
-          {/* UPLOADER DE IMÁGENES */}
-          {comercioId && (
-            <ImageUploader 
-              comercioId={comercioId}
-              onImageUploaded={() => cargarImagenesPersonales()}
-            />
-          )}
-
           <form onSubmit={async (e) => {
             e.preventDefault();
             setSaving(true);
