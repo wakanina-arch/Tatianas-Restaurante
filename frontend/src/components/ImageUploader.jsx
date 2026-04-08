@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function ImageUploader({ comercioId, onImageUploaded }) {
+export default function ImageUploader({ comercioId, onImageUploaded, compact = false }) {
   const [isUploading, setIsUploading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'success', 'error', 'info'
@@ -90,43 +90,65 @@ export default function ImageUploader({ comercioId, onImageUploaded }) {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.uploadSectionHeader}>
-        <span style={styles.uploadSectionIcon}>📸</span>
-        <span style={styles.uploadSectionTitle}>Mis imágenes personalizadas</span>
-      </div>
-      
-      <label style={styles.uploadLabel}>
-        <input
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          onChange={handleFileSelect}
-          disabled={isUploading}
-          style={styles.fileInput}
-        />
-        <div style={{
-          ...styles.uploadBox,
-          opacity: isUploading ? 0.6 : 1,
-          pointerEvents: isUploading ? 'none' : 'auto'
-        }}>
-          <div style={styles.uploadIcon}>
-            {isUploading ? '⏳' : '📤'}
+    <>
+      {compact ? (
+        // Versión compacta: solo botón rojo
+        <label style={styles.compactLabel}>
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleFileSelect}
+            disabled={isUploading}
+            style={styles.fileInput}
+          />
+          <div style={{
+            ...styles.compactButton,
+            opacity: isUploading ? 0.7 : 1
+          }}>
+            {isUploading ? '⏳' : '🖼️'} Añadir Imagen
           </div>
-          <div style={styles.uploadText}>
-            {isUploading ? 'Procesando imagen...' : 'Subir nueva imagen'}
+        </label>
+      ) : (
+        // Versión completa: con descripción y más detalles
+        <div style={styles.container}>
+          <div style={styles.uploadSectionHeader}>
+            <span style={styles.uploadSectionIcon}>📸</span>
+            <span style={styles.uploadSectionTitle}>Mis imágenes personalizadas</span>
           </div>
-          <div style={styles.uploadSubtext}>
-            JPG, PNG, WEBP • Máximo 5MB
-          </div>
-        </div>
-      </label>
+          
+          <label style={styles.uploadLabel}>
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleFileSelect}
+              disabled={isUploading}
+              style={styles.fileInput}
+            />
+            <div style={{
+              ...styles.uploadBox,
+              opacity: isUploading ? 0.6 : 1,
+              pointerEvents: isUploading ? 'none' : 'auto'
+            }}>
+              <div style={styles.uploadIcon}>
+                {isUploading ? '⏳' : '📤'}
+              </div>
+              <div style={styles.uploadText}>
+                {isUploading ? 'Procesando imagen...' : 'Subir nueva imagen'}
+              </div>
+              <div style={styles.uploadSubtext}>
+                JPG, PNG, WEBP • Máximo 5MB
+              </div>
+            </div>
+          </label>
 
-      {message && (
-        <div style={{...styles.message, ...styles[`message_${messageType}`]}}>
-          <span>{message}</span>
+          {message && (
+            <div style={{...styles.message, ...styles[`message_${messageType}`]}}>
+              <span>{message}</span>
+            </div>
+          )}
         </div>
       )}
-    </div>
+    </>
   );
 }
 
@@ -223,6 +245,31 @@ const styles = {
     color: '#01579b',
     border: '1px solid rgba(33, 150, 243, 0.3)',
     boxShadow: '0 2px 8px rgba(33, 150, 243, 0.1)'
+  },
+  compactLabel: {
+    display: 'block',
+    cursor: 'pointer'
+  },
+  compactButton: {
+    background: '#e63946',
+    color: 'white',
+    padding: '0.6rem 1.2rem',
+    borderRadius: '12px',
+    fontSize: '0.85rem',
+    fontWeight: '600',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.4rem',
+    whiteSpace: 'nowrap',
+    boxShadow: '0 2px 8px rgba(230, 57, 70, 0.2)',
+    ':hover': {
+      background: '#d62828',
+      boxShadow: '0 4px 12px rgba(230, 57, 70, 0.3)'
+    }
   }
 };
 
