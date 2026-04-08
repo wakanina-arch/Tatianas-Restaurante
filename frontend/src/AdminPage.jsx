@@ -7,6 +7,7 @@ import PromosDrawer from './PromosDrawer';
 import Acordeon from './components/Acordeon';
 
 export default function AdminPage({
+  comercioId,
   menuItems,
   onSaveMenu,
   log,
@@ -171,7 +172,7 @@ export default function AdminPage({
         onPayment={handlePayment}
       />
 
-      <EditMenuDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} menuItems={menuItems} onSave={onSaveMenu} />
+      <EditMenuDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} comercioId={comercioId} menuItems={menuItems} onSave={onSaveMenu} />
 
       <ComandasDrawer
         open={ordersOpen}

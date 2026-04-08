@@ -1,15 +1,75 @@
 import { useState, useEffect } from 'react';
+import ImageUploader from './components/ImageUploader';
 
 // ============================================
 // EDIT MENU DRAWER - EDICIÓN SIMPLE DE PLATOS
-// Solo nombres y precios por opción
+// Con soporte para upload de imágenes personalizadas
 // ============================================
 
-export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
+export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, onSave }) {
   const [items, setItems] = useState(menuItems || []);
   const [saving, setSaving] = useState(false);
   const [categoriasExpandidas, setCategoriasExpandidas] = useState({});
-  const [imageErrores, setImageErrores] = useState({}); // Nuevo estado para errores de imagen
+  const [imageErrores, setImageErrores] = useState({});
+  const [imagenesPersonales, setImagenesPersonales] = useState([]);
+  
+  // Cargar imágenes personales desde localStorage
+  useEffect(() => {
+    if (comercioId && open) {
+      cargarImagenesPersonales();
+    }
+  }, [comercioId, open]);
+
+  const cargarImagenesPersonales = () => {
+    try {
+      const key = `${comercioId}_miImágenes`;
+      const data = localStorage.getItem(key);
+      if (data) {
+        setImagenesPersonales(JSON.parse(data));
+      } else {
+        setImagenesPersonales([]);
+      }
+    } catch (error) {
+      console.error('Error cargando imágenes personales:', error);
+      setImagenesPersonales([]);
+    }
+  };
+
+  const guardarImagenPersonal = (url, nombre) => {
+    try {
+      const key = `${comercioId}_miImágenes`;
+      const imagenes = JSON.parse(localStorage.getItem(key) || '[]');
+      
+      // Verificar si ya existe
+      const existe = imagenes.some(img => img.url === url);
+      if (existe) return;
+      
+      const nuevaImagen = {
+        id: Date.now(),
+        url,
+        nombre: nombre || getNombreDesdeUrl(url)
+      };
+      
+      imagenes.push(nuevaImagen);
+      localStorage.setItem(key, JSON.stringify(imagenes));
+      setImagenesPersonales(imagenes);
+    } catch (error) {
+      console.error('Error guardando imagen:', error);
+    }
+  };
+
+  const eliminarImagenPersonal = (imagenId) => {
+    try {
+      const key = `${comercioId}_miImágenes`;
+      const imagenes = JSON.parse(localStorage.getItem(key) || '[]');
+      const filtradas = imagenes.filter(img => img.id !== imagenId);
+      
+      localStorage.setItem(key, JSON.stringify(filtradas));
+      setImagenesPersonales(filtradas);
+    } catch (error) {
+      console.error('Error eliminando imagen:', error);
+    }
+  };
 
   const [imagenesPorCategoria, setImagenesPorCategoria] = useState({
     Picoteo: [],
@@ -22,86 +82,20 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     Bebidas: []
   });
   
-  // ============================================
-  // CATÁLOGO DE IMÁGENES POR CATEGORÍA - CORREGIDO
-  // ============================================
- useEffect(() => {
-  setImagenesPorCategoria({
-    Picoteo: [
-      '/img/Picoteo/Alitas2.png',
-      '/img/Picoteo/Bolon%20de%20Verde.JPG',
-      '/img/Picoteo/Bowl%20Patatas%20fritas.png',
-      '/img/Picoteo/Nachos%20con%20queso.png',
-      '/img/Picoteo/Palomitas%20de%20ma%C3%ADz.png',
-      '/img/Picoteo/Patacones%20con%20Queso.JPG',
-    ],
-    Aperturas: [
-      '/img/Aperturas/Ceviche%20de%20Camaron.JPG',
-      '/img/Aperturas/Locro%20de%20Papa.JPG',
-      '/img/Aperturas/Mote%20Pillo.JPG',
-      '/img/Aperturas/Pincho%20de%20verduras.png',
-      '/img/Aperturas/Tigrillo.JPG',
-    ],
-    Gourmets: [
-      '/img/Gourmets/Bistec%20convinado.png',
-      '/img/Gourmets/Cuy%20Asado.JPG',
-      '/img/Gourmets/Encebollado.JPG',
-      '/img/Gourmets/Encocado%20de%20Pescado.JPG',
-      '/img/Gourmets/Estofado%20de%20Pollo.JPG',
-      '/img/Gourmets/Pollo%20broster.png',
-      '/img/Gourmets/Tabla%20flamenca.png',
-    ],
-    Escuderos: [
-      '/img/Escuderos/Ensalada%20Alemana%20de%20Patata.jpg',
-      '/img/Escuderos/Ensalada%20Caprese.jpg',
-      '/img/Escuderos/Ensalada%20C%C3%A9sar.jpg',
-      '/img/Escuderos/Ensalada%20Coleslaw.jpg',
-      '/img/Escuderos/Ensalada%20Griega.jpg',
-      '/img/Escuderos/Ensalada%20Mimosa.jpg',
-      '/img/Escuderos/Ensalada%20Nizarda.jpg',
-      '/img/Escuderos/Ensalada%20Tabal%C3%A9.jpg',
-      '/img/Escuderos/Ensalada%20Waldorf.jpg',
-      '/img/Escuderos/Ensaladilla%20Rusa.jpg',
-    ],
-    Zombies: [
-      '/img/Zombies/Carbonara.jpg',
-      '/img/Zombies/Champinones.jpg',
-      '/img/Zombies/Cuatro-Quesos.jpg',
-      '/img/Zombies/Hawaiana.jpg',
-      '/img/Zombies/Margherita.jpg',
-      '/img/Zombies/Marinera.jpg',
-      '/img/Zombies/Napolitana.jpg',
-      '/img/Zombies/Papas%20con%20cuero.JPG',
-      '/img/Zombies/Pepperoni.jpg',
-      '/img/Zombies/Rustica.jpg',
-    ],
-    FastFurious: [
-      '/img/FastFurious/Ceviche%20de%20Camaron.JPG',
-      '/img/FastFurious/Combos.png',
-      '/img/FastFurious/Humitas.JPG',
-      '/img/FastFurious/LLapingachos.JPG',
-      '/img/FastFurious/Pincho%20de%20verduras.png',
-      '/img/FastFurious/Tabla%20flamenca.png',
-      '/img/FastFurious/Tonga.JPG',
-    ],
-    Postres: [
-      '/img/Postres/Dulce%20de%20Tomate.JPG',
-      '/img/Postres/Helado%20de%20Paila.JPG',
-      '/img/Postres/ZumoDeFrutas.jpg',
-      '/img/Postres/ZumosVerdes.jpg',
-    ],
-    Bebidas: [
-      '/img/Bebidas/AguaMineral.jpg',
-      '/img/Bebidas/CervezaClub.jpg',
-      '/img/Bebidas/CervezaGuinness.jpg',
-      '/img/Bebidas/CervezaHeineken.jpg',
-      '/img/Bebidas/CocaCola.jpg',
-      '/img/Bebidas/Fanta.jpg',
-      '/img/Bebidas/Guarana.jpg',
-      '/img/Bebidas/Pepsi.jpg',
-    ],
-  });
-}, []);
+  // Cargar imágenes del catálogo
+  useEffect(() => {
+    setImagenesPorCategoria(prev => ({
+      ...prev,
+      Picoteo: ['/img/Picoteo/Alitas2.png', '/img/Picoteo/Bolon%20de%20Verde.JPG', '/img/Picoteo/Bowl%20Patatas%20fritas.png', '/img/Picoteo/Nachos%20con%20queso.png', '/img/Picoteo/Palomitas%20de%20ma%C3%ADz.png', '/img/Picoteo/Patacones%20con%20Queso.JPG'],
+      Aperturas: ['/img/Aperturas/Ceviche%20de%20Camaron.JPG', '/img/Aperturas/Locro%20de%20Papa.JPG', '/img/Aperturas/Mote%20Pillo.JPG', '/img/Aperturas/Pincho%20de%20verduras.png', '/img/Aperturas/Tigrillo.JPG'],
+      Gourmets: ['/img/Gourmets/Bistec%20convinado.png', '/img/Gourmets/Cuy%20Asado.JPG', '/img/Gourmets/Encebollado.JPG', '/img/Gourmets/Encocado%20de%20Pescado.JPG', '/img/Gourmets/Estofado%20de%20Pollo.JPG', '/img/Gourmets/Pollo%20broster.png', '/img/Gourmets/Tabla%20flamenca.png'],
+      Escuderos: ['/img/Escuderos/Ensalada%20Alemana%20de%20Patata.jpg', '/img/Escuderos/Ensalada%20Caprese.jpg', '/img/Escuderos/Ensalada%20C%C3%A9sar.jpg', '/img/Escuderos/Ensalada%20Coleslaw.jpg', '/img/Escuderos/Ensalada%20Griega.jpg', '/img/Escuderos/Ensalada%20Mimosa.jpg', '/img/Escuderos/Ensalada%20Nizarda.jpg', '/img/Escuderos/Ensalada%20Tabal%C3%A9.jpg', '/img/Escuderos/Ensalada%20Waldorf.jpg', '/img/Escuderos/Ensaladilla%20Rusa.jpg'],
+      Zombies: ['/img/Zombies/Carbonara.jpg', '/img/Zombies/Champinones.jpg', '/img/Zombies/Cuatro-Quesos.jpg', '/img/Zombies/Hawaiana.jpg', '/img/Zombies/Margherita.jpg', '/img/Zombies/Marinera.jpg', '/img/Zombies/Napolitana.jpg', '/img/Zombies/Papas%20con%20cuero.JPG', '/img/Zombies/Pepperoni.jpg', '/img/Zombies/Rustica.jpg'],
+      FastFurious: ['/img/FastFurious/Ceviche%20de%20Camaron.JPG', '/img/FastFurious/Combos.png', '/img/FastFurious/Humitas.JPG', '/img/FastFurious/LLapingachos.JPG', '/img/FastFurious/Pincho%20de%20verduras.png', '/img/FastFurious/Tabla%20flamenca.png', '/img/FastFurious/Tonga.JPG'],
+      Postres: ['/img/Postres/Dulce%20de%20Tomate.JPG', '/img/Postres/Helado%20de%20Paila.JPG', '/img/Postres/ZumoDeFrutas.jpg', '/img/Postres/ZumosVerdes.jpg'],
+      Bebidas: ['/img/Bebidas/AguaMineral.jpg', '/img/Bebidas/CervezaClub.jpg', '/img/Bebidas/CervezaGuinness.jpg', '/img/Bebidas/CervezaHeineken.jpg', '/img/Bebidas/CocaCola.jpg', '/img/Bebidas/Fanta.jpg', '/img/Bebidas/Guarana.jpg', '/img/Bebidas/Pepsi.jpg']
+    }));
+  }, []);
 
   // Inicializar expansión de categorías
   useEffect(() => {
@@ -137,6 +131,11 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
       [field]: value
     };
     setItems(updated);
+
+    // Si es una URL de imagen, guardarla automáticamente en personal
+    if (field === 'imagen' && value && value.startsWith('http')) {
+      guardarImagenPersonal(value, getNombreDesdeUrl(value));
+    }
   };
 
   // Función para decodificar URL y obtener nombre legible
@@ -159,6 +158,10 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
   const handleSelectNombreDesdeImagen = (itemIdx, optIdx, imagenUrl) => {
     const nombreLimpio = getNombreDesdeUrl(imagenUrl);
     
+    // Guardar automáticamente en colección personal
+    guardarImagenPersonal(imagenUrl, nombreLimpio);
+    
+    // Asignar al plato
     handleOptionChange(itemIdx, optIdx, 'nombre', nombreLimpio);
     handleOptionChange(itemIdx, optIdx, 'imagen', imagenUrl);
   };
@@ -184,6 +187,11 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
     const updated = [...items];
     updated[itemIdx].opciones = updated[itemIdx].opciones.filter((_, i) => i !== optIdx);
     setItems(updated);
+  };
+
+  const handleEliminarImagenPersonalizada = (imagenId) => {
+    if (!window.confirm('¿Eliminar esta imagen?')) return;
+    eliminarImagenPersonal(imagenId);
   };
 
   const handleAddCategory = () => {
@@ -284,33 +292,76 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
   // ============================================
 
   const renderImageSelector = (itemIdx, optIdx, categoria) => {
-    const imagenes = imagenesPorCategoria[categoria] || [];
+    const catalogoImagenes = imagenesPorCategoria[categoria] || [];
     
-    if (imagenes.length === 0) return null;
-    
+    // Combinar imágenes personales + catálogo
+    const todasLasImagenes = [
+      ...imagenesPersonales.map(img => ({
+        tipo: 'personal',
+        url: img.url,
+        nombre: img.nombre,
+        id: img.id
+      })),
+      ...catalogoImagenes.map((url, idx) => ({
+        tipo: 'catalogo',
+        url,
+        nombre: getNombreDesdeUrl(url),
+        id: idx
+      }))
+    ];
+
     return (
       <div style={styles.imageSelector}>
-        <label style={styles.label}>Seleccionar de catálogo:</label>
-        <div style={styles.imageGrid}>
-          {imagenes.map((img, idx) => {
-            const nombreArchivo = getNombreDesdeUrl(img);
-            return (
+        <label style={styles.labelImagenes}>
+          {todasLasImagenes.length > 0 ? '🖼️ Mis imágenes disponibles:' : '📷 Sube imágenes o selecciona del catálogo'}
+        </label>
+
+        {todasLasImagenes.length > 0 ? (
+          <div style={styles.imageGrid}>
+            {todasLasImagenes.map((img) => (
               <div
-                key={idx}
+                key={`${img.tipo}-${img.id}`}
                 style={styles.imageOption}
-                onClick={() => handleSelectNombreDesdeImagen(itemIdx, optIdx, img, categoria)}
-                title={nombreArchivo}
+                onClick={() => handleSelectNombreDesdeImagen(itemIdx, optIdx, img.url)}
+                title={img.nombre}
                 className="image-option"
               >
-                <img src={img} alt={nombreArchivo} style={styles.imageOptionThumb} />
+                <div style={styles.imageOptionContainer}>
+                  <img 
+                    src={img.url} 
+                    alt={img.nombre} 
+                    style={styles.imageOptionThumb}
+                    onError={(e) => e.target.style.display = 'none'}
+                  />
+                  {img.tipo === 'personal' && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEliminarImagenPersonalizada(img.id);
+                      }}
+                      style={styles.deleteImageBtn}
+                      title="Eliminar"
+                    >
+                      ✕
+                    </button>
+                  )}
+                  <div style={styles.imageBadge}>
+                    {img.tipo === 'personal' ? '📸' : '📁'}
+                  </div>
+                </div>
                 <span style={styles.imageOptionName}>
-                  {nombreArchivo.substring(0, 12)}
-                  {nombreArchivo.length > 12 ? '...' : ''}
+                  {img.nombre.substring(0, 10)}
+                  {img.nombre.length > 10 ? '...' : ''}
                 </span>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div style={styles.noImagesMessage}>
+            <p>Sube imágenes con el uploader o selecciona del catálogo</p>
+          </div>
+        )}
       </div>
     );
   };
@@ -334,6 +385,14 @@ export default function EditMenuDrawer({ open, onClose, menuItems, onSave }) {
 
         {/* Contenido del formulario */}
         <div style={styles.content}>
+          {/* UPLOADER DE IMÁGENES */}
+          {comercioId && (
+            <ImageUploader 
+              comercioId={comercioId}
+              onImageUploaded={() => cargarImagenesPersonales()}
+            />
+          )}
+
           <form onSubmit={async (e) => {
             e.preventDefault();
             setSaving(true);
@@ -791,6 +850,71 @@ const styles = {
     padding: '0.2rem',
     color: 'var(--gris-texto)'
   },
+  imageSelectorSection: {
+    marginBottom: '1.5rem',
+    paddingBottom: '1rem',
+    borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+  },
+  labelPersonalizado: {
+    display: 'block',
+    fontSize: '0.85rem',
+    color: '#01400e',
+    marginBottom: '0.5rem',
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
+  },
+  labelImagenes: {
+    display: 'block',
+    fontSize: '0.85rem',
+    color: '#01400e',
+    marginBottom: '0.5rem',
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
+  },
+  imageBadge: {
+    position: 'absolute',
+    top: '4px',
+    left: '4px',
+    fontSize: '0.75rem',
+    background: 'rgba(0, 0, 0, 0.5)',
+    color: 'white',
+    padding: '2px 4px',
+    borderRadius: '4px'
+  },
+  noImagesMessage: {
+    textAlign: 'center',
+    padding: '1rem',
+    color: '#999',
+    fontSize: '0.8rem',
+    fontStyle: 'italic'
+  },
+  deleteImageBtn: {
+    position: 'absolute',
+    top: '4px',
+    right: '4px',
+    background: 'rgba(255, 59, 48, 0.8)',
+    color: 'white',
+    border: 'none',
+    borderRadius: '50%',
+    width: '20px',
+    height: '20px',
+    cursor: 'pointer',
+    fontSize: '0.7rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: 0,
+    transition: 'opacity 0.2s ease'
+  },
+  imageOptionContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '50px',
+    overflow: 'hidden',
+    borderRadius: '8px'
+  },
   noOptions: {
     textAlign: 'center',
     padding: '1.5rem',
@@ -933,6 +1057,10 @@ styleSheet.textContent = `
     border-color: var(--maracuya) !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 179, 71, 0.2);
+  }
+  
+  .image-option:hover button {
+    opacity: 1 !important;
   }
   
   .close-btn:hover {

@@ -202,6 +202,7 @@ function MainApp() {
         <LoginComercio
           onLogin={(id) => {
             setSelectedComercioAdmin(id);
+            setSelectedComercio(id);
             setCurrentPage('comercio-admin');
           }}
           onBack={() => setCurrentPage('home')}
@@ -213,7 +214,11 @@ function MainApp() {
           comercioId={selectedComercioAdmin}
           menuItems={menuItems}
           onSaveMenu={handleSaveMenu}
-          onBack={() => setCurrentPage('home')}
+          onBack={() => {
+            setCurrentPage('home');
+            setSelectedComercioAdmin(null);
+            setSelectedComercio(null);
+          }}
         />
       )}
 

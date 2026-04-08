@@ -8,6 +8,8 @@ import authRoutes from './routes/auth.js';
 import itemsRoutes from './routes/items.js';
 import menusRoutes from './routes/menus.js';
 import ordersRoutes from './routes/orders.js';
+import ticketsRoutes from './routes/tickets.js';
+import uploadsRoutes from './routes/uploads.js';
 
 dotenv.config();
 
@@ -31,6 +33,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/items', itemsRoutes);
 app.use('/api/menus', menusRoutes);
 app.use('/api/orders', ordersRoutes);
+app.use('/api/tickets', ticketsRoutes);
+app.use('/api/uploads', uploadsRoutes);
 
 // Ruta de salud
 app.get('/api/health', (req, res) => {

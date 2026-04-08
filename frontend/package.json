@@ -10,8 +10,10 @@
   "dependencies": {
     "@babel/runtime": "^7.28.6",
     "axios": "^1.5.0",
+    "cropperjs": "^1.5.13",
     "qrcode.react": "^4.2.0",
     "react": "^18.2.0",
+    "react-cropper": "^2.3.3",
     "react-dom": "^18.2.0",
     "react-qr-scanner": "^1.0.0-alpha.11",
     "react-router-dom": "^6.15.0",
