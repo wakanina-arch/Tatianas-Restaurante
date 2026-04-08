@@ -11,6 +11,7 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
   const [categoriasExpandidas, setCategoriasExpandidas] = useState({});
   const [imageErrores, setImageErrores] = useState({});
   const [imagenesPersonales, setImagenesPersonales] = useState([]);
+  const [imagenAñadidaReciente, setImagenAñadidaReciente] = useState(null);
   
   // Cargar imágenes personales desde localStorage
   useEffect(() => {
@@ -163,6 +164,12 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
     // Asignar al plato
     handleOptionChange(itemIdx, optIdx, 'nombre', nombreLimpio);
     handleOptionChange(itemIdx, optIdx, 'imagen', imagenUrl);
+    
+    // Mostrar feedback visual
+    setImagenAñadidaReciente(imagenUrl);
+    setTimeout(() => {
+      setImagenAñadidaReciente(null);
+    }, 2500);
   };
 
   const handleAddOption = (itemIdx) => {
@@ -317,28 +324,40 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
 
         {todasLasImagenes.length > 0 ? (
           <div style={styles.imageGrid}>
-            {todasLasImagenes.map((img) => (
-              <div
-                key={`${img.tipo}-${img.id}`}
-                style={styles.imageOption}
-                onClick={() => handleSelectNombreDesdeImagen(itemIdx, optIdx, img.url)}
-                title={img.nombre}
-                className="image-option"
-              >
-                <div style={styles.imageOptionContainer}>
-                  <img 
-                    src={img.url} 
-                    alt={img.nombre} 
-                    style={styles.imageOptionThumb}
-                    onError={(e) => e.target.style.display = 'none'}
-                  />
+            {todasLasImagenes.map((img) => {
+              const esImagenAñadida = imagenAñadidaReciente === img.url;
+              return (
+                <div
+                  key={`${img.tipo}-${img.id}`}
+                  style={{
+                    ...styles.imageOption,
+                    opacity: esImagenAñadida ? 0.6 : 1,
+                    backgroundColor: esImagenAñadida ? 'rgba(0, 150, 200, 0.1)' : 'transparent'
+                  }}
+                  onClick={() => handleSelectNombreDesdeImagen(itemIdx, optIdx, img.url)}
+                  title={img.nombre}
+                  className="image-option"
+                >
+                  <div style={styles.imageOptionContainer}>
+                    <img 
+                      src={img.url} 
+                      alt={img.nombre} 
+                      style={styles.imageOptionThumb}
+                      onError={(e) => e.target.style.display = 'none'}
+                    />
+                  </div>
+                  <span style={styles.imageOptionName}>
+                    {img.nombre.substring(0, 10)}
+                    {img.nombre.length > 10 ? '...' : ''}
+                  </span>
+                  {esImagenAñadida && (
+                    <div style={styles.feedbackImagenAñadida}>
+                      Imagen Añadida
+                    </div>
+                  )}
                 </div>
-                <span style={styles.imageOptionName}>
-                  {img.nombre.substring(0, 10)}
-                  {img.nombre.length > 10 ? '...' : ''}
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div style={styles.noImagesMessage}>
@@ -811,7 +830,8 @@ const styles = {
     overflow: 'hidden',
     border: '1px solid transparent',
     transition: 'all 0.2s ease',
-    background: 'white'
+    background: 'white',
+    position: 'relative'
   },
   imageOptionThumb: {
     width: '100%',
@@ -824,6 +844,21 @@ const styles = {
     textAlign: 'center',
     padding: '0.2rem',
     color: 'var(--gris-texto)'
+  },
+  feedbackImagenA\u00f1adida: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    background: '#0096c8',
+    color: 'white',
+    padding: '0.4rem 0.8rem',
+    borderRadius: '8px',
+    fontSize: '0.6rem',
+    fontWeight: '600',
+    whiteSpace: 'nowrap',
+    zIndex: 10,
+    boxShadow: '0 2px 8px rgba(0, 150, 200, 0.3)'
   },
   imageSelectorSection: {
     marginBottom: '1.5rem',
