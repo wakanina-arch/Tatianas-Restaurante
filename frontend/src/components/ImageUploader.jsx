@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 export default function ImageUploader({ comercioId, onImageUploaded, compact = false }) {
   const [isUploading, setIsUploading] = useState(false);
   const [message, setMessage] = useState('');
@@ -34,49 +36,55 @@ export default function ImageUploader({ comercioId, onImageUploaded, compact = f
 
     try {
       setIsUploading(true);
-      showMessage('Procesando imagen...', 'info');
+      showMessage('Subiendo imagen...', 'info');
 
-      // Convertir a base64
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64 = event.target.result;
-        
-        try {
-          // Guardar en localStorage
-          const key = `${comercioId}_miImágenes`;
-          const imagenes = JSON.parse(localStorage.getItem(key) || '[]');
-          
-          const nuevaImagen = {
-            id: Date.now(),
-            url: base64,
-            nombre: file.name.split('.')[0]
-          };
-          
-          imagenes.push(nuevaImagen);
-          localStorage.setItem(key, JSON.stringify(imagenes));
-          
-          showMessage(`✅ Imagen "${nuevaImagen.nombre}" guardada`, 'success');
-          
-          // Notificar al padre
-          if (onImageUploaded) {
-            onImageUploaded(nuevaImagen);
-          }
-          
-          // Limpiar input
-          e.target.value = '';
-        } catch (error) {
-          showMessage(`Error: ${error.message}`, 'error');
-        } finally {
-          setIsUploading(false);
-        }
+      // Crear FormData para enviar al backend
+      const formData = new FormData();
+      formData.append('imagen', file);
+      formData.append('comercioId', comercioId);
+
+      // Enviar al backend
+      const response = await fetch(`${API_URL}/uploads`, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al subir imagen');
+      }
+
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Error en la respuesta del servidor');
+      }
+
+      // Guardar la ruta en localStorage
+      const key = `${comercioId}_miImágenes`;
+      const imagenes = JSON.parse(localStorage.getItem(key) || '[]');
+      
+      const nuevaImagen = {
+        id: data.imagen.id,
+        url: data.imagen.url,
+        nombre: data.imagen.nombre.split('.')[0]
       };
-      reader.onerror = () => {
-        showMessage('Error leyendo archivo', 'error');
-        setIsUploading(false);
-      };
-      reader.readAsDataURL(file);
+      
+      imagenes.push(nuevaImagen);
+      localStorage.setItem(key, JSON.stringify(imagenes));
+      
+      showMessage(`✅ Imagen "${nuevaImagen.nombre}" cargada`, 'success');
+      
+      // Notificar al padre
+      if (onImageUploaded) {
+        onImageUploaded(nuevaImagen);
+      }
+      
+      // Limpiar input
+      e.target.value = '';
     } catch (error) {
       showMessage(`Error: ${error.message}`, 'error');
+    } finally {
       setIsUploading(false);
     }
   };

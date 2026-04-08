@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Importar rutas
 import authRoutes from './routes/auth.js';
@@ -11,6 +13,7 @@ import ordersRoutes from './routes/orders.js';
 import ticketsRoutes from './routes/tickets.js';
 import uploadsRoutes from './routes/uploads.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config();
 
 const app = express();
@@ -22,6 +25,9 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+// Servir archivos estáticos desde public/
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Conectar a MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tianas_restaurant')

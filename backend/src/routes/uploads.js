@@ -1,9 +1,12 @@
 import express from 'express';
 import multer from 'multer';
 import sharp from 'sharp';
-import { put, del } from '@vercel/blob';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import ComercioImage from '../models/ComercioImage.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const router = express.Router();
 
 // Configurar multer para archivos en memoria
@@ -21,7 +24,7 @@ const upload = multer({
 });
 
 // ============================================
-// POST /api/uploads - Subir imagen (con procesamiento)
+// POST /api/uploads - Subir imagen (guardada localmente en public/img)
 // ============================================
 router.post('/', upload.single('imagen'), async (req, res) => {
   try {
@@ -31,10 +34,16 @@ router.post('/', upload.single('imagen'), async (req, res) => {
 
     const { comercioId } = req.body;
     if (!comercioId) {
-      return res.status(400).json({ error: 'commercioId es requerido' });
+      return res.status(400).json({ error: 'comercioId es requerido' });
     }
 
     console.log(`📤 Procesando imagen para comercio ${comercioId}...`);
+
+    // Crear directorio si no existe
+    const publicPath = path.join(path.dirname(__dirname), 'public', 'img', comercioId);
+    if (!fs.existsSync(publicPath)) {
+      fs.mkdirSync(publicPath, { recursive: true });
+    }
 
     // Procesar imagen con sharp (resize + optimización)
     let processedImageBuffer = req.file.buffer;
@@ -59,26 +68,24 @@ router.post('/', upload.single('imagen'), async (req, res) => {
       console.error('Error procesando imagen:', sharpError);
     }
 
-    // Generar nombre único para Vercel Blob
+    // Generar nombre único para archivo local
     const timestamp = Date.now();
-    const nombreArchivo = `comercio_${comercioId}_${timestamp}.webp`;
-    const blobPath = `comercios/${comercioId}/${nombreArchivo}`;
+    const nombreArchivo = `${timestamp}.webp`;
+    const rutaArchivo = path.join(publicPath, nombreArchivo);
+    const rutaRelativa = `/img/${comercioId}/${nombreArchivo}`;
 
-    // Subir a Vercel Blob
-    console.log(`☁️ Subiendo a Vercel Blob: ${blobPath}...`);
-    const blob = await put(blobPath, processedImageBuffer, {
-      access: 'public',
-      contentType: 'image/webp'
-    });
+    // Guardar archivo en public/img
+    console.log(`💾 Guardando en disco: ${rutaArchivo}...`);
+    fs.writeFileSync(rutaArchivo, processedImageBuffer);
 
-    console.log(`✅ Subido correctamente: ${blob.url}`);
+    console.log(`✅ Guardado correctamente: ${rutaRelativa}`);
 
     // Guardar referencia en MongoDB
     const imagenGuardada = new ComercioImage({
       comercioId: parseInt(comercioId),
       nombreOriginal: req.file.originalname,
       nombreArchivo: nombreArchivo,
-      urlPublica: blob.url,
+      urlPublica: rutaRelativa,
       tamaño: processedImageBuffer.length,
       peso: `${(processedImageBuffer.length / 1024 / 1024).toFixed(2)} MB`,
       mimetype: 'image/webp',
