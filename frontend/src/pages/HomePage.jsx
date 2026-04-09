@@ -10,14 +10,11 @@ if (typeof document !== 'undefined' && !document.getElementById('jelly-style')) 
   s.id = 'jelly-style';
   s.textContent = `
     @keyframes jellyIn {
-      0% { transform: scale(0.92); opacity: 0; }
-      40% { transform: scale(1.04); opacity: 1; }
-      65% { transform: scale(0.97); }
-      82% { transform: scale(1.02); }
-      100% { transform: scale(1); }
+      0% { transform: scale(0.99); opacity: 0.4; }
+      100% { transform: scale(1); opacity: 1; }
     }
     .jelly-section {
-      animation: jellyIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      animation: jellyIn 0.6s ease both;
     }
   `;
   document.head.appendChild(s);
@@ -38,6 +35,7 @@ export default function HomePage({
   const [platoSeleccionado, setPlatoSeleccionado] = useState(null);
   const [carrito, setCarrito] = useState({});
   const seccionesRef = useRef({});
+  const sentinelRef = useRef({});
   const { addToCart } = useCart();
 
   const categorias = [
@@ -74,32 +72,33 @@ export default function HomePage({
 };
 
   useEffect(() => {
-    const observador = new IntersectionObserver(
-      (entradas) => {
-        // Solo detectar cuando un elemento entra por la PARTE SUPERIOR
-        entradas.forEach((entrada) => {
-          // Si el elemento está intersectando y el ratio es alto (> 50%)
-          // significa que está completamente visible
-          if (entrada.isIntersecting && entrada.intersectionRatio > 0.5) {
-            const id = entrada.target.dataset.categoria;
-            if (id) {
-              setCategoriaActiva(id);
-            }
+    // Scroll listener: la línea trigger está a 360px del top (debajo de tabs)
+    const TRIGGER_LINE = 360;
+    
+    const handleScroll = () => {
+      let categoriaVisible = null;
+      // Recorrer sentinels y encontrar el último cuyo top ya pasó la línea trigger
+      const ids = categorias.map(c => c.id);
+      for (let i = ids.length - 1; i >= 0; i--) {
+        const el = sentinelRef.current[ids[i]];
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= TRIGGER_LINE) {
+            categoriaVisible = ids[i];
+            break;
           }
-        });
-      },
-      { 
-        threshold: [0.5],  // Solo cuando está >50% visible
-        rootMargin: '-60px 0px -50% 0px'  // Detecta cuando llega a TOP
+        }
       }
-    );
+      if (categoriaVisible && categoriaVisible !== categoriaActiva) {
+        setCategoriaActiva(categoriaVisible);
+      }
+    };
 
-    Object.values(seccionesRef.current).forEach((el) => {
-      if (el) observador.observe(el);
-    });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Chequear estado inicial
 
-    return () => observador.disconnect();
-  }, []);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [categorias, categoriaActiva]);
 
   if (!comercio) {
     return <div style={{ textAlign: 'center', padding: '2rem' }}>Cargando comercio...</div>;
@@ -133,6 +132,12 @@ export default function HomePage({
             className="jelly-section"
             style={{ scrollMarginTop: '320px', animationDelay: `${i * 0.07}s` }}
           >
+            {/* Sentinel: línea invisible que activa el tab al cruzar bajo los tabs */}
+            <div
+              ref={(el) => (sentinelRef.current[cat.id] = el)}
+              data-categoria={cat.id}
+              style={{ height: '1px', background: '#2a1414', margin: 0, padding: 0 }}
+            />
             <h3 style={styles.seccionTitulo}>{cat.nombre}</h3>
             {platillosPorCategoria(cat.id).map((plato, idx) => (
       <PlatoCard 
@@ -154,7 +159,7 @@ const styles = {
     margin: 0,
     fontSize: '1.15rem',
     fontWeight: '700',
-    color: '#01400e',
+    color: '#037b05',
     letterSpacing: '0.5px',
     textShadow: '0 1px 3px rgba(0,0,0,0.3), 0 0 12px rgba(1, 64, 14, 0.25)',
   },
