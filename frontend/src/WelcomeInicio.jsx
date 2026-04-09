@@ -32,8 +32,9 @@ const COMERCIOS = [
   { id: 9, nombre: "Tradicional", imagen: "/casas/Tradicional.JPG" },
 ];
 
-export default function WelcomeInicio({ onSelectCategory, onAccesoComercio }) {
+export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRegistroComercio, currentPage }) {
   const [fraseData] = useState(() => getFraseAleatoria());
+  const [comerciosRegistrados, setComerciosRegistrados] = useState([]);
 
   useEffect(() => {
     localStorage.setItem('fraseOraculo', JSON.stringify({
@@ -42,6 +43,27 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio }) {
       icono: fraseData.icono
     }));
   }, [fraseData]);
+
+  // Cargar comercios registrados desde localStorage (recarga al volver a home)
+  useEffect(() => {
+    try {
+      const registros = JSON.parse(localStorage.getItem('registros_comercios') || '[]');
+      setComerciosRegistrados(registros);
+    } catch (e) {
+      console.error('Error cargando comercios registrados:', e);
+    }
+  }, [currentPage]);
+
+  // Combinar comercios hardcoded + registrados
+  const todosLosComercios = [
+    ...COMERCIOS,
+    ...comerciosRegistrados.map(r => ({
+      id: r.id,
+      nombre: r.nombreComercio,
+      imagen: r.logo,
+      esNuevo: true,
+    })),
+  ];
 
   const handleComercioClick = (comercio) => {
     console.log('Comercio seleccionado:', comercio.nombre);
@@ -73,7 +95,7 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio }) {
       </div>
 
       <div style={styles.comerciosContainer}>
-        {COMERCIOS.map((comercio) => (
+        {todosLosComercios.map((comercio) => (
           <div
             key={comercio.id}
             style={styles.comercioCard}
@@ -84,12 +106,24 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio }) {
               alt={comercio.nombre}
               style={styles.comercioImagen}
               onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/400x280?text=Comercio';
+                e.target.src = 'https://via.placeholder.com/400x280?text=' + encodeURIComponent(comercio.nombre || 'Comercio');
               }}
             />
           </div>
         ))}
       </div>
+
+      {/* Botón de inscripción de comercio */}
+      {onRegistroComercio && (
+        <div style={styles.registroBtnContainer}>
+          <button
+            onClick={onRegistroComercio}
+            style={styles.registroBtn}
+          >
+            🏪 Inscribir mi comercio
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -179,6 +213,7 @@ const styles = {
     gap: '20px',
   },
   comercioCard: {
+    position: 'relative',
     width: '100%',
     height: '280px',
     borderRadius: '16px',
@@ -191,6 +226,36 @@ const styles = {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+  },
+  registroBtnContainer: {
+    padding: '1.5rem 16px 2rem',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  registroBtn: {
+    padding: '0.8rem 2rem',
+    background: 'transparent',
+    border: '1px solid rgba(255,215,0,0.4)',
+    borderRadius: '30px',
+    color: '#FFD700',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    letterSpacing: '0.5px',
+  },
+  comercioNombreOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: '6px 8px',
+    background: 'linear-gradient(transparent, rgba(0,0,0,0.75))',
+    color: '#FFD700',
+    fontSize: '0.7rem',
+    fontWeight: '600',
+    textAlign: 'center',
+    letterSpacing: '0.3px',
   },
 };
 

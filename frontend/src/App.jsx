@@ -11,6 +11,7 @@ import RegisterModal from './components/RegisterModal';
 import HomePage from './pages/HomePage';
 import LoginComercio from './pages/LoginComercio';
 import AdminComercio from './pages/AdminComercio';
+import RegistroComercio from './pages/RegistroComercio';
 
 // ============================================
 // CONFIGURACIÓN GLOBAL
@@ -209,6 +210,18 @@ function MainApp() {
         />
       )}
 
+      {currentPage === 'registro-comercio' && (
+        <RegistroComercio
+          onRegistro={(data) => console.log('Comercio registrado:', data)}
+          onBack={() => setCurrentPage('home')}
+          onIrAlPanel={(comercioId) => {
+            setSelectedComercioAdmin(comercioId);
+            setSelectedComercio(comercioId);
+            setCurrentPage('comercio-admin');
+          }}
+        />
+      )}
+
       {currentPage === 'comercio-admin' && selectedComercioAdmin && (
         <AdminComercio
           comercioId={selectedComercioAdmin}
@@ -226,6 +239,8 @@ function MainApp() {
         <WelcomeInicio
           onSelectCategory={handleSelectCategory}
           onAccesoComercio={() => setCurrentPage('comercio-login')}
+        onRegistroComercio={() => setCurrentPage('registro-comercio')}
+        currentPage={currentPage}
         />
       ) : (
         <>
@@ -258,7 +273,7 @@ function MainApp() {
           <main style={{ paddingTop: '100px', minHeight: 'calc(100vh - 100px)', width: '100%' }}>
             {currentPage === 'home' && (
               <HomePage
-                comercio={COMERCIOS.find(c => c.id === selectedComercio)}
+                comercio={COMERCIOS.find(c => c.id === selectedComercio) || (() => { try { const regs = JSON.parse(localStorage.getItem('registros_comercios') || '[]'); const r = regs.find(r => r.id === selectedComercio); return r ? { id: r.id, nombre: r.nombreComercio, imagen: r.logo } : null; } catch { return null; } })()}
                 platillos={menuItems}
                 user={user}
                 itemCount={itemCount}

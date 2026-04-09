@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import AdminPage from '../AdminPage';
+import BajaComercio from './BajaComercio';
 
 export default function AdminComercio({ comercioId, onBack, menuItems: propsMenuItems, onSaveMenu: propsOnSaveMenu }) {
   const [menuItems, setMenuItems] = useState(propsMenuItems || []);
   const [pendingOrders, setPendingOrders] = useState([]);
   const [finishedOrders, setFinishedOrders] = useState([]);
   const [log, setLog] = useState([]);
+  const [mostrarBaja, setMostrarBaja] = useState(false);
 
   // Sincronizar menuItems cuando cambia el prop
   useEffect(() => {
@@ -33,14 +35,37 @@ export default function AdminComercio({ comercioId, onBack, menuItems: propsMenu
     setLog(prev => [...prev, { ...entry, timestamp: new Date().toISOString() }]);
   };
 
+  // Obtener nombre del comercio
+  const getNombreComercio = () => {
+    try {
+      const registros = JSON.parse(localStorage.getItem('registros_comercios') || '[]');
+      const comercio = registros.find(r => r.id === comercioId);
+      return comercio?.nombreComercio || `Comercio ${comercioId}`;
+    } catch { return `Comercio ${comercioId}`; }
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
         <button onClick={onBack} style={styles.backButton}>← Volver</button>
         <h1 style={styles.title}>🔱 Panel de Control</h1>
-        <div style={styles.comercioBadge}>Comercio ID: {comercioId}</div>
+        <div style={styles.headerRight}>
+          <div style={styles.comercioBadge}>Comercio ID: {comercioId}</div>
+          <button onClick={() => setMostrarBaja(true)} style={styles.bajaBtn}>
+            Dar de baja
+          </button>
+        </div>
       </div>
       
+      {mostrarBaja && (
+        <BajaComercio
+          comercioId={comercioId}
+          nombreComercio={getNombreComercio()}
+          onConfirmarBaja={() => onBack()}
+          onCancel={() => setMostrarBaja(false)}
+        />
+      )}
+
       <AdminPage
         comercioId={comercioId}
         menuItems={menuItems}
@@ -92,5 +117,21 @@ const styles = {
     borderRadius: '20px', 
     color: '#aaa', 
     fontSize: '0.7rem' 
+  },
+  headerRight: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    flexWrap: 'wrap',
+  },
+  bajaBtn: {
+    background: 'transparent',
+    border: '1px solid rgba(255,69,0,0.3)',
+    borderRadius: '20px',
+    padding: '0.3rem 0.8rem',
+    color: '#FF4500',
+    fontSize: '0.65rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
   },
 };
