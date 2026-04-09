@@ -33,7 +33,7 @@ const DEFAULT_MENU_ITEMS = [
   },
   {
     id: 2,
-    nombre: 'Aperturas',
+    nombre: 'Entrantes',
     opciones: [
       { nombre: 'Croquetas de jamón', precio: 6.50, descripcion: 'Croquetas caseras de jamón' },
       { nombre: 'Calamares a la romana', precio: 8.00, descripcion: 'Calamares frescos rebozados' },
@@ -158,7 +158,26 @@ function MainApp() {
 
   // Obtener clave de localStorage para el menú del comercio
   const getMenuKey = (comercioId) => `menu_comercio_${comercioId || 'default'}`;
-  const [menuItems, setMenuItems] = useLocalStorage(getMenuKey(selectedComercio), DEFAULT_MENU_ITEMS);
+  const [menuItemsRaw, setMenuItemsRaw] = useLocalStorage(getMenuKey(selectedComercio), DEFAULT_MENU_ITEMS);
+
+  // Sincronizar nombres de categoría legacy (ej: "Aperturas" → "Entrantes")
+  const CATEGORIAS_FIJAS = ['Picoteo', 'Entrantes', 'Gourmets', 'Escuderos', 'Zombies', 'FastFurious', 'Postres', 'Bebidas'];
+  const menuItems = menuItemsRaw.map((item, idx) => {
+    if (idx < CATEGORIAS_FIJAS.length && item.nombre !== CATEGORIAS_FIJAS[idx]) {
+      return { ...item, nombre: CATEGORIAS_FIJAS[idx] };
+    }
+    return item;
+  });
+  const setMenuItems = (val) => {
+    // Al guardar, también forzar nombres correctos
+    const fixed = (typeof val === 'function' ? val(menuItemsRaw) : val).map((item, idx) => {
+      if (idx < CATEGORIAS_FIJAS.length && item.nombre !== CATEGORIAS_FIJAS[idx]) {
+        return { ...item, nombre: CATEGORIAS_FIJAS[idx] };
+      }
+      return item;
+    });
+    setMenuItemsRaw(fixed);
+  };
 
   const [pendingOrders, setPendingOrders] = useLocalStorage(STORAGE_KEYS.PENDING, []);
   const [log, setLog] = useLocalStorage(STORAGE_KEYS.LOGS, []);

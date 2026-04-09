@@ -6,8 +6,22 @@ import ImageUploader from './components/ImageUploader';
 // Con soporte para upload de imágenes personalizadas
 // ============================================
 
+// Nombres fijos de categorías (orden oficial)
+const CATEGORIAS_FIJAS = ['Picoteo', 'Entrantes', 'Gourmets', 'Escuderos', 'Zombies', 'FastFurious', 'Postres', 'Bebidas'];
+
 export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, onSave }) {
-  const [items, setItems] = useState(menuItems || []);
+  // Sincronizar nombres de categoría con los fijos (corrige datos legacy en localStorage)
+  const syncCategoriaNombres = (rawItems) => {
+    if (!rawItems) return [];
+    return rawItems.map((item, idx) => {
+      if (idx < CATEGORIAS_FIJAS.length && item.nombre !== CATEGORIAS_FIJAS[idx]) {
+        return { ...item, nombre: CATEGORIAS_FIJAS[idx] };
+      }
+      return item;
+    });
+  };
+
+  const [items, setItems] = useState(() => syncCategoriaNombres(menuItems || []));
   const [saving, setSaving] = useState(false);
   const [categoriasExpandidas, setCategoriasExpandidas] = useState({});
   const [imageErrores, setImageErrores] = useState({});
@@ -82,7 +96,7 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
 
   const [imagenesPorCategoria, setImagenesPorCategoria] = useState({
     Picoteo: [],
-    Aperturas: [],
+    Entrantes: [],
     Gourmets: [],
     Escuderos: [],
     Zombies: [],
@@ -96,7 +110,7 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
     setImagenesPorCategoria(prev => ({
       ...prev,
       Picoteo: ['/img/Picoteo/Alitas2.png', '/img/Picoteo/Bolon%20de%20Verde.JPG', '/img/Picoteo/Bowl%20Patatas%20fritas.png', '/img/Picoteo/Nachos%20con%20queso.png', '/img/Picoteo/Palomitas%20de%20ma%C3%ADz.png', '/img/Picoteo/Patacones%20con%20Queso.JPG'],
-      Aperturas: ['/img/Aperturas/Ceviche%20de%20Camaron.JPG', '/img/Aperturas/Locro%20de%20Papa.JPG', '/img/Aperturas/Mote%20Pillo.JPG', '/img/Aperturas/Pincho%20de%20verduras.png', '/img/Aperturas/Tigrillo.JPG'],
+      Entrantes: ['/img/Entrantes/Ceviche%20de%20Camaron.JPG', '/img/Entrantes/Locro%20de%20Papa.JPG', '/img/Entrantes/Mote%20Pillo.JPG', '/img/Entrantes/Pincho%20de%20verduras.png', '/img/Entrantes/Tigrillo.JPG'],
       Gourmets: ['/img/Gourmets/Bistec%20convinado.png', '/img/Gourmets/Cuy%20Asado.JPG', '/img/Gourmets/Encebollado.JPG', '/img/Gourmets/Encocado%20de%20Pescado.JPG', '/img/Gourmets/Estofado%20de%20Pollo.JPG', '/img/Gourmets/Pollo%20broster.png', '/img/Gourmets/Tabla%20flamenca.png'],
       Escuderos: ['/img/Escuderos/Ensalada%20Alemana%20de%20Patata.jpg', '/img/Escuderos/Ensalada%20Caprese.jpg', '/img/Escuderos/Ensalada%20C%C3%A9sar.jpg', '/img/Escuderos/Ensalada%20Coleslaw.jpg', '/img/Escuderos/Ensalada%20Griega.jpg', '/img/Escuderos/Ensalada%20Mimosa.jpg', '/img/Escuderos/Ensalada%20Nizarda.jpg', '/img/Escuderos/Ensalada%20Tabal%C3%A9.jpg', '/img/Escuderos/Ensalada%20Waldorf.jpg', '/img/Escuderos/Ensaladilla%20Rusa.jpg'],
       Zombies: ['/img/Zombies/Carbonara.jpg', '/img/Zombies/Champinones.jpg', '/img/Zombies/Cuatro-Quesos.jpg', '/img/Zombies/Hawaiana.jpg', '/img/Zombies/Margherita.jpg', '/img/Zombies/Marinera.jpg', '/img/Zombies/Napolitana.jpg', '/img/Zombies/Papas%20con%20cuero.JPG', '/img/Zombies/Pepperoni.jpg', '/img/Zombies/Rustica.jpg'],

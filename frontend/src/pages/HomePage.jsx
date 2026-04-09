@@ -23,7 +23,7 @@ export default function HomePage({
 
   const categorias = [
   { id: 'Picoteo', nombre: 'PICOTEO', icono: '🍢' },
-  { id: 'Aperturas', nombre: 'APERTURAS', icono: '🍤' },
+  { id: 'Entrantes', nombre: 'ENTRANTES', icono: '🍤' },
   { id: 'Gourmets', nombre: 'GOURMETS', icono: '🍷' },
   { id: 'Escuderos', nombre: 'ESCUDEROS', icono: '🥘' },
   { id: 'Zombies', nombre: 'ZOMBIES', icono: '🍕' },
@@ -87,14 +87,14 @@ export default function HomePage({
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#1a0a0a' }}>
       {/* Header con imagen del comercio (sticky) */}
       <div style={{ position: 'sticky', top: '60px', zIndex: 20 }}>
         <ComercioHeader comercio={comercio} />
       </div>
       
       {/* Tabs de categorías (sticky) */}
-      <div style={{ position: 'sticky', top: '260px', zIndex: 15 }}>
+      <div style={{ position: 'sticky', top: '300px', zIndex: 15 }}>
         <CategoriaTabs
           categorias={categorias}
           categoriaActiva={categoriaActiva}

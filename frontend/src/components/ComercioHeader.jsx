@@ -17,7 +17,7 @@ const styles = {
   container: {
     position: 'relative',
     width: '100%',
-    height: '200px',
+    height: '240px',
     overflow: 'hidden',
   },
   imagen: {
