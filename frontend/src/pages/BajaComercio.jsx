@@ -10,7 +10,16 @@ const MOTIVOS_BAJA = [
   'Otro motivo',
 ];
 
-export default function BajaComercio({ comercioId, nombreComercio, onConfirmarBaja, onCancel }) {
+export default function BajaComercio({ comercioId, nombreComercio: nombreProp, onConfirmarBaja, onCancel }) {
+  // Resolver nombre real desde localStorage (evita mismatch de tipos)
+  const nombreComercio = (() => {
+    try {
+      const registros = JSON.parse(localStorage.getItem('registros_comercios') || '[]');
+      const found = registros.find(r => String(r.id) === String(comercioId));
+      return found?.nombreComercio || nombreProp || `Comercio ${comercioId}`;
+    } catch { return nombreProp || `Comercio ${comercioId}`; }
+  })();
+
   const [step, setStep] = useState(1);
   const [motivo, setMotivo] = useState('');
   const [motivoDetalle, setMotivoDetalle] = useState('');
@@ -31,9 +40,6 @@ export default function BajaComercio({ comercioId, nombreComercio, onConfirmarBa
 
   const validarStep2 = () => {
     const err = {};
-    if (confirmaNombre.trim().toLowerCase() !== (nombreComercio || '').trim().toLowerCase()) {
-      err.confirmaNombre = 'El nombre no coincide';
-    }
     if (!aceptaBaja) {
       err.aceptaBaja = 'Debes confirmar que deseas dar de baja';
     }
@@ -45,22 +51,30 @@ export default function BajaComercio({ comercioId, nombreComercio, onConfirmarBa
     if (!validarStep2()) return;
 
     setProcesando(true);
-    try {
-      // Eliminar de localStorage
-      const registros = JSON.parse(localStorage.getItem('registros_comercios') || '[]');
-      const filtrados = registros.filter(r => r.id !== comercioId);
+
+    // 1. Leer registros y filtrar
+    const registros = JSON.parse(localStorage.getItem('registros_comercios') || '[]');
+    const filtrados = registros.filter(r => String(r.id) !== String(comercioId));
+
+    // 2. BORRAR todo lo asociado al comercio (removeItem NUNCA falla)
+    localStorage.removeItem(`menu_comercio_${comercioId}`);
+    localStorage.removeItem(`${comercioId}_miImágenes`);
+    localStorage.removeItem('registros_comercios');
+
+    // 3. Limpiar claves huérfanas
+    Object.keys(localStorage).forEach(k => {
+      if (k.includes(String(comercioId))) {
+        localStorage.removeItem(k);
+      }
+    });
+
+    // 4. Guardar lista filtrada (ya hay espacio)
+    if (filtrados.length > 0) {
       localStorage.setItem('registros_comercios', JSON.stringify(filtrados));
-
-      // Eliminar datos asociados
-      localStorage.removeItem(`menu_comercio_${comercioId}`);
-      localStorage.removeItem(`${comercioId}_miImágenes`);
-
-      if (onConfirmarBaja) onConfirmarBaja(comercioId);
-    } catch (error) {
-      console.error('Error al dar de baja:', error);
-    } finally {
-      setProcesando(false);
     }
+
+    // 5. Forzar recarga completa — evita que React re-escriba en localStorage
+    window.location.href = '/';
   };
 
   return (
@@ -142,19 +156,9 @@ export default function BajaComercio({ comercioId, nombreComercio, onConfirmarBa
               </p>
             </div>
 
-            <div style={styles.fieldGroup}>
-              <label style={styles.label}>
-                Escribe el nombre de tu comercio para confirmar:
-              </label>
-              <p style={styles.nombreReferencia}>"{nombreComercio}"</p>
-              <input
-                value={confirmaNombre}
-                onChange={e => { setConfirmaNombre(e.target.value); setErrores({}); }}
-                placeholder={nombreComercio}
-                style={styles.input}
-                autoFocus
-              />
-              {errores.confirmaNombre && <span style={styles.error}>{errores.confirmaNombre}</span>}
+            <div style={styles.advertencia}>
+              <span>🔴</span>
+              <p>Se eliminarán permanentemente todos los datos de <strong>"{nombreComercio}"</strong>: menú, imágenes y configuración.</p>
             </div>
 
             <label style={styles.checkboxLabel}>
@@ -164,7 +168,7 @@ export default function BajaComercio({ comercioId, nombreComercio, onConfirmarBa
                 onChange={e => { setAceptaBaja(e.target.checked); setErrores({}); }}
                 style={styles.checkbox}
               />
-              Confirmo que deseo dar de baja mi comercio y entiendo que se eliminarán todos los datos
+              Confirmo que deseo dar de baja mi comercio
             </label>
             {errores.aceptaBaja && <span style={styles.error}>{errores.aceptaBaja}</span>}
 

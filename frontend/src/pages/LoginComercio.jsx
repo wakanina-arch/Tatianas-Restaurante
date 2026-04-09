@@ -10,7 +10,9 @@ export default function LoginComercio({ onLogin, onBack }) {
       setError('Ingresa el ID del comercio');
       return;
     }
-    onLogin(comercioId);
+    // Intentar parsear como número si es numérico (los IDs de registro son Date.now())
+    const parsed = /^\d+$/.test(comercioId.trim()) ? Number(comercioId.trim()) : comercioId.trim();
+    onLogin(parsed);
   };
 
   return (

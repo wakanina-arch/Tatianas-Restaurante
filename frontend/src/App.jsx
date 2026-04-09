@@ -112,9 +112,30 @@ function useLocalStorage(key, initialValue) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(key, JSON.stringify(storedValue));
+      const current = localStorage.getItem(key);
+      const next = JSON.stringify(storedValue);
+      // Solo escribir si el valor realmente cambió (evita QuotaExceededError en loop)
+      if (current !== next) {
+        localStorage.setItem(key, next);
+      }
     } catch (error) {
-      console.error(`Error saving to localStorage key "${key}":`, error);
+      // Si es QuotaExceeded, intentar limpiar claves huérfanas y reintentar
+      if (error.name === 'QuotaExceededError' || error.code === 22) {
+        try {
+          // Limpiar menús de comercios que ya no existen
+          const registros = JSON.parse(localStorage.getItem('registros_comercios') || '[]');
+          const idsValidos = new Set(registros.map(r => String(r.id)));
+          Object.keys(localStorage).forEach(k => {
+            const match = k.match(/^menu_comercio_(.+)$/);
+            if (match && match[1] !== 'default' && !idsValidos.has(match[1])) {
+              localStorage.removeItem(k);
+            }
+          });
+          localStorage.setItem(key, JSON.stringify(storedValue));
+        } catch {
+          console.warn(`localStorage lleno, no se pudo guardar "${key}"`);
+        }
+      }
     }
   }, [key, storedValue]);
 
@@ -250,6 +271,7 @@ function MainApp() {
             setCurrentPage('home');
             setSelectedComercioAdmin(null);
             setSelectedComercio(null);
+            setShowWelcome(true);
           }}
         />
       )}

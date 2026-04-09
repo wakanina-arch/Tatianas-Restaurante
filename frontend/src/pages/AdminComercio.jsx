@@ -39,7 +39,7 @@ export default function AdminComercio({ comercioId, onBack, menuItems: propsMenu
   const getNombreComercio = () => {
     try {
       const registros = JSON.parse(localStorage.getItem('registros_comercios') || '[]');
-      const comercio = registros.find(r => r.id === comercioId);
+      const comercio = registros.find(r => String(r.id) === String(comercioId));
       return comercio?.nombreComercio || `Comercio ${comercioId}`;
     } catch { return `Comercio ${comercioId}`; }
   };
