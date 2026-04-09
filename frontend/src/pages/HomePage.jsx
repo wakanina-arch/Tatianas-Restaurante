@@ -4,6 +4,25 @@ import CategoriaTabs from '../components/CategoriaTabs';
 import PlatoCard from '../components/PlatoCard';
 import { useCart } from '../CartContext';
 
+// Inyectar animación gelatinosa
+if (typeof document !== 'undefined' && !document.getElementById('jelly-style')) {
+  const s = document.createElement('style');
+  s.id = 'jelly-style';
+  s.textContent = `
+    @keyframes jellyIn {
+      0% { transform: scale(0.92); opacity: 0; }
+      40% { transform: scale(1.04); opacity: 1; }
+      65% { transform: scale(0.97); }
+      82% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+    .jelly-section {
+      animation: jellyIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+  `;
+  document.head.appendChild(s);
+}
+
 
 export default function HomePage({ 
   comercio, 
@@ -87,7 +106,7 @@ export default function HomePage({
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#1a0a0a' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#2a1414' }}>
       {/* Header con imagen del comercio (sticky) */}
       <div style={{ position: 'sticky', top: '60px', zIndex: 20 }}>
         <ComercioHeader comercio={comercio} />
@@ -106,12 +125,13 @@ export default function HomePage({
       
       {/* Contenido principal (scroll) */}
       <div style={{ flex: 1 }}>
-        {categorias.map((cat) => (
+        {categorias.map((cat, i) => (
           <div
             key={cat.id}
             ref={(el) => (seccionesRef.current[cat.id] = el)}
             data-categoria={cat.id}
-            style={{ scrollMarginTop: '320px' }}
+            className="jelly-section"
+            style={{ scrollMarginTop: '320px', animationDelay: `${i * 0.07}s` }}
           >
             <h3 style={styles.seccionTitulo}>{cat.nombre}</h3>
             {platillosPorCategoria(cat.id).map((plato, idx) => (
@@ -131,9 +151,11 @@ export default function HomePage({
 const styles = {
   seccionTitulo: {
     padding: '12px 16px 6px',
-    fontSize: '1.2rem',
-    fontWeight: '600',
-    color: '#01400e',
     margin: 0,
+    fontSize: '1.15rem',
+    fontWeight: '700',
+    color: '#01400e',
+    letterSpacing: '0.5px',
+    textShadow: '0 1px 3px rgba(0,0,0,0.3), 0 0 12px rgba(1, 64, 14, 0.25)',
   },
 };
