@@ -32,7 +32,7 @@ const COMERCIOS = [
   { id: 9, nombre: "Tradicional", imagen: "/casas/Tradicional.JPG" },
 ];
 
-export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRegistroComercio, currentPage }) {
+export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRegistroComercio, currentPage, comercioSimple }) {
   const [fraseData] = useState(() => getFraseAleatoria());
   const [comerciosRegistrados, setComerciosRegistrados] = useState([]);
 
@@ -59,16 +59,18 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
     ...COMERCIOS,
     ...comerciosRegistrados.map(r => ({
       id: r.id,
-      nombre: r.nombreComercio,
-      imagen: r.logo,
+      nombre: r.nombre, // 👈 Antes decía nombreComercio, cámbialo a nombre
+      imagen: r.imagen || r.logo, // 👈 Aseguramos que use cualquiera de las dos propiedades
       esNuevo: true,
     })),
+    ...(comercioSimple ? [{ id: comercioSimple.id, nombre: comercioSimple.nombre, imagen: comercioSimple.logo, esSimple: true }] : []),
   ];
 
   const handleComercioClick = (comercio) => {
-    console.log('Comercio seleccionado:', comercio.nombre);
-    onSelectCategory('Primero', comercio.id);
-  };
+  console.log('Comercio seleccionado:', comercio.nombre);
+  // Pasar la primera categoría real del menú, no "Primero"
+  onSelectCategory('Picoteo', comercio.id);
+};
 
   return (
     <div style={styles.container}>

@@ -1,18 +1,20 @@
 import { useState } from 'react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Configuración de Cloudinary desde variables de entorno
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
-export default function ImageUploader({ comercioId, onImageUploaded, compact = false }) {
+export default function ImageUploader({ comercioId, categoria, onImageUploaded, compact = true }) {
   const [isUploading, setIsUploading] = useState(false);
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success', 'error', 'info'
+  const [messageType, setMessageType] = useState('');
 
   const validarArchivo = (file) => {
-    const formatosValidos = ['image/jpeg', 'image/png', 'image/webp'];
+    const formatosValidos = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     const tamanoMaximo = 5 * 1024 * 1024; // 5MB
 
     if (!formatosValidos.includes(file.type)) {
-      return { valido: false, error: '❌ Formato no soportado. Usa JPG, PNG o WEBP' };
+      return { valido: false, error: '❌ Formato no soportado. Usa JPG, PNG, GIF o WEBP' };
     }
 
     if (file.size > tamanoMaximo) {
@@ -26,7 +28,6 @@ export default function ImageUploader({ comercioId, onImageUploaded, compact = f
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validar archivo
     const validacion = validarArchivo(file);
     if (!validacion.valido) {
       showMessage(validacion.error, 'error');
@@ -36,54 +37,50 @@ export default function ImageUploader({ comercioId, onImageUploaded, compact = f
 
     try {
       setIsUploading(true);
-      showMessage('Subiendo imagen...', 'info');
+      showMessage('⏳ Subiendo imagen a Cloudinary...', 'info');
 
-      // Crear FormData para enviar al backend
+      // Crear FormData para Cloudinary
       const formData = new FormData();
-      formData.append('imagen', file);
-      formData.append('comercioId', comercioId);
+      formData.append('file', file);
+      formData.append('upload_preset', UPLOAD_PRESET);
+      formData.append('folder', `one_to_one/${categoria || 'general'}`);
 
-      // Enviar al backend
-      const response = await fetch(`${API_URL}/uploads`, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al subir imagen');
-      }
+      // Subir a Cloudinary
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        { method: 'POST', body: formData }
+      );
 
       const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error || 'Error en la respuesta del servidor');
+
+      if (!data.secure_url) {
+        throw new Error(data.error?.message || 'Error al subir la imagen');
       }
 
-      // Guardar la ruta en localStorage
-      const key = `${comercioId}_miImágenes`;
+      // Guardar en localStorage para mantener catálogo personal
+      const key = `${comercioId || 'default'}_miImagenes`;
       const imagenes = JSON.parse(localStorage.getItem(key) || '[]');
       
       const nuevaImagen = {
-        id: data.imagen.id,
-        url: data.imagen.url,
-        nombre: data.imagen.nombre.split('.')[0]
+        id: data.public_id,
+        url: data.secure_url,
+        nombre: file.name.split('.')[0]
       };
       
       imagenes.push(nuevaImagen);
       localStorage.setItem(key, JSON.stringify(imagenes));
       
-      showMessage(`✅ Imagen "${nuevaImagen.nombre}" cargada`, 'success');
+      showMessage(`✅ Imagen "${nuevaImagen.nombre}" subida correctamente`, 'success');
       
-      // Notificar al padre
+      // Notificar al componente padre
       if (onImageUploaded) {
-        onImageUploaded(nuevaImagen);
+        onImageUploaded(data.secure_url);
       }
       
-      // Limpiar input
       e.target.value = '';
     } catch (error) {
-      showMessage(`Error: ${error.message}`, 'error');
+      console.error('Error subiendo a Cloudinary:', error);
+      showMessage(`❌ Error: ${error.message}`, 'error');
     } finally {
       setIsUploading(false);
     }
@@ -104,30 +101,34 @@ export default function ImageUploader({ comercioId, onImageUploaded, compact = f
         <label style={styles.compactLabel}>
           <input
             type="file"
-            accept="image/jpeg,image/png,image/webp"
+            accept="image/jpeg,image/png,image/webp,image/gif"
             onChange={handleFileSelect}
             disabled={isUploading}
             style={styles.fileInput}
           />
           <div style={{
             ...styles.compactButton,
-            opacity: isUploading ? 0.7 : 1
+            opacity: isUploading ? 0.7 : 1,
+            cursor: isUploading ? 'wait' : 'pointer'
           }}>
-            {isUploading ? '⏳' : '🖼️'} Añadir Imagen
+            {isUploading ? '⏳ Subiendo...' : '🖼️ Añadir Imagen'}
           </div>
+          {message && messageType === 'error' && (
+            <div style={styles.errorTooltip}>{message}</div>
+          )}
         </label>
       ) : (
-        // Versión completa: con descripción y más detalles
+        // Versión completa
         <div style={styles.container}>
           <div style={styles.uploadSectionHeader}>
-            <span style={styles.uploadSectionIcon}>📸</span>
-            <span style={styles.uploadSectionTitle}>Mis imágenes personalizadas</span>
+            <span style={styles.uploadSectionIcon}>☁️</span>
+            <span style={styles.uploadSectionTitle}>Subir a Cloudinary</span>
           </div>
           
           <label style={styles.uploadLabel}>
             <input
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/jpeg,image/png,image/webp,image/gif"
               onChange={handleFileSelect}
               disabled={isUploading}
               style={styles.fileInput}
@@ -138,13 +139,13 @@ export default function ImageUploader({ comercioId, onImageUploaded, compact = f
               pointerEvents: isUploading ? 'none' : 'auto'
             }}>
               <div style={styles.uploadIcon}>
-                {isUploading ? '⏳' : '📤'}
+                {isUploading ? '⏳' : '☁️'}
               </div>
               <div style={styles.uploadText}>
-                {isUploading ? 'Procesando imagen...' : 'Subir nueva imagen'}
+                {isUploading ? 'Subiendo a Cloudinary...' : 'Subir nueva imagen'}
               </div>
               <div style={styles.uploadSubtext}>
-                JPG, PNG, WEBP • Máximo 5MB
+                JPG, PNG, GIF, WEBP • Máximo 5MB
               </div>
             </div>
           </label>
@@ -198,8 +199,8 @@ const styles = {
   },
   uploadBox: {
     padding: '2rem',
-    background: 'linear-gradient(135deg, rgba(255, 179, 71, 0.15) 0%, rgba(255, 215, 0, 0.08) 100%)',
-    border: '2px dashed rgba(255, 179, 71, 0.5)',
+    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.08) 100%)',
+    border: '2px dashed rgba(59, 130, 246, 0.5)',
     borderRadius: '20px',
     textAlign: 'center',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -215,7 +216,7 @@ const styles = {
   uploadText: {
     fontSize: '1rem',
     fontWeight: '700',
-    color: '#01400e',
+    color: '#1e3a8a',
     letterSpacing: '0.3px'
   },
   uploadSubtext: {
@@ -240,23 +241,21 @@ const styles = {
     background: 'rgba(76, 175, 80, 0.12)',
     color: '#1b5e20',
     border: '1px solid rgba(76, 175, 80, 0.3)',
-    boxShadow: '0 2px 8px rgba(76, 175, 80, 0.1)'
   },
   message_error: {
-    background: 'rgba(255, 152, 0, 0.12)',
-    color: '#e65100',
-    border: '1px solid rgba(255, 152, 0, 0.3)',
-    boxShadow: '0 2px 8px rgba(255, 152, 0, 0.1)'
+    background: 'rgba(230, 57, 70, 0.12)',
+    color: '#b91c1c',
+    border: '1px solid rgba(230, 57, 70, 0.3)',
   },
   message_info: {
-    background: 'rgba(33, 150, 243, 0.12)',
-    color: '#01579b',
-    border: '1px solid rgba(33, 150, 243, 0.3)',
-    boxShadow: '0 2px 8px rgba(33, 150, 243, 0.1)'
+    background: 'rgba(59, 130, 246, 0.12)',
+    color: '#1e40af',
+    border: '1px solid rgba(59, 130, 246, 0.3)',
   },
   compactLabel: {
-    display: 'block',
-    cursor: 'pointer'
+    display: 'inline-block',
+    cursor: 'pointer',
+    position: 'relative'
   },
   compactButton: {
     background: '#e63946',
@@ -266,65 +265,40 @@ const styles = {
     fontSize: '0.85rem',
     fontWeight: '600',
     border: 'none',
-    cursor: 'pointer',
     transition: 'all 0.2s ease',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '0.4rem',
     whiteSpace: 'nowrap',
-    boxShadow: '0 2px 8px rgba(230, 57, 70, 0.2)',
-    ':hover': {
-      background: '#d62828',
-      boxShadow: '0 4px 12px rgba(230, 57, 70, 0.3)'
-    }
+    boxShadow: 'rgba(230, 57, 70, 0.2) 0px 2px 8px',
+  },
+  errorTooltip: {
+    position: 'absolute',
+    top: '100%',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    marginTop: '8px',
+    padding: '8px 12px',
+    background: '#b91c1c',
+    color: 'white',
+    borderRadius: '8px',
+    fontSize: '0.75rem',
+    whiteSpace: 'nowrap',
+    zIndex: 1000,
+    boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
   }
 };
 
 // Agregar animación
-const styleId = 'imageUploader-styles';
+const styleId = 'imageUploader-cloudinary-styles';
 if (!document.getElementById(styleId)) {
   const styleSheet = document.createElement('style');
   styleSheet.id = styleId;
   styleSheet.textContent = `
     @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes uploadPulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
-    }
-    
-    label {
-      transition: all 0.3s ease;
-    }
-    
-    label:has(input:hover) .uploadBox {
-      border-color: rgba(255, 179, 71, 0.8) !important;
-      background: linear-gradient(135deg, rgba(255, 179, 71, 0.2) 0%, rgba(255, 215, 0, 0.12) 100%) !important;
-      box-shadow: 0 4px 16px rgba(255, 179, 71, 0.15) !important;
-    }
-    
-    label:has(input:focus) .uploadBox {
-      border-color: rgba(255, 179, 71, 1) !important;
-      box-shadow: 0 0 0 4px rgba(255, 179, 71, 0.2) !important;
-    }
-    
-    label:has(input:disabled) .uploadBox {
-      opacity: 0.6;
-      cursor: not-allowed;
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   `;
   document.head.appendChild(styleSheet);

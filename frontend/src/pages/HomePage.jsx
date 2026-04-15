@@ -31,7 +31,12 @@ export default function HomePage({
   onBackToWelcome,
   setCurrentPage
 }) {
-  const [categoriaActiva, setCategoriaActiva] = useState('Primero');
+  const [categoriaActiva, setCategoriaActiva] = useState(() => {
+    if (platillos && platillos.length > 0) {
+      return platillos[0].nombre; // Primera categoría real
+    }
+    return 'Picoteo'; // Fallback
+  });
   const [platoSeleccionado, setPlatoSeleccionado] = useState(null);
   const [carrito, setCarrito] = useState({});
   const seccionesRef = useRef({});
