@@ -1,41 +1,49 @@
-// ============================================
-// SERVICIO DIRECTO A CLOUDINARY
-// ============================================
-
+// src/services/uploadImageService.js
 const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
-export const uploadImageService = {
-  async subirImagen(archivo, comercioId) {
+const uploadImageService = {
+  subirImagen: async (file, comercioId) => {
+    // Validaciones
+    if (!CLOUD_NAME) throw new Error("❌ VITE_CLOUDINARY_CLOUD_NAME no está definido en .env");
+    if (!UPLOAD_PRESET) throw new Error("❌ VITE_CLOUDINARY_UPLOAD_PRESET no está definido en .env");
+    
+    console.log("☁️ CLOUD_NAME:", CLOUD_NAME);
+    console.log("☁️ UPLOAD_PRESET:", UPLOAD_PRESET);
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', UPLOAD_PRESET);
+    formData.append('folder', `one_to_one/${comercioId || 'general'}`);
+
+    const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+    console.log("📤 URL:", url);
+
     try {
-      const formData = new FormData();
-      formData.append('file', archivo);
-      formData.append('upload_preset', UPLOAD_PRESET);
-      formData.append('folder', `comercios/${comercioId}`);
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData,
+        // Añadir headers para evitar problemas de CORS
+        mode: 'cors',
+        credentials: 'omit'
+      });
 
-      const response = await fetch(
-        `https://cloudinary.com{CLOUD_NAME}/image/upload`,
-        { method: 'POST', body: formData }
-      );
-
-      if (!response.ok) throw new Error('Error al subir a Cloudinary');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || `Error HTTP ${response.status}`);
+      }
 
       const data = await response.json();
       
-      // Devolvemos la URL segura para guardarla en la estantería
-      return { url: data.secure_url, id: data.public_id };
+      if (!data.secure_url) {
+        throw new Error('No se recibió URL de la imagen');
+      }
+
+      return { url: data.secure_url, public_id: data.public_id };
     } catch (error) {
-      console.error('❌ Error Cloudinary:', error);
+      console.error("❌ Error Cloudinary:", error);
       throw error;
     }
-  },
-
-  validarArchivo(archivo) {
-    const formatos = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!archivo) return { valido: false, error: 'Sin archivo' };
-    if (archivo.size > 5 * 1024 * 1024) return { valido: false, error: 'Máximo 5MB' };
-    if (!formatos.includes(archivo.type)) return { valido: false, error: 'Solo JPG/PNG/WEBP' };
-    return { valido: true };
   }
 };
 

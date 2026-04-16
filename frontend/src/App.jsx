@@ -13,6 +13,7 @@ import LoginComercio from './pages/LoginComercio';
 import AdminComercio from './pages/AdminComercio';
 import RegistroComercio from './pages/RegistroComercio';
 import uploadImageService from "./services/uploadImageService";
+import { getMenuPublicado } from './services/menuService';
 
 // ============================================
 // CONFIGURACIÓN GLOBAL
@@ -143,15 +144,11 @@ function MainApp() {
   }, [selectedComercio, COMERCIOS]);
 
   useEffect(() => {
-    if (selectedComercio) {
-      const savedMenu = localStorage.getItem(`menu_comercio_${selectedComercio}`);
-      if (savedMenu) {
-        setMenuItems(JSON.parse(savedMenu));
-      } else {
-        setMenuItems(DEFAULT_MENU_ITEMS);
-      }
-    }
-  }, [selectedComercio]);
+  if (selectedComercio) {
+    const menuPublicado = getMenuPublicado(selectedComercio);
+    setMenuItems(menuPublicado);
+  }
+}, [selectedComercio]);
 
   const handleSaveMenu = (newMenu) => {
     setMenuItems(newMenu);
@@ -242,12 +239,12 @@ console.log("  - COMERCIOS:", COMERCIOS?.length, "comercios");
       {showWelcome ? (
         <WelcomeInicio
           onSelectCategory={(cat, id) => {
-            setSelectedComercio(id);
-            const savedMenu = localStorage.getItem(`menu_comercio_${id}`);
-            setMenuItems(savedMenu ? JSON.parse(savedMenu) : DEFAULT_MENU_ITEMS);
-            setShowWelcome(false);
-            setCurrentPage('home');
-          }}
+  setSelectedComercio(id);
+  const menuPublicado = getMenuPublicado(id);
+  setMenuItems(menuPublicado);
+  setShowWelcome(false);
+  setCurrentPage('home');
+}}
           onAccesoComercio={() => {
             setShowWelcome(false);
             setCurrentPage('comercio-login');
@@ -258,71 +255,78 @@ console.log("  - COMERCIOS:", COMERCIOS?.length, "comercios");
           }}
         />
       ) : (
-        <>
-          <header style={styles.header}>
-            <div style={styles.headerContent}>
-              <button onClick={handleBackToWelcome} style={styles.backBtn}>←</button>
-              <div style={styles.logoContainer} onClick={handleBackToWelcome}>
-                <span style={styles.logoIcon}>🔱</span>
-                <span style={styles.logoText}>ONE TO ONE</span>
-              </div>
-              <div style={styles.rightIcons}>
-                <button onClick={() => setCurrentPage('carrito')} style={styles.iconBtn}>
-                  🛒{itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
-                </button>
-                <button onClick={() => setPerfilAbierto(true)} style={styles.iconBtn}>👤</button>
-              </div>
-            </div>
-          </header>
+  <>
+    {/* HEADER PÚBLICO - Solo visible en páginas de cliente (home, carrito) */}
+    {!['comercio-admin', 'admin', 'comercio-login', 'registro-comercio'].includes(currentPage) && (
+      <header style={styles.header}>
+        <div style={styles.headerContent}>
+          <button onClick={handleBackToWelcome} style={styles.backBtn}>←</button>
+          <div style={styles.logoContainer} onClick={handleBackToWelcome}>
+            <span style={styles.logoIcon}>🔱</span>
+            <span style={styles.logoText}>ONE TO ONE</span>
+          </div>
+          <div style={styles.rightIcons}>
+            <button onClick={() => setCurrentPage('carrito')} style={styles.iconBtn}>
+              🛒{itemCount > 0 && <span style={styles.badge}>{itemCount}</span>}
+            </button>
+            <button onClick={() => setPerfilAbierto(true)} style={styles.iconBtn}>👤</button>
+          </div>
+        </div>
+      </header>
+    )}
 
-          <RegisterModal
-            open={perfilAbierto}
-            onClose={() => setPerfilAbierto(false)}
-            onRegister={(userData, modo) => {
-              if (modo === 'logout') setUser(null);
-              else setUser(userData);
-              setPerfilAbierto(false);
-            }}
-            modo="editar"
-            usuario={user}
-          />
+    <RegisterModal
+      open={perfilAbierto}
+      onClose={() => setPerfilAbierto(false)}
+      onRegister={(userData, modo) => {
+        if (modo === 'logout') setUser(null);
+        else setUser(userData);
+        setPerfilAbierto(false);
+      }}
+      modo="editar"
+      usuario={user}
+    />
 
-          <main style={{ paddingTop: '100px', minHeight: 'calc(100vh - 100px)' }}>
-            {currentPage === 'home' && (
-              <HomePage
-                comercio={comercioActivo}
-                platillos={menuItems}
-                user={user}
-                itemCount={itemCount}
-                onOpenPerfil={() => setPerfilAbierto(true)}
-                onBackToWelcome={handleBackToWelcome}
-                setCurrentPage={setCurrentPage}
-              />
-            )}
-            {currentPage === 'carrito' && (
-              <CartPage
-                addLog={() => {}}
-                setPendingOrders={() => {}}
-                user={user}
-                onVolverAlMenu={() => setCurrentPage('home')}
-              />
-            )}
-            {currentPage === 'admin' && (
-              <AdminPage
-                menuItems={menuItems}
-                onSaveMenu={handleSaveMenu}
-                log={[]}
-                addLog={() => {}}
-                pendingOrders={[]}
-                setPendingOrders={() => {}}
-                finishedOrders={[]}
-                setFinishedOrders={() => {}}
-                onBack={() => setCurrentPage('home')}
-              />
-            )}
-          </main>
-        </>
+    {/* El main se ajusta dinámicamente: con padding solo si hay header público */}
+    <main style={{ 
+      paddingTop: !['comercio-admin', 'admin', 'comercio-login', 'registro-comercio'].includes(currentPage) ? '100px' : '0',
+      minHeight: 'calc(100vh - 100px)' 
+    }}>
+      {currentPage === 'home' && (
+        <HomePage
+          comercio={comercioActivo}
+          platillos={menuItems}
+          user={user}
+          itemCount={itemCount}
+          onOpenPerfil={() => setPerfilAbierto(true)}
+          onBackToWelcome={handleBackToWelcome}
+          setCurrentPage={setCurrentPage}
+        />
       )}
+      {currentPage === 'carrito' && (
+        <CartPage
+          addLog={() => {}}
+          setPendingOrders={() => {}}
+          user={user}
+          onVolverAlMenu={() => setCurrentPage('home')}
+        />
+      )}
+      {currentPage === 'admin' && (
+        <AdminPage
+          menuItems={menuItems}
+          onSaveMenu={handleSaveMenu}
+          log={[]}
+          addLog={() => {}}
+          pendingOrders={[]}
+          setPendingOrders={() => {}}
+          finishedOrders={[]}
+          setFinishedOrders={() => {}}
+          onBack={() => setCurrentPage('home')}
+        />
+      )}
+    </main>
+  </>
+)}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import uploadImageService from './services/uploadImageService';
+import { saveMenuBorrador } from './services/menuService';
 
 const CATEGORIAS_FIJAS = ['Picoteo', 'Entrantes', 'Gourmets', 'Escuderos', 'Zombies', 'FastFurious', 'Postres', 'Bebidas'];
 
@@ -59,17 +60,24 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
   };
 
   const handleGuardarTodo = async () => {
-    setSaving(true);
-    try {
-      await onSave(items);
-      setToast('✅ Menú actualizado');
-      setTimeout(onClose, 1000);
-    } catch (err) {
-      setToast('❌ Error al guardar');
-    } finally {
-      setSaving(false);
+  setSaving(true);
+  try {
+    // Guardar en el BORRADOR
+    saveMenuBorrador(comercioId, items);
+    
+    // Notificar al padre (AdminComercio)
+    if (onSave) {
+      onSave(items);
     }
-  };
+    
+    setToast('✅ Cambios guardados en borrador');
+    setTimeout(() => onClose(), 1000);
+  } catch (err) {
+    setToast('❌ Error al guardar');
+  } finally {
+    setSaving(false);
+  }
+};
 
   return (
     <div style={S.drawer}>

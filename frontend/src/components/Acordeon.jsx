@@ -15,7 +15,8 @@ export default function Acordeon({
   onOpenPromos,
   onCierreJornada,
   onConfirmarEntrega,
-  onPayment
+  onPayment,
+  isDraftMode = false
 }) {
   const [openSection, setOpenSection] = useState(null);
 
@@ -126,9 +127,16 @@ export default function Acordeon({
   ];
 
   return (
-    <div className="admin-accordion" style={styles.acordeonContainer}>
-      {sections.map((section) => (
-        <div key={section.id} className="accordion-item" style={styles.itemAcordeon}>
+  <div className="admin-accordion" style={styles.acordeonContainer}>
+    {/* 📝 INDICADOR DE MODO BORRADOR - AQUÍ */}
+    {isDraftMode && (
+      <div style={styles.draftIndicator}>
+        📝 Modo Borrador - Los cambios no son públicos
+      </div>
+    )}
+
+    {sections.map((section) => (
+      <div key={section.id} className="accordion-item" style={styles.itemAcordeon}>
           <button
             className="accordion-header"
             onClick={() => {
@@ -326,5 +334,20 @@ const styles = {
     cursor: 'pointer',
     transition: 'all 0.2s ease',
     boxShadow: '0 4px 12px rgba(255, 59, 48, 0.2)'
-  }
+  },
+  
+  draftIndicator: {
+    padding: '0.8rem 1.2rem',
+    marginBottom: '12px',
+    background: 'rgba(255, 193, 7, 0.15)',
+    border: '1px solid rgba(255, 193, 7, 0.3)',
+    borderRadius: '16px',
+    color: '#ffc107',
+    fontSize: '0.85rem',
+    fontWeight: '500',
+    textAlign: 'center',
+    backdropFilter: 'blur(10px)',
+  },
+  
+  // ... resto de estilos
 };
