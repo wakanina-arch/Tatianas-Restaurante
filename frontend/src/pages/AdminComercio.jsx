@@ -117,63 +117,75 @@ export default function AdminComercio({ comercioId, onBack }) {
   };
 
   return (
-    <div style={styles.container}>
-      {/* HEADER PRINCIPAL */}
-      <div style={styles.header}>
-        <button onClick={handleVolver} style={styles.backButton}>
-          ← {vista === 'preview' ? 'Volver al Dashboard' : 'Panel'}
+  <div style={{
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    background: 'radial-gradient(circle at 30% 30%, #2a0a0a 0%, #0a0a0a 100%)',
+    overflow: 'hidden'  // ← Esto elimina cualquier scroll
+  }}>
+    {/* HEADER PRINCIPAL - FIJO ARRIBA */}
+    <div style={styles.header}>
+      <button onClick={handleVolver} style={styles.backButton}>← Panel</button>
+      <div style={styles.spacer}></div>
+      <div style={styles.headerRight}>
+        <div style={styles.comercioBadge}>ID: {comercioId}</div>
+        
+        {/* Botón Vista Previa */}
+        <button onClick={handleVerPreview} style={styles.previewButton}>
+          👁️ Vista Previa
         </button>
-        <h1 style={styles.title}>🔱 Panel de Control</h1>
-        <div style={styles.headerRight}>
-          <div style={styles.comercioBadge}>ID: {comercioId}</div>
-          
-          {/* Botón Vista Previa */}
-          <button onClick={handleVerPreview} style={styles.previewButton}>
-            👁️ Vista Previa
-          </button>
-          
-          {/* Botones de Publicar/Descartar (solo en dashboard) */}
-          {vista === 'dashboard' && (
-            <>
-              {hayCambios ? (
-                <>
-                  <button onClick={handleDescartar} style={styles.discardButton}>
-                    🗑️ Descartar
-                  </button>
-                  <button onClick={handlePublicar} style={styles.publishButton}>
-                    🚀 Publicar
-                  </button>
-                </>
-              ) : (
-                <span style={styles.syncedBadge}>✅ Publicado</span>
-              )}
-            </>
-          )}
-          
-          <button onClick={handleLogout} style={styles.logoutButton}>
-            🚪 Cerrar Sesión
-          </button>
-        </div>
+        
+        {/* Botones de Publicar/Descartar */}
+        {vista === 'dashboard' && (
+          <>
+            {hayCambios ? (
+              <>
+                <button onClick={handleDescartar} style={styles.discardButton}>
+                  🗑️ Descartar
+                </button>
+                <button onClick={handlePublicar} style={styles.publishButton}>
+                  🚀 Publicar
+                </button>
+              </>
+            ) : (
+              <span style={styles.syncedBadge}>✅ Publicado</span>
+            )}
+          </>
+        )}
+        
+        <button onClick={handleLogout} style={styles.logoutButton}>
+          🚪 Cerrar Sesión
+        </button>
       </div>
+    </div>
 
-      {/* BANNER DE BORRADOR (solo en dashboard) */}
-      {vista === 'dashboard' && hayCambios && (
-        <div style={styles.draftBanner}>
-          ⚠️ Estás editando el BORRADOR. Los cambios NO son visibles para los clientes hasta que publiques.
-        </div>
-      )}
+    {/* BANNER DE PREVIEW */}
+    {/* BANNER DE PREVIEW - VERSIÓN MEJORADA */}
+{/* BANNER DE PREVIEW - VERSIÓN MEJORADA */}
+{/* BANNER DE PREVIEW - VERSIÓN MEJORADA */}
 
-      {/* BANNER DE PREVIEW */}
-      {vista === 'preview' && (
-        <div style={styles.previewBanner}>
-          <span>👁️ MODO PREVIEW - Así verán los clientes el menú (borrador actual)</span>
-          <button onClick={() => setVista('dashboard')} style={styles.backToDashboardBtn}>
-            ← Volver al Dashboard
-          </button>
-        </div>
-      )}
+{vista === 'preview' && (
+  <div style={styles.previewBanner}>
+    <div style={styles.previewBannerContent}>
+      <span style={styles.previewIcon}>🚀</span>
+      <div style={styles.previewTextWrapper}>
+       <span style={styles.previewText}>
+  <strong> Modo de visualización previa — Vuelva al Panel Administrativo — 
+  Presione <span style={styles.publishHighlight}>Publicar</span> para hacer visible su contenido al público.</strong>
+</span>
+      </div>
+    </div>
+  </div>
+)}
 
-      {/* CONTENIDO PRINCIPAL */}
+    {/* CONTENIDO PRINCIPAL - FIJO, SIN SCROLL */}
+    <div style={{
+      flex: 1,
+      overflow: 'hidden',  // ← Sin scroll
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
       {vista === 'dashboard' && (
         <AdminPage
           comercioId={comercioId}
@@ -187,6 +199,7 @@ export default function AdminComercio({ comercioId, onBack }) {
           setFinishedOrders={setFinishedOrders}
           onBack={onBack}
           isDraftMode={true}
+          fixedMode={true}  // ← Nueva prop para indicar modo fijo
         />
       )}
 
@@ -203,7 +216,24 @@ export default function AdminComercio({ comercioId, onBack }) {
         />
       )}
     </div>
-  );
+
+    {/* PIE DE PÁGINA - FIJO ABAJO */}
+    {vista === 'dashboard' && hayCambios && (
+      <div style={{
+        padding: '0.5rem 2rem',
+        background: 'rgba(20, 10, 5, 0.95)',
+        backdropFilter: 'blur(10px)',
+        borderTop: '1px solid rgba(255, 193, 7, 0.3)',
+        color: '#ffc107',
+        fontSize: '0.8rem',
+        textAlign: 'center',
+        flexShrink: 0  // ← No se encoge
+      }}>
+        ⚠️ Estás editando el BORRADOR. Los cambios NO son visibles para los clientes hasta que publiques.
+      </div>
+    )}
+  </div>
+);
 }
 
 const styles = {
@@ -296,14 +326,7 @@ const styles = {
     fontSize: '0.9rem',
     fontWeight: '600',
     transition: 'all 0.2s ease',
-  },
-  draftBanner: {
-    padding: '0.5rem 2rem',
-    background: 'rgba(255, 193, 7, 0.15)',
-    borderBottom: '1px solid rgba(255, 193, 7, 0.3)',
-    color: '#ffc107',
-    fontSize: '0.85rem',
-    textAlign: 'center',
+  
   },
   previewBanner: {
     padding: '0.5rem 2rem',
@@ -325,6 +348,35 @@ const styles = {
     fontSize: '0.8rem',
     transition: 'all 0.2s ease',
   },
+  spacer: {
+  flex: 1, // Ocupa el espacio sobrante
+  },
+  previewBannerContent: {
+  display: 'flex',
+  alignItems: 'center',  // ← Alineación centrada (misma línea)
+  gap: '12px',           // ← Separación normal entre cohete y texto
+  maxWidth: '900px',
+},
+previewIcon: {
+  fontSize: '1.3rem',
+  lineHeight: 1,
+  flexShrink: 0,         // ← El cohete no se encoge
+},
+previewTextWrapper: {
+  display: 'flex',
+  alignItems: 'center',
+},
+previewText: {
+  lineHeight: 1.5,
+  letterSpacing: '0.3px',
+},
+publishHighlight: {
+  color: '#2ecc71',
+  fontWeight: '700',
+  marginLeft: '4px',
+  marginRight: '4px',
+},
+  
 };
 
 // Estilos hover

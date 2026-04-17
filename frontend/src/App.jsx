@@ -202,7 +202,11 @@ console.log("  - COMERCIOS:", COMERCIOS?.length, "comercios");
   // RENDERIZADO PRINCIPAL
   // ============================================
   return (
-    <div style={{ height: '100vh', overflowY: 'auto', position: 'relative' }}>
+  <div style={{ 
+    height: '100vh', 
+    overflow: currentPage === 'comercio-admin' || currentPage === 'admin' ? 'hidden' : 'auto',
+    position: 'relative' 
+  }}>
       {currentPage === 'comercio-login' && (
         <LoginComercio
           onLogin={(id) => {

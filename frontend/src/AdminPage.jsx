@@ -77,92 +77,86 @@ export default function AdminPage({
     }
   };
 
-  return (
-    <section className="admin-page">
-      <div style={{
-  marginBottom: '1.5rem',
-  padding: '0.5rem 1.2rem',           // ← padding reducido
-  background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 69, 0, 0.1) 100%)',
-  borderRadius: '28px',
-  border: '1px solid rgba(255, 215, 0, 0.3)',
-  backdropFilter: 'blur(10px)',
-  WebkitBackdropFilter: 'blur(10px)',
-  textAlign: 'center',
-  position: 'relative'               // ← para posicionar el botón X
-}}>
-  {/* Botón de cierre (X) */}
-  <button
-    onClick={onBack}
-    style={{
-      position: 'absolute',
-      top: '12px',
-      right: '16px',
-      background: 'rgba(0, 0, 0, 0.4)',
-      border: 'none',
-      borderRadius: '20px',
-      width: '32px',
-      height: '32px',
-      fontSize: '1.2rem',
-      cursor: 'pointer',
-      color: '#FFD700',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      transition: 'all 0.2s ease',
-      backdropFilter: 'blur(4px)'
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.background = 'rgba(255, 69, 0, 0.6)';
-      e.currentTarget.style.color = 'white';
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)';
-      e.currentTarget.style.color = '#FFD700';
-    }}
-  >
-    ✕
-  </button>
+    return (
+  <section className="admin-page" style={{
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',  // ← Sin scroll
+    padding: '1.5rem',
+    paddingBottom: '0'
+  }}>
+      {/* HERO - FIJO */}
+    <div style={{
+      marginBottom: '1.5rem',
+      padding: '1rem 1.5rem',
+      background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 69, 0, 0.03) 100%)',
+      borderRadius: '50px',
+      border: '1px solid rgba(255, 215, 0, 0.15)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
+      textAlign: 'center',
+      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',
+      flexShrink: 0  // ← No se encoge
+    }}>
+        
+        {/* Línea Principal: Icono + Título */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '12px',
+          marginBottom: '6px'
+        }}>
+          <span style={{ 
+            fontSize: '2.2rem', 
+            lineHeight: 1,
+            filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.6))'
+          }}>
+            🔱
+          </span>
+          
+          <h2 style={{
+            margin: 0,
+            fontSize: '1.7rem',
+            fontWeight: '700',
+            background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            letterSpacing: '0.5px'
+          }}>
+            Panel Administrativo
+          </h2>
+        </div>
 
-  <div style={{
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: 'linear-gradient(135deg, #FFD700, #FF4500)',
-    width: '48px',                   // ← tamaño reducido
-    height: '48px',
-    borderRadius: '24px',
-    marginBottom: '0.5rem',          // ← margen reducido
-    boxShadow: '0 4px 12px rgba(255, 215, 0, 0.3)'
-  }}>
-    <span style={{ fontSize: '1.6rem' }}>🔱</span>
-  </div>
-  <h2 style={{
-    margin: '0 0 0.25rem 0',         // ← margen reducido
-    fontSize: '1.2rem',              // ← tamaño reducido
-    fontWeight: '600',
-    background: 'linear-gradient(135deg, #FFD700, #FF4500)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text'
-  }}>
-    Dashboard Administrativo
-  </h2>
-  <p style={{
-    margin: 0,
-    color: 'rgba(255, 255, 255, 0.85)',
-    fontSize: '0.9rem',              // ← tamaño reducido
-    letterSpacing: '1px'
-  }}>
-    Gestión integral del restaurante
-  </p>
-</div>
+        {/* Subtítulo */}
+        <p style={{
+          margin: 0,
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: '0.8rem',
+          letterSpacing: '3px',
+          //textTransform: 'uppercase',
+          fontWeight: '500',
+          wordSpacing: '4px'
+        }}>
+          Gestión integral del comercio
+        </p>
+      </div>
+
+      {/* Acordeon y demás componentes... */}
+       <div style={{
+      flex: 1,
+      overflowY: 'auto',  // ← Solo el acordeon puede hacer scroll si es necesario
+      paddingBottom: '0.5rem'
+    }}>
       <Acordeon
         menuItems={menuItems}
         finishedOrders={finishedOrders}
-        setFinishedOrders={setFinishedOrders} // 👈 Importante pasar los setters
+        setFinishedOrders={setFinishedOrders}
         pendingOrders={pendingOrders}
         log={log}
-        addLog={addLog} // 👈 Para que el acordeón registre logs si es necesario
+        addLog={addLog}
         total={total}
         onOpenDrawer={() => setDrawerOpen(true)}
         onOpenOrders={() => setOrdersOpen(true)}
@@ -170,8 +164,11 @@ export default function AdminPage({
         onOpenPromos={() => setPromosOpen(true)}
         onCierreJornada={handleCierreJornada}
         onPayment={handlePayment}
+        isDraftMode={true}
       />
+    </div>
 
+      {/* ... Resto del código (Drawers y Modales) ... */}
       <EditMenuDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} comercioId={comercioId} menuItems={menuItems} onSave={onSaveMenu} />
 
       <ComandasDrawer
@@ -235,7 +232,9 @@ export default function AdminPage({
           cursor: pointer;
           font-size: 1.2rem;
         }
-      `}</style>
+      `}      </style>
+
+      
     </section>
   );
 }
