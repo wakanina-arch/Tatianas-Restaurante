@@ -29,7 +29,6 @@ export default function AdminPage({
 
   const handleArchivarPedido = (order) => {
     setArchivedOrders(prev => [...prev, order]);
-    // Quitamos de terminados al archivar
     setFinishedOrders(prev => prev.filter(o => o.id !== order.id));
     
     addLog({
@@ -77,98 +76,94 @@ export default function AdminPage({
     }
   };
 
-    return (
-  <section className="admin-page" style={{
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',  // ← Sin scroll
-    padding: '1.5rem',
-    paddingBottom: '0'
-  }}>
-      {/* HERO - FIJO */}
-    <div style={{
-      marginBottom: '1.5rem',
-      padding: '1rem 1.5rem',
-      background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 69, 0, 0.03) 100%)',
-      borderRadius: '50px',
-      border: '1px solid rgba(255, 215, 0, 0.15)',
-      backdropFilter: 'blur(10px)',
-      WebkitBackdropFilter: 'blur(10px)',
-      textAlign: 'center',
-      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',
-      flexShrink: 0  // ← No se encoge
+  return (
+    <section className="admin-page" style={{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      padding: '0.75rem',
+      paddingBottom: '0'
     }}>
-        
-        {/* Línea Principal: Icono + Título */}
+      {/* HERO COMPACTO */}
+      <div style={{
+        marginBottom: '0.75rem',
+        padding: '0.75rem 1rem',
+        background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 69, 0, 0.03) 100%)',
+        borderRadius: '40px',
+        border: '1px solid rgba(255, 215, 0, 0.15)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        textAlign: 'center',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+        flexShrink: 0
+      }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '12px',
-          marginBottom: '6px'
+          gap: '8px',
+          marginBottom: '4px'
         }}>
           <span style={{ 
-            fontSize: '2.2rem', 
+            fontSize: '1.8rem', 
             lineHeight: 1,
-            filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.6))'
+            filter: 'drop-shadow(0 0 8px rgba(255,215,0,0.5))'
           }}>
             🔱
           </span>
           
           <h2 style={{
             margin: 0,
-            fontSize: '1.7rem',
+            fontSize: 'clamp(1.2rem, 5vw, 1.5rem)',
             fontWeight: '700',
             background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
-            letterSpacing: '0.5px'
+            letterSpacing: '0.3px'
           }}>
             Panel Administrativo
           </h2>
         </div>
 
-        {/* Subtítulo */}
         <p style={{
           margin: 0,
           color: 'rgba(255, 255, 255, 0.7)',
-          fontSize: '0.8rem',
-          letterSpacing: '3px',
-          //textTransform: 'uppercase',
+          fontSize: '0.65rem',
+          letterSpacing: '2px',
           fontWeight: '500',
-          wordSpacing: '4px'
+          wordSpacing: '3px'
         }}>
           Gestión integral del comercio
         </p>
       </div>
 
-      {/* Acordeon y demás componentes... */}
-       <div style={{
-      flex: 1,
-      overflowY: 'auto',  // ← Solo el acordeon puede hacer scroll si es necesario
-      paddingBottom: '0.5rem'
-    }}>
-      <Acordeon
-        menuItems={menuItems}
-        finishedOrders={finishedOrders}
-        setFinishedOrders={setFinishedOrders}
-        pendingOrders={pendingOrders}
-        log={log}
-        addLog={addLog}
-        total={total}
-        onOpenDrawer={() => setDrawerOpen(true)}
-        onOpenOrders={() => setOrdersOpen(true)}
-        onOpenLog={() => setLogOpen(true)}
-        onOpenPromos={() => setPromosOpen(true)}
-        onCierreJornada={handleCierreJornada}
-        onPayment={handlePayment}
-        isDraftMode={true}
-      />
-    </div>
+      {/* ACORDEON */}
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
+        paddingBottom: '0.5rem'
+      }}>
+        <Acordeon
+          menuItems={menuItems}
+          finishedOrders={finishedOrders}
+          setFinishedOrders={setFinishedOrders}
+          pendingOrders={pendingOrders}
+          log={log}
+          addLog={addLog}
+          total={total}
+          onOpenDrawer={() => setDrawerOpen(true)}
+          onOpenOrders={() => setOrdersOpen(true)}
+          onOpenLog={() => setLogOpen(true)}
+          onOpenPromos={() => setPromosOpen(true)}
+          onCierreJornada={handleCierreJornada}
+          onPayment={handlePayment}
+          isDraftMode={true}
+        />
+      </div>
 
-      {/* ... Resto del código (Drawers y Modales) ... */}
+      {/* DRAWERS Y MODALES */}
       <EditMenuDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} comercioId={comercioId} menuItems={menuItems} onSave={onSaveMenu} />
 
       <ComandasDrawer
@@ -216,7 +211,7 @@ export default function AdminPage({
         .modal-content {
           background: white;
           border-radius: 24px;
-          padding: 2.5rem;
+          padding: 1.5rem;
           max-width: 500px;
           width: 90%;
           position: relative;
@@ -224,17 +219,20 @@ export default function AdminPage({
         }
         .modal-close {
           position: absolute;
-          top: 15px; right: 15px;
+          top: 10px; right: 10px;
           background: #f0f0f0;
           border: none;
-          width: 35px; height: 35px;
+          width: 30px; height: 30px;
           border-radius: 50%;
           cursor: pointer;
-          font-size: 1.2rem;
+          font-size: 1rem;
         }
-      `}      </style>
-
-      
+        @media (max-width: 480px) {
+          .modal-content {
+            padding: 1rem;
+          }
+        }
+      `}</style>
     </section>
   );
 }
