@@ -1,165 +1,110 @@
+import React from "react";
 import CodigoQR from "./CodigoQR";
 
-export default function TicketModal({ open, onClose, order }) {
+// Asegúrate de recibir 'user' como prop para que no de error al buscar el RUC
+export default function TicketModal({ open, onClose, order, user }) {
   if (!open || !order) return null;
 
-  // Recuperar la frase guardada
   const fraseGuardada = JSON.parse(localStorage.getItem('fraseOraculo') || '{}');
   const { texto = "El barro espera paciente a que lo moldees.", icono = "⛰️" } = fraseGuardada;
+
+  const handlePrintAndSend = async () => {
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    // CORRECCIÓN: También usamos Number() aquí para evitar el error en el mensaje de WA
+    const mensajeWA = `*¡Hola! Mi pedido es el #${order.numero || order.ordenId}*%0A` +
+      `--------------------------%0A` +
+      order.items.map(i => `- ${i.cantidad}x ${i.nombre}`).join('%0A') +
+      `%0A--------------------------%0A` +
+      `*Total: $${Number(order.total || 0).toFixed(2)}*%0A%0A` + // ← CORREGIDO
+      `_Ref: ${texto}_`;
+
+    // CORRECCIÓN: Falta el "/" y "?" en la URL de WhatsApp
+    const urlWA = `https://wa.me{mensajeWA}`;
+
+    const ticketElement = document.querySelector('.ticket-content');
+    const ticketClone = ticketElement.cloneNode(true);
+    ticketClone.querySelectorAll('button').forEach(b => b.remove());
+
+    const htmlContent = `<html><head><style>body{display:flex;justify-content:center;padding:20px;background:#f0f0f0;font-family:sans-serif;}.ticket-content{background:white;padding:2rem;border-radius:32px;max-width:350px;}</style></head><body>${ticketClone.innerHTML}</body></html>`;
+    
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Ticket_${order.numero || '001'}.html`;
+    a.click();
+
+    window.open(urlWA, '_blank');
+  };
 
   return (
     <div style={styles.overlay} onClick={onClose}>
       <div className="ticket-content" style={styles.modal} onClick={e => e.stopPropagation()}>
         
-        {/* Botón de impresión */}
         <div style={styles.printContainer}>
-  <button 
-    style={styles.printBtn} 
-    onClick={async () => {
-      // Esperar un momento para asegurar que el QR está renderizado
-      await new Promise(resolve => setTimeout(resolve, 200));
-      
-      // Capturar el QR como imagen
-      const qrCanvas = document.querySelector('#ticket-qr canvas');
-      let qrImageData = '';
-      
-      if (qrCanvas) {
-        qrImageData = qrCanvas.toDataURL('image/png');
-      } else {
-        console.error('No se encontró el canvas del QR');
-      }
-      
-      // Obtener el HTML del ticket actual
-      const ticketElement = document.querySelector('.ticket-content');
-      if (!ticketElement) {
-        alert('No se pudo capturar el ticket');
-        return;
-      }
-      
-      // Clonar el ticket
-      const ticketClone = ticketElement.cloneNode(true);
-      
-      // Reemplazar el QR original por la imagen capturada
-      if (qrImageData) {
-        const qrContainer = ticketClone.querySelector('#ticket-qr');
-        if (qrContainer) {
-          qrContainer.innerHTML = `<img src="${qrImageData}" style="width: 100px; height: 100px; border-radius: 12px;" />`;
-        }
-      }
-      
-      // Obtener todos los estilos de la página
-      const estilos = Array.from(document.querySelectorAll('style')).map(style => style.innerHTML).join('');
-      
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <title>Ticket ${order.numero || order.ordenId || 'OTO-001'}</title>
-          <style>${estilos}</style>
-          <style>
-            body {
-              margin: 0;
-              padding: 20px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              min-height: 100vh;
-              background: #f5f5f5;
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            }
-            .ticket-content {
-  max-width: 400px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-}
-          </style>
-        </head>
-        <body>
-          body {
-  margin: 0;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: #f5f5f5;
-}
-        </body>
-        </html>
-      `;
-      
-      // Crear archivo HTML para descargar
-      const blob = new Blob([htmlContent], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `ticket_${order.numero || order.ordenId || 'OTO-001'}.html`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      alert('✅ Revisa tu correo electrónico; WhatsApp!');
-    }}
-  >
-    <span style={styles.printIcon}>📬</span>
-  </button>
-  <span style={styles.printText}>Imprime<br />Ticket</span>
-</div>
+          <button style={styles.printBtn} onClick={handlePrintAndSend}>
+            <span style={styles.printIcon}>📬</span>
+          </button>
+          <span style={styles.printText}>Enviar<br />Ticket</span>
+        </div>
 
-        {/* QR CODE - TOP (PRIMERO) */}
-        <CodigoQR valor={order.numero || order.ordenId || "OTO-001"} tamaño={130} />
-        
-        {/* ORDER NUMBER */}
+        <div id="ticket-qr" style={styles.qrContainer}>
+          <CodigoQR valor={order.numero || order.ordenId || "OTO-001"} tamaño={130} />
+        </div>
+
         <div style={styles.orderInfo}>
           <span style={styles.orderLabel}>Nº DE PEDIDO:</span>
           <span style={styles.orderNumber}>{order.numero || order.ordenId || "OTO-001"}</span>
         </div>
 
-        {/* RESUMEN DE COMPRA */}
+        <div style={styles.fiscalInfo}>
+          <span style={styles.fiscalText}>
+            {user?.restaurante?.nombreLegal || "Nombre del Comercio"}
+          </span>
+          <span style={styles.fiscalText}>
+            RUC/NIT: {user?.restaurante?.ruc || "0000000000"}
+          </span>
+          <span style={styles.fiscalText}>
+            Fecha: {new Date().toLocaleString('es-ES')}
+          </span>
+        </div>
+
         <div style={styles.summaryCard}>
           <h3 style={styles.summaryTitle}>Resumen de Compra</h3>
           <div style={styles.itemsList}>
             {order.items?.map((item, idx) => (
               <div key={item.id || idx} style={styles.itemRow}>
                 <span style={styles.itemName}>{item.cantidad} x {item.nombre}</span>
-                <span style={styles.itemPrice}>${item.precio?.toFixed(2)}</span>
+                <span style={styles.itemPrice}>
+                  ${Number(item.precio || 0).toFixed(2)}
+                </span>
               </div>
             ))}
           </div>
           <div style={styles.totalRow}>
             <span style={styles.totalLabel}>Total:</span>
-            <span style={styles.totalAmount}>${order.total?.toFixed(2)}</span>
+            <span style={styles.totalAmount}>
+              ${Number(order.total || 0).toFixed(2)}
+            </span>
           </div>
         </div>
 
-        {/* TRIDENTE COMO LOGO */}
         <div style={styles.tridenteContainer}>
           <span style={styles.tridenteIcon}>🔱</span>
         </div>
 
-        {/* 🌟 FRASE ESPIRITUAL - YELLOW BOX */}
         <div style={styles.fraseEspiritual}>
           <div style={styles.elementoIcono}>{icono}</div>
           <p style={styles.fraseTexto}>"{texto}"</p>
         </div>
 
-        {/* Botón finalizar */}
-        <button style={styles.finishBtn} onClick={onClose}>
+        <button style={styles.finishBtn} onClick={onClose} className="finish-btn">
           Finalizar y Cerrar
         </button>
 
-        {/* Enlace */}
         <div style={styles.linkContainer}>
-          <a 
-            href="https://tatianas-restaurante.vercel.app" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            style={styles.link}
-          >
+          <a href="https://vercel.app" target="_blank" style={styles.link}>
             🔱 OneToOne.app
           </a>
         </div>
@@ -167,6 +112,7 @@ export default function TicketModal({ open, onClose, order }) {
     </div>
   );
 }
+
 
 const styles = {
   overlay: {

@@ -5,17 +5,17 @@ export default function CategoriaTabs({ categorias, categoriaActiva, onSelectCat
   const activeTabRef = useRef(null);
 
   useEffect(() => {
-    // Auto-scroll del tab activo hacia el centro del contenedor
+    // 1. Mejora en el cálculo: Usamos scrollLeft con el offset del contenedor
     if (activeTabRef.current && containerRef.current) {
       const container = containerRef.current;
       const activeTab = activeTabRef.current;
       
-      const containerLeft = container.scrollLeft;
-      const containerWidth = container.clientWidth;
+      // Calculamos la posición relativa del tab dentro del contenedor
       const activeTabLeft = activeTab.offsetLeft;
       const activeTabWidth = activeTab.offsetWidth;
+      const containerWidth = container.clientWidth;
       
-      // Calcular para centrar el tab activo
+      // El objetivo es que el centro del tab coincida con el centro del contenedor
       const scrollTarget = activeTabLeft - (containerWidth / 2) + (activeTabWidth / 2);
       
       container.scrollTo({
@@ -24,35 +24,42 @@ export default function CategoriaTabs({ categorias, categoriaActiva, onSelectCat
       });
     }
   }, [categoriaActiva]);
+
   return (
-    <div style={styles.container} ref={containerRef}>
-      {categorias.map((cat) => (
-        <button
-          key={cat.id}
-          ref={categoriaActiva === cat.id ? activeTabRef : null}
-          onClick={() => onSelectCategoria(cat.id)}
-          style={{
-            ...styles.tab,
-            ...(categoriaActiva === cat.id ? styles.tabActivo : {}),
-          }}
-        >
-          <span style={styles.icono}>{cat.icono}</span>
-          <span style={styles.nombre}>{cat.nombre}</span>
-        </button>
-      ))}
-      
-      {/* DSH Button - Last position */}
-      {user?.rol === 'admin_restaurante' && setCurrentPage && (
-        <button
-          onClick={() => setCurrentPage('admin')}
-          style={{...styles.tab, ...styles.dshTab}}
-          title="Dashboard Admin"
-        >
-          <span style={styles.dshIcono}>⚙️</span>
-          <span style={styles.nombre}>DSH</span>
-        </button>
-      )}
-    </div>
+    <>
+      <div style={styles.container} ref={containerRef}>
+        {categorias.map((cat) => (
+          <button
+            key={cat.id}
+            // Importante: Solo el botón activo recibe la referencia
+            ref={categoriaActiva === cat.id ? activeTabRef : null}
+            onClick={() => onSelectCategoria(cat.id)}
+            style={{
+              ...styles.tab,
+              ...(categoriaActiva === cat.id ? styles.tabActivo : {}),
+            }}
+          >
+            <span style={styles.icono}>{cat.icono}</span>
+            <span style={styles.nombre}>{cat.nombre}</span>
+          </button>
+        ))}
+        
+        {user?.rol === 'admin_restaurante' && setCurrentPage && (
+          <button
+            onClick={() => setCurrentPage('admin')}
+            style={{...styles.tab, ...styles.dshTab}}
+          >
+            <span style={styles.dshIcono}>⚙️</span>
+            <span style={styles.nombre}>DSH</span>
+          </button>
+        )}
+      </div>
+      {/* Ocultamos scrollbar manteniendo funcionalidad */}
+      <style>{`
+        #tabs-container::-webkit-scrollbar { display: none; }
+        #tabs-container { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
+    </>
   );
 }
 
@@ -60,58 +67,47 @@ const styles = {
   container: {
     display: 'flex',
     overflowX: 'auto',
-    gap: '12px',
+    gap: '10px', // Un poco más ajustado para minimalismo
     padding: '12px 16px',
-    background: 'rgba(20, 10, 10, 0.75)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    borderBottom: '1px solid rgba(255,215,0,0.15)',
+    background: 'rgba(15, 15, 15, 0.8)', // Más oscuro para que resalte el dorado
+    backdropFilter: 'blur(15px)',
+    WebkitBackdropFilter: 'blur(15px)',
+    borderBottom: '1px solid rgba(255, 215, 0, 0.2)',
     position: 'sticky',
-    top: '60px',
-    zIndex: 15,
+    top: '0', // Asegúrate de que coincida con tu header
+    zIndex: 100,
     scrollBehavior: 'smooth',
+    WebkitOverflowScrolling: 'touch', // Scroll suave en iOS
   },
   tab: {
     display: 'flex',
     alignItems: 'center',
-    gap: '4px',
-    padding: '8px 12px',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '30px',
-    color: 'rgba(255, 255, 255, 0.6)',
+    justifyContent: 'center',
+    gap: '6px',
+    padding: '8px 16px',
+    background: 'rgba(255, 255, 255, 0.03)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '20px',
+    color: 'rgba(255, 255, 255, 0.5)',
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     whiteSpace: 'nowrap',
-    fontSize: '0.85rem',
-    fontWeight: '500',
-    position: 'relative',
+    flexShrink: 0, // CRITICO: Evita que el texto se amontone en móvil
+    outline: 'none',
   },
   tabActivo: {
-    background: 'rgba(255, 215, 0, 0.15)',
+    background: 'rgba(255, 215, 0, 0.12)',
     color: '#FFD700',
-    border: '1px solid rgb(255,215,0,0.3)',
-    fontWeight: '700',
-    position: 'relative',
-    boxShadow: '0 0 15px rgba(255, 215, 0, 0.2)',
+    borderColor: 'rgba(255, 215, 0, 0.4)',
+    transform: 'scale(1.05)', // Pequeño efecto de realce
+    boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
   },
-  icono: {
-    fontSize: '1.1rem',
-  },
-  nombre: {
-    fontSize: '0.8rem',
-    fontWeight: '500',
-  },
+  icono: { fontSize: '1rem' },
+  nombre: { fontSize: '0.85rem', fontWeight: '600' },
   dshTab: {
-    background: 'rgba(0, 168, 107, 0.1)',
+    background: 'rgba(20, 20, 20, 0.5)',
+    borderColor: '#00ffd933',
     color: '#00ffd9',
-    border: '1px solid rgba(0, 255, 217, 0.3)',
-    fontWeight: '600',
-    marginLeft: 'auto',
-    boxShadow: 'none',
-    transition: 'all 0.2s ease',
   },
-  dshIcono: {
-    fontSize: '1rem',
-  },
+  dshIcono: { fontSize: '0.9rem' }
 };

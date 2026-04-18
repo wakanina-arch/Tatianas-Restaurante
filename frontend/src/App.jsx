@@ -373,7 +373,7 @@ function CartPage({ addLog, setPendingOrders, user, onVolverAlMenu }) {
 
   return (
     <section style={cartStyles.container}>
-      <h2 style={cartStyles.pageTitle}>Revisa tu Carrito 🔱</h2>
+      <h2 style={cartStyles.pageTitle}>Revisa tu Compra 🔱</h2>
       <div style={cartStyles.cartCard}>
         <div style={cartStyles.itemsList}>
           {cartItems.map(item => (
@@ -416,7 +416,7 @@ function CartSummary({ total, onCheckout, user, onVolver }) {
       <div style={cartStyles.summaryRow}><span>Envío</span><span style={{ color: '#34c759' }}>Gratis</span></div>
       <div style={cartStyles.totalRow}><span>Total</span><span style={cartStyles.totalAmount}>${total}</span></div>
       <button onClick={onCheckout} style={cartStyles.checkoutBtn}>Proceder al Pago</button>
-      <button onClick={onVolver} style={cartStyles.backBtn}>🍽️ Seguir Comprando</button>
+      <button onClick={onVolver} style={cartStyles.backBtn}>🔱 Seguir Comprando</button>
     </div>
   );
 }

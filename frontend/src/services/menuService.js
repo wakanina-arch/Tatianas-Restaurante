@@ -66,13 +66,20 @@ export const saveMenuBorrador = (comercioId, menu) => {
 export const publicarMenu = (comercioId) => {
   try {
     const borrador = getMenuBorrador(comercioId);
+    
+    // ✅ SOLUCIÓN: Filtrar platos marcados como eliminados
+    const menuLimpio = borrador.map(categoria => ({
+      ...categoria,
+      opciones: categoria.opciones.filter(opt => !opt._deleted)
+    }));
+    
     const key = `menu_comercio_${comercioId}`;
-    localStorage.setItem(key, JSON.stringify(borrador));
+    localStorage.setItem(key, JSON.stringify(menuLimpio));
     
-    // Opcional: guardar timestamp de publicación
-    localStorage.setItem(`last_publish_${comercioId}`, new Date().toISOString());
+    // Actualizar también el borrador para que quede limpio
+    localStorage.setItem(`borrador_comercio_${comercioId}`, JSON.stringify(menuLimpio));
     
-    return { success: true, menu: borrador };
+    return { success: true, menu: menuLimpio };
   } catch (e) {
     console.error('Error publicando menú:', e);
     return { success: false, error: e.message };
