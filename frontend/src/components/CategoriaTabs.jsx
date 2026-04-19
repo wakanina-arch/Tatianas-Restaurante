@@ -5,21 +5,20 @@ export default function CategoriaTabs({ categorias, categoriaActiva, onSelectCat
   const activeTabRef = useRef(null);
 
   useEffect(() => {
-    // 1. Mejora en el cálculo: Usamos scrollLeft con el offset del contenedor
+    // Sincronización del scroll lateral cuando cambia la categoría activa
     if (activeTabRef.current && containerRef.current) {
       const container = containerRef.current;
       const activeTab = activeTabRef.current;
-      
-      // Calculamos la posición relativa del tab dentro del contenedor
+
+      const containerWidth = container.clientWidth;
       const activeTabLeft = activeTab.offsetLeft;
       const activeTabWidth = activeTab.offsetWidth;
-      const containerWidth = container.clientWidth;
       
-      // El objetivo es que el centro del tab coincida con el centro del contenedor
+      // Calculamos la posición para que el tab quede centrado
       const scrollTarget = activeTabLeft - (containerWidth / 2) + (activeTabWidth / 2);
       
       container.scrollTo({
-        left: scrollTarget,
+        left: Math.max(0, scrollTarget),
         behavior: 'smooth'
       });
     }
@@ -28,36 +27,46 @@ export default function CategoriaTabs({ categorias, categoriaActiva, onSelectCat
   return (
     <>
       <div style={styles.container} ref={containerRef}>
-        {categorias.map((cat) => (
-          <button
-            key={cat.id}
-            // Importante: Solo el botón activo recibe la referencia
-            ref={categoriaActiva === cat.id ? activeTabRef : null}
-            onClick={() => onSelectCategoria(cat.id)}
-            style={{
-              ...styles.tab,
-              ...(categoriaActiva === cat.id ? styles.tabActivo : {}),
-            }}
-          >
-            <span style={styles.icono}>{cat.icono}</span>
-            <span style={styles.nombre}>{cat.nombre}</span>
-          </button>
-        ))}
+        {categorias.map((cat) => {
+          const isActive = categoriaActiva === cat.id;
+          
+          return (
+            <button
+              key={cat.id}
+              // RE-ACTIVADO: Sin esta ref, el scroll automático no funciona
+              ref={isActive ? activeTabRef : null}
+              onClick={() => onSelectCategoria(cat.id)}
+              style={{
+                ...styles.tab,
+                ...(isActive ? styles.tabActivo : {}),
+              }}
+            >
+              <span style={styles.icono}>{cat.icono}</span>
+              <span style={styles.nombre}>{cat.nombre}</span>
+            </button>
+          );
+        })}
         
         {user?.rol === 'admin_restaurante' && setCurrentPage && (
           <button
             onClick={() => setCurrentPage('admin')}
             style={{...styles.tab, ...styles.dshTab}}
+            title="Dashboard Admin"
           >
             <span style={styles.dshIcono}>⚙️</span>
             <span style={styles.nombre}>DSH</span>
           </button>
         )}
       </div>
-      {/* Ocultamos scrollbar manteniendo funcionalidad */}
+      {/* Estilo para ocultar scrollbar manteniendo funcionalidad */}
       <style>{`
-        #tabs-container::-webkit-scrollbar { display: none; }
-        #tabs-container { -ms-overflow-style: none; scrollbar-width: none; }
+        div::-webkit-scrollbar {
+          display: none;
+        }
+        div {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
       `}</style>
     </>
   );
@@ -67,47 +76,57 @@ const styles = {
   container: {
     display: 'flex',
     overflowX: 'auto',
-    gap: '10px', // Un poco más ajustado para minimalismo
-    padding: '12px 16px',
-    background: 'rgba(15, 15, 15, 0.8)', // Más oscuro para que resalte el dorado
-    backdropFilter: 'blur(15px)',
-    WebkitBackdropFilter: 'blur(15px)',
-    borderBottom: '1px solid rgba(255, 215, 0, 0.2)',
+    gap: '8px',
+    padding: '10px 12px',
+    background: 'rgba(20, 10, 10, 0.85)', // Un poco más opaco para legibilidad
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+    borderBottom: '1px solid rgba(255,215,0,0.15)',
     position: 'sticky',
-    top: '0', // Asegúrate de que coincida con tu header
+    top: 0, // Ajustado para que pegue al tope si el padre lo permite
     zIndex: 100,
     scrollBehavior: 'smooth',
-    WebkitOverflowScrolling: 'touch', // Scroll suave en iOS
+    msOverflowStyle: 'none',
+    scrollbarWidth: 'none',
   },
   tab: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: '6px',
     padding: '8px 16px',
-    background: 'rgba(255, 255, 255, 0.03)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    borderRadius: '20px',
-    color: 'rgba(255, 255, 255, 0.5)',
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '30px',
+    color: 'rgba(255, 255, 255, 0.7)',
     cursor: 'pointer',
-    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     whiteSpace: 'nowrap',
-    flexShrink: 0, // CRITICO: Evita que el texto se amontone en móvil
+    fontSize: '0.85rem',
+    fontWeight: '500',
+    flexShrink: 0,
     outline: 'none',
   },
   tabActivo: {
-    background: 'rgba(255, 215, 0, 0.12)',
+    background: 'rgba(255, 215, 0, 0.15)',
     color: '#FFD700',
-    borderColor: 'rgba(255, 215, 0, 0.4)',
-    transform: 'scale(1.05)', // Pequeño efecto de realce
-    boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+    border: '1px solid rgba(255, 215, 0, 0.5)',
+    fontWeight: '700',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+    transform: 'scale(1.05)',
   },
-  icono: { fontSize: '1rem' },
-  nombre: { fontSize: '0.85rem', fontWeight: '600' },
+  icono: {
+    fontSize: '1rem',
+  },
+  nombre: {
+    fontSize: '0.75rem',
+  },
   dshTab: {
-    background: 'rgba(20, 20, 20, 0.5)',
-    borderColor: '#00ffd933',
+    background: 'rgba(0, 168, 107, 0.1)',
     color: '#00ffd9',
+    border: '1px solid rgba(0, 255, 217, 0.3)',
+    marginLeft: '12px',
   },
-  dshIcono: { fontSize: '0.9rem' }
+  dshIcono: {
+    fontSize: '0.9rem',
+  },
 };

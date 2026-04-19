@@ -1,123 +1,116 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ComercioHeader from '../components/ComercioHeader';
 import CategoriaTabs from '../components/CategoriaTabs';
 import PlatoCard from '../components/PlatoCard';
 import { useCart } from '../CartContext';
 
-// Inyectar animación gelatinosa
+// Animación gelatinosa limpia
 if (typeof document !== 'undefined' && !document.getElementById('jelly-style')) {
   const s = document.createElement('style');
   s.id = 'jelly-style';
   s.textContent = `
     @keyframes jellyIn {
-      0% { transform: scale(0.99); opacity: 0.4; }
+      0% { transform: scale(0.98); opacity: 0.5; }
       100% { transform: scale(1); opacity: 1; }
     }
-    .jelly-section {
-      animation: jellyIn 0.6s ease both;
-    }
+    .jelly-section { animation: jellyIn 0.5s ease both; }
   `;
   document.head.appendChild(s);
 }
 
-
 export default function HomePage({ 
-  comercio, 
-  platillos, 
-  user, 
-  itemCount, 
-  onOpenPerfil, 
-  onOpenMenu, 
-  onBackToWelcome,
-  setCurrentPage
+  comercio, platillos, user, setCurrentPage 
 }) {
-  const [categoriaActiva, setCategoriaActiva] = useState(() => {
-    if (platillos && platillos.length > 0) {
-      return platillos[0].nombre; // Primera categoría real
-    }
-    return 'Picoteo'; // Fallback
-  });
-  const [platoSeleccionado, setPlatoSeleccionado] = useState(null);
-  const [carrito, setCarrito] = useState({});
-  const seccionesRef = useRef({});
-  const sentinelRef = useRef({});
+  const [categoriaActiva, setCategoriaActiva] = useState('Picoteo');
   const { addToCart } = useCart();
+  
+  const seccionesRef = useRef({});
+  const isScrollingRef = useRef(false); // Bloqueo para evitar saltos al hacer clic
 
   const categorias = [
-  { id: 'Picoteo', nombre: 'PICOTEO', icono: '🍢' },
-  { id: 'Entrantes', nombre: 'ENTRANTES', icono: '🍤' },
-  { id: 'Gourmets', nombre: 'GOURMETS', icono: '🍷' },
-  { id: 'Escuderos', nombre: 'ESCUDEROS', icono: '🥘' },
-  { id: 'Zombies', nombre: 'ZOMBIES', icono: '🍕' },
-  { id: 'FastFurious', nombre: 'FAST&FURIOUS', icono: '🏎️' },
-  { id: 'Postres', nombre: 'POSTRES', icono: '🍰' },
-  { id: 'Bebidas', nombre: 'BEBIDAS', icono: '🥤' },
-];
+    { id: 'Picoteo', nombre: 'PICOTEO', icono: '🍢' },
+    { id: 'Entrantes', nombre: 'ENTRANTES', icono: '🍤' },
+    { id: 'Gourmets', nombre: 'GOURMETS', icono: '🍷' },
+    { id: 'Escuderos', nombre: 'ESCUDEROS', icono: '🥘' },
+    { id: 'Zombies', nombre: 'ZOMBIES', icono: '🍕' },
+    { id: 'FastFurious', nombre: 'FAST&FURIOUS', icono: '🏎️' },
+    { id: 'Postres', nombre: 'POSTRES', icono: '🍰' },
+    { id: 'Bebidas', nombre: 'BEBIDAS', icono: '🥤' },
+  ];
 
   const platillosPorCategoria = (categoriaId) => {
-  const categoria = platillos.find(p => p.nombre === categoriaId);
-  return categoria?.opciones || [];
-};
+    return platillos?.find(p => p.nombre === categoriaId)?.opciones || [];
+  };
 
+  // 1. Efecto para detectar qué categoría está en pantalla
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-150px 0px -70% 0px', // Detecta cuando el título entra en la zona superior
+      threshold: 0
+    };
+
+    const observerCallback = (entries) => {
+      if (isScrollingRef.current) return; // No actualizar si estamos haciendo scroll por clic
+
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setCategoriaActiva(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    Object.values(seccionesRef.current).forEach(section => {
+      if (section) observer.observe(section);
+    });
+
+    return () => observer.disconnect();
+  }, [platillos]);
+
+  // 2. Scroll al hacer clic en Tab
   const scrollASeccion = (categoriaId) => {
+    isScrollingRef.current = true;
     setCategoriaActiva(categoriaId);
-    seccionesRef.current[categoriaId]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const elemento = seccionesRef.current[categoriaId];
+    if (elemento) {
+      const offset = 140; // Ajuste según la altura de tus headers sticky
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = elemento.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+
+    // Liberar el bloqueo tras terminar el scroll
+    setTimeout(() => { isScrollingRef.current = false; }, 800);
   };
 
   const updateCarrito = (plato, cantidad) => {
-  if (cantidad > 0) {
-    addToCart({
-      id: plato.id || `${plato.nombre}-${Date.now()}`,
-      nombre: plato.nombre,
-      precio: plato.precio,
-      cantidad: cantidad,
-      imagen: plato.imagen || plato.imagenes?.[0],
-    });
-  }
-};
+    if (cantidad > 0) {
+      addToCart({
+        id: plato.id || `${plato.nombre}-${Date.now()}`,
+        nombre: plato.nombre,
+        precio: plato.precio,
+        cantidad,
+        imagen: plato.imagen || plato.imagenes?.[0],
+      });
+    }
+  };
 
-  useEffect(() => {
-    // Scroll listener: la línea trigger está a 360px del top (debajo de tabs)
-    const TRIGGER_LINE = 360;
-    
-    const handleScroll = () => {
-      let categoriaVisible = null;
-      // Recorrer sentinels y encontrar el último cuyo top ya pasó la línea trigger
-      const ids = categorias.map(c => c.id);
-      for (let i = ids.length - 1; i >= 0; i--) {
-        const el = sentinelRef.current[ids[i]];
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= TRIGGER_LINE) {
-            categoriaVisible = ids[i];
-            break;
-          }
-        }
-      }
-      if (categoriaVisible && categoriaVisible !== categoriaActiva) {
-        setCategoriaActiva(categoriaVisible);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Chequear estado inicial
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [categorias, categoriaActiva]);
-
-  if (!comercio) {
-    return <div style={{ textAlign: 'center', padding: '2rem' }}>Cargando comercio...</div>;
-  }
+  if (!comercio) return <div style={{ color: 'white', textAlign: 'center' }}>Cargando...</div>;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#2a1414' }}>
-      {/* Header con imagen del comercio (sticky) */}
-      <div style={{ position: 'sticky', top: '60px', zIndex: 20 }}>
-        <ComercioHeader comercio={comercio} />
-      </div>
       
-      {/* Tabs de categorías (sticky) */}
-      <div style={{ position: 'sticky', top: '300px', zIndex: 15 }}>
+      <div style={{ position: 'sticky', top: 0, zIndex: 30 }}>
+        <ComercioHeader comercio={comercio} />
         <CategoriaTabs
           categorias={categorias}
           categoriaActiva={categoriaActiva}
@@ -127,32 +120,25 @@ export default function HomePage({
         />
       </div>
       
-      {/* Contenido principal (scroll) */}
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, paddingBottom: '100px' }}>
         {categorias.map((cat, i) => (
           <div
             key={cat.id}
+            id={cat.id}
             ref={(el) => (seccionesRef.current[cat.id] = el)}
-            data-categoria={cat.id}
             className="jelly-section"
-            style={{ scrollMarginTop: '320px', animationDelay: `${i * 0.07}s` }}
+            style={{ animationDelay: `${i * 0.05}s`, marginBottom: '20px' }}
           >
-            {/* Sentinel: línea invisible que activa el tab al cruzar bajo los tabs */}
-            <div
-              ref={(el) => (sentinelRef.current[cat.id] = el)}
-              data-categoria={cat.id}
-              style={{ height: '1px', background: '#2a1414', margin: 0, padding: 0 }}
-            />
             <h3 style={styles.seccionTitulo}>{cat.nombre}</h3>
             {platillosPorCategoria(cat.id).map((plato, idx) => (
-      <PlatoCard 
-  key={`${cat.id}-${idx}`} 
-  plato={plato} 
-  onUpdateCart={updateCarrito} 
-/>
-    ))}
-  </div>
-))}
+              <PlatoCard 
+                key={`${cat.id}-${idx}`} 
+                plato={plato} 
+                onUpdateCart={updateCarrito} 
+              />
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -160,12 +146,13 @@ export default function HomePage({
 
 const styles = {
   seccionTitulo: {
-    padding: '12px 16px 6px',
+    padding: '20px 16px 10px',
     margin: 0,
-    fontSize: '1.15rem',
-    fontWeight: '700',
-    color: '#037b05',
-    letterSpacing: '0.5px',
-    textShadow: '0 1px 3px rgba(0,0,0,0.3), 0 0 12px rgba(1, 64, 14, 0.25)',
+    fontSize: '1.2rem',
+    fontWeight: '800',
+    color: '#00c805',
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+    textShadow: '0 2px 4px rgba(0,0,0,0.5)',
   },
 };
