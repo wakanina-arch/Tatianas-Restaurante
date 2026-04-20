@@ -120,8 +120,14 @@ export default function AdminComercio({ comercioId, onBack }) {
         <div style={styles.spacer}></div>
         <div style={styles.headerRight}>
           <div style={styles.comercioBadge}>
-            <span className="hide-on-mobile">ID: </span>{comercioId}
-          </div>
+  <span style={{ marginRight: '6px', fontSize: '1rem' }}>🔱</span>
+  <span className="hide-on-mobile">
+    {comercioInfo?.nombre || `ID: ${comercioId}`}
+  </span>
+  <span className="show-on-mobile">
+    {comercioInfo?.nombre || `#${comercioId}`}
+  </span>
+</div>
           
           <button onClick={handleVerPreview} style={styles.previewButton} title="Vista Previa">
             👁️ <span className="hide-on-mobile">Vista Previa</span>
@@ -213,13 +219,20 @@ export default function AdminComercio({ comercioId, onBack }) {
       )}
       
       {/* ESTILOS RESPONSIVE */}
-      <style>{`
-        @media (max-width: 480px) {
-          .hide-on-mobile {
-            display: none !important;
-          }
-        }
-      `}</style>
+      {/* ESTILOS RESPONSIVE */}
+<style>{`
+  .show-on-mobile {
+    display: none;
+  }
+  @media (max-width: 480px) {
+    .hide-on-mobile {
+      display: none !important;
+    }
+    .show-on-mobile {
+      display: inline !important;
+    }
+  }
+`}</style>
     </div>
   );
 }
@@ -260,13 +273,23 @@ const styles = {
     flexWrap: 'wrap',
   },
   comercioBadge: {
-    background: 'rgba(0,0,0,0.5)',
-    padding: '0.2rem 0.5rem',
-    borderRadius: '20px',
-    color: '#aaa',
-    fontSize: '0.65rem',
-    whiteSpace: 'nowrap',
-  },
+  background: 'rgba(0, 0, 0, 0.3)',        // Fondo sutil
+  backdropFilter: 'blur(8px)',              // Efecto esmerilado
+  WebkitBackdropFilter: 'blur(8px)',
+  padding: '0.3rem 1rem',
+  borderRadius: '30px',
+  color: 'rgba(255, 255, 255, 0.9)',       // Blanco cristal
+  fontSize: '1rem',
+  fontWeight: '500',                        // Semi-negrita (menos agresiva)
+  letterSpacing: '0.3px',
+  whiteSpace: 'nowrap',
+  maxWidth: '180px',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  border: '1px solid rgba(255, 255, 255, 0.15)', // Borde sutil para definir
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
+  transition: 'all 0.2s ease',
+},
   previewButton: {
     background: 'rgba(59, 130, 246, 0.2)',
     border: '1px solid rgba(59, 130, 246, 0.5)',

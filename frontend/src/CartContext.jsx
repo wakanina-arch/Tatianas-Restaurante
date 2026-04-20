@@ -1,71 +1,62 @@
-import React, { createContext, useState, useCallback } from 'react';
+import React, { createContext, useState, useCallback, useContext } from 'react';
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  const [orders, setOrders] = useState([]);
 
-  // Agregar item al carrito
+  // 1. Agregar al carrito (Capturando datos de oferta)
   const addToCart = useCallback((item) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
-      
-      if (existingItem) {
-        // Si existe, incrementar cantidad
-        return prevItems.map((i) =>
-          i.id === item.id
-            ? { ...i, cantidad: (i.cantidad || 1) + 1 }
-            : i
-        );
-      } else {
-        // Si no existe, agregar nuevo item con cantidad 1
-        return [...prevItems, { ...item, cantidad: 1 }];
-      }
-    });
+  setCartItems((prevItems) => {
+    // Buscamos si ya existe el mismo nombre (o ID)
+    const existingItem = prevItems.find((i) => i.nombre === item.nombre);
+    
+    if (existingItem) {
+      return prevItems.map((i) =>
+        i.nombre === item.nombre
+          ? { ...i, cantidad: (i.cantidad || 1) + 1 }
+          : i
+      );
+    }
+    // Si es nuevo, lo añadimos
+    return [...prevItems, { ...item, cantidad: 1 }];
+  });
+}, []);
+
+
+  const addOrder = useCallback((order) => {
+    setOrders((prevOrders) => [...prevOrders, order]);
   }, []);
 
-    // Estado para órdenes pagadas
-    const [orders, setOrders] = useState([]);
-
-    // Función para agregar una orden
-    const addOrder = useCallback((order) => {
-      setOrders((prevOrders) => [...prevOrders, order]);
-    }, []);
-  // Eliminar item del carrito
   const removeFromCart = useCallback((itemId) => {
-    setCartItems((prevItems) =>
-      prevItems.filter((i) => i.id !== itemId)
-    );
+    setCartItems((prevItems) => prevItems.filter((i) => i.id !== itemId));
   }, []);
 
-  // Actualizar cantidad
   const updateQuantity = useCallback((itemId, newQuantity) => {
     if (newQuantity <= 0) {
       removeFromCart(itemId);
     } else {
       setCartItems((prevItems) =>
         prevItems.map((i) =>
-          i.id === itemId
-            ? { ...i, cantidad: newQuantity }
-            : i
+          i.id === itemId ? { ...i, cantidad: newQuantity } : i
         )
       );
     }
   }, [removeFromCart]);
 
-  // Limpiar carrito
-  const clearCart = useCallback(() => {
-    setCartItems([]);
-  }, []);
+  const clearCart = useCallback(() => setCartItems([]), []);
 
-  // Calcular total
+  // 2. Calcular Total Real (Aritmética final)
+  // Este total ya descuenta las ofertas para pasarlo a la pasarela de pago
   const calculateTotal = useCallback(() => {
-    return cartItems.reduce((total, item) => {
-      return total + (item.precio * (item.cantidad || 1));
-    }, 0).toFixed(2);
+    const total = cartItems.reduce((acc, item) => {
+      // Usamos el precio que viene del plato (que ya es el rebajado si hay promo)
+      return acc + (item.precio * (item.cantidad || 1));
+    }, 0);
+    return total.toFixed(2);
   }, [cartItems]);
 
-  // Contar items totales (suma de cantidades)
   const itemCount = cartItems.reduce((sum, item) => sum + (item.cantidad || 1), 0);
 
   const value = {
@@ -88,9 +79,7 @@ export const CartProvider = ({ children }) => {
 };
 
 export const useCart = () => {
-  const context = React.useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart debe ser usado dentro de CartProvider');
-  }
+  const context = useContext(CartContext);
+  if (!context) throw new Error('useCart debe ser usado dentro de CartProvider');
   return context;
 };

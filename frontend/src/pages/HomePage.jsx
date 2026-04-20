@@ -93,16 +93,20 @@ export default function HomePage({
   };
 
   const updateCarrito = (plato, cantidad) => {
-    if (cantidad > 0) {
-      addToCart({
-        id: plato.id || `${plato.nombre}-${Date.now()}`,
-        nombre: plato.nombre,
-        precio: plato.precio,
-        cantidad,
-        imagen: plato.imagen || plato.imagenes?.[0],
-      });
-    }
-  };
+  if (cantidad > 0) {
+    addToCart({
+      id: plato.id || plato.nombre,  // ← ID FIJO (sin Date.now)
+      nombre: plato.nombre,
+      precio: plato.precio,
+      precioOriginal: plato.precioOriginal || plato.precio,  // ← AÑADIR
+      enOferta: plato.enOferta || false,                      // ← AÑADIR
+      descuentoAplicado: plato.descuentoAplicado || 0,        // ← AÑADIR
+      tagPromo: plato.tagPromo || '',                         // ← AÑADIR
+      cantidad: cantidad,
+      imagen: plato.imagen
+    });
+  }
+};
 
   if (!comercio) return <div style={{ color: 'white', textAlign: 'center' }}>Cargando...</div>;
 

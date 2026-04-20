@@ -20,7 +20,7 @@ const getFraseAleatoria = () => {
   };
 };
 
-const COMERCIOS = [
+const COMERCIOS_FIJOS = [
   { id: 1, nombre: "En su punto", imagen: "/casas/en_su_punto.JPG" },
   { id: 2, nombre: "Ceremoniales", imagen: "/casas/Ceremoniales.JPG" },
   { id: 3, nombre: "Como en casa", imagen: "/casas/Como_en_casa.JPG" },
@@ -44,7 +44,6 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
     }));
   }, [fraseData]);
 
-  // Cargar comercios registrados desde localStorage (recarga al volver a home)
   useEffect(() => {
     try {
       const registros = JSON.parse(localStorage.getItem('registros_comercios') || '[]');
@@ -54,28 +53,26 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
     }
   }, [currentPage]);
 
-  // Combinar comercios hardcoded + registrados
+  // Combinar comercios con keys ÚNICAS garantizadas
   const todosLosComercios = [
-    ...COMERCIOS,
+    ...COMERCIOS_FIJOS.map(c => ({ ...c, tipo: 'fijo' })),
     ...comerciosRegistrados.map(r => ({
       id: r.id,
-      nombre: r.nombre, // 👈 Antes decía nombreComercio, cámbialo a nombre
-      imagen: r.imagen || r.logo, // 👈 Aseguramos que use cualquiera de las dos propiedades
-      esNuevo: true,
+      nombre: r.nombre,
+      imagen: r.imagen || r.logo,
+      tipo: 'registrado'
     })),
-    ...(comercioSimple ? [{ id: comercioSimple.id, nombre: comercioSimple.nombre, imagen: comercioSimple.logo, esSimple: true }] : []),
+    ...(comercioSimple ? [{ ...comercioSimple, tipo: 'simple' }] : []),
   ];
 
   const handleComercioClick = (comercio) => {
-  console.log('Comercio seleccionado:', comercio.nombre);
-  // Pasar la primera categoría real del menú, no "Primero"
-  onSelectCategory('Picoteo', comercio.id);
-};
+    console.log('Comercio seleccionado:', comercio.nombre);
+    onSelectCategory('Picoteo', comercio.id);
+  };
 
   return (
     <div style={styles.container}>
       <div style={styles.hero}>
-        {/* Moneda central (único elemento funcional) */}
         <div 
           style={styles.moneda} 
           onClick={() => onAccesoComercio && onAccesoComercio()}
@@ -97,31 +94,33 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
       </div>
 
       <div style={styles.comerciosContainer}>
-        {todosLosComercios.map((comercio) => (
-          <div
-            key={comercio.id}
-            style={styles.comercioCard}
-            onClick={() => handleComercioClick(comercio)}
-          >
-            <img
-              src={comercio.imagen}
-              alt={comercio.nombre}
-              style={styles.comercioImagen}
-              onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/400x280?text=' + encodeURIComponent(comercio.nombre || 'Comercio');
-              }}
-            />
-          </div>
-        ))}
+        {todosLosComercios.map((comercio, index) => {
+          // ✅ KEY ÚNICA GARANTIZADA
+          const uniqueKey = `${comercio.tipo}-${comercio.id}-${index}`;
+          
+          return (
+            <div
+              key={uniqueKey}
+              style={styles.comercioCard}
+              onClick={() => handleComercioClick(comercio)}
+            >
+              <img
+                src={comercio.imagen}
+                alt={comercio.nombre}
+                style={styles.comercioImagen}
+                onError={(e) => {
+                  e.target.src = 'https://via.placeholder.com/400x280/2a0a0a/FFD700?text=' + encodeURIComponent(comercio.nombre || 'Comercio');
+                }}
+              />
+              
+            </div>
+          );
+        })}
       </div>
 
-      {/* Botón de inscripción de comercio */}
       {onRegistroComercio && (
         <div style={styles.registroBtnContainer}>
-          <button
-            onClick={onRegistroComercio}
-            style={styles.registroBtn}
-          >
+          <button onClick={onRegistroComercio} style={styles.registroBtn}>
             🏪 Inscribir mi comercio
           </button>
         </div>
@@ -145,24 +144,20 @@ const styles = {
     background: 'rgba(20, 10, 10, 0.75)',
     backdropFilter: 'blur(20px)',
     WebkitBackdropFilter: 'blur(20px)',
-    padding: '20px 16px',
+    padding: '16px 16px',
     borderBottom: '1px solid rgba(255,215,0,0.2)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '12px',
+    gap: '8px',
   },
   moneda: {
-    fontSize: '2.2rem',
+    fontSize: '2rem',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     animation: 'flotar 3s ease-in-out infinite, pulso 2s ease-in-out infinite',
     textShadow: '0 0 5px rgba(255,215,0,0.5)',
     display: 'inline-block',
-    '&:hover': {
-      transform: 'scale(1.1)',
-      textShadow: '0 0 15px rgba(255,215,0,0.8)',
-    },
   },
   titulo: {
     display: 'flex',
@@ -172,24 +167,24 @@ const styles = {
     margin: 0,
   },
   one: {
-    fontSize: '1.4rem',
+    fontSize: '1.3rem',
     fontWeight: '700',
     color: '#B22222',
-    textShadow: '0 0 5px rgba(178,34,34,0.5), 0 0 10px rgba(178,34,34,0.3)',
+    textShadow: '0 0 5px rgba(178,34,34,0.5)',
     animation: 'brilloRojo 2.5s infinite alternate',
   },
   to: {
-    fontSize: '1.4rem',
+    fontSize: '1.3rem',
     fontWeight: '700',
     color: '#1a3b1a',
-    textShadow: '0 0 5px rgba(26,59,26,0.5), 0 0 10px rgba(26,59,26,0.3)',
+    textShadow: '0 0 5px rgba(26,59,26,0.5)',
     animation: 'brilloVerde 2.5s infinite alternate',
   },
   oneEnd: {
-    fontSize: '1.4rem',
+    fontSize: '1.3rem',
     fontWeight: '700',
     color: '#FFD700',
-    textShadow: '0 0 5px rgba(255,215,0,0.5), 0 0 10px rgba(255,215,0,0.3)',
+    textShadow: '0 0 5px rgba(255,215,0,0.5)',
     animation: 'brilloDorado 2.5s infinite alternate',
   },
   fraseContainer: {
@@ -197,27 +192,27 @@ const styles = {
     padding: '0 15px',
   },
   fraseIcono: {
-    fontSize: '1.2rem',
+    fontSize: '1rem',
     display: 'block',
-    marginBottom: '4px',
+    marginBottom: '2px',
   },
   fraseTexto: {
     color: '#FFD700',
-    fontSize: '0.7rem',
+    fontSize: '0.65rem',
     fontStyle: 'italic',
     margin: 0,
-    lineHeight: 1.4,
+    lineHeight: 1.3,
   },
   comerciosContainer: {
-    padding: '20px 16px 40px',
+    padding: '16px 12px 40px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px',
+    gap: '16px',
   },
   comercioCard: {
     position: 'relative',
     width: '100%',
-    height: '280px',
+    height: '240px',
     borderRadius: '16px',
     overflow: 'hidden',
     cursor: 'pointer',
@@ -229,35 +224,22 @@ const styles = {
     height: '100%',
     objectFit: 'cover',
   },
+  
   registroBtnContainer: {
-    padding: '1.5rem 16px 2rem',
+    padding: '0 16px 2rem',
     display: 'flex',
     justifyContent: 'center',
   },
   registroBtn: {
-    padding: '0.8rem 2rem',
+    padding: '0.7rem 1.8rem',
     background: 'transparent',
     border: '1px solid rgba(255,215,0,0.4)',
     borderRadius: '30px',
     color: '#FFD700',
-    fontSize: '0.9rem',
+    fontSize: '0.85rem',
     fontWeight: '600',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    letterSpacing: '0.5px',
-  },
-  comercioNombreOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: '6px 8px',
-    background: 'linear-gradient(transparent, rgba(0,0,0,0.75))',
-    color: '#FFD700',
-    fontSize: '0.7rem',
-    fontWeight: '600',
-    textAlign: 'center',
-    letterSpacing: '0.3px',
   },
 };
 

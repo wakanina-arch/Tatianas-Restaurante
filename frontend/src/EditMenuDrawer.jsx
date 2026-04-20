@@ -1,55 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'; // React eliminado para limpiar ESLint
 import uploadImageService from './services/uploadImageService';
 import { saveMenuBorrador } from './services/menuService';
 
 const CATEGORIAS_FIJAS = ['Picoteo', 'Entrantes', 'Gourmets', 'Escuderos', 'Zombies', 'FastFurious', 'Postres', 'Bebidas'];
+const EVENTOS_PROMO = ['Día de Reyes', 'Día del Amor', 'Día del Maestro', 'Día del Obrero', 'Día de la Madre', 'Día del Padre', 'Vacaciones', 'Invierno', 'Navidad', '2x1'];
 
-// --- 🪄 COMPONENTE MÁGICO PARA DECIMALES (ESTILO MINIMALISTA) ---
 const InputPrecioDinamico = ({ valorInicial, onChangeFinal, disabled, style }) => {
   const [localValue, setLocalValue] = useState('');
-
   useEffect(() => {
-    // Asegurar que se muestre el valor correcto incluso si es 0 o vacío
-    if (valorInicial !== undefined && valorInicial !== null) {
-      setLocalValue(valorInicial.toString());
-    } else {
-      setLocalValue('');
-    }
+    setLocalValue(valorInicial !== undefined && valorInicial !== null ? valorInicial.toString() : '');
   }, [valorInicial]);
 
   const handleChange = (e) => {
-    let val = e.target.value;
-    
-    // 1. Reemplazar coma por punto
-    val = val.replace(',', '.');
-    
-    // 2. Validar formato: números, un punto opcional, máximo 2 decimales
+    let val = e.target.value.replace(',', '.');
     if (val === '' || /^\d*\.?\d{0,2}$/.test(val)) {
       setLocalValue(val);
-      
-      // 3. Convertir y notificar al padre
-      if (val === '' || val === '.') {
-        onChangeFinal(0); // Valor seguro
-      } else {
-        const num = parseFloat(val);
-        if (!isNaN(num)) {
-          onChangeFinal(num);
-        }
-      }
+      onChangeFinal(val === '' || val === '.' ? 0 : parseFloat(val));
     }
   };
-
-  return (
-    <input
-      type="text"
-      inputMode="decimal"
-      value={localValue}
-      onChange={handleChange}
-      disabled={disabled}
-      placeholder="0.00"
-      style={style}
-    />
-  );
+  return <input type="text" inputMode="decimal" value={localValue} onChange={handleChange} disabled={disabled} placeholder="0.00" style={style} />;
 };
 
 export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, onSave }) {
@@ -57,29 +26,23 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
   const [expandidas, setExpandidas] = useState({});
-
-  // Estados para Ofertas
   const [showOfertaModal, setShowOfertaModal] = useState(false);
-  const [ofertaData, setOfertaData] = useState({ descuento: '', tag: '' });
+  const [ofertaData, setOfertaData] = useState({ descuento: '', tag: 'Día de la Madre' });
   const [platoSeleccionado, setPlatoSeleccionado] = useState(null);
 
   useEffect(() => {
     if (!open || !menuItems) return;
-    const synced = CATEGORIAS_FIJAS.map((catNombre) => {
-      const catExistente = menuItems.find(m => m.nombre === catNombre);
-      return catExistente || { nombre: catNombre, opciones: [] };
-    });
+    const synced = CATEGORIAS_FIJAS.map(catNombre => 
+      menuItems.find(m => m.nombre === catNombre) || { nombre: catNombre, opciones: [] }
+    );
     setItems(synced);
   }, [open, menuItems]);
-
-  if (!open) return null;
 
   const showToast = (msg, isError = false) => {
     setToast({ msg, isError });
     setTimeout(() => setToast(null), 3000);
   };
 
-  // 2. Subida a Cloudinary
   const handleUploadPlato = async (catIdx, optIdx, file) => {
     if (!file) return;
     try {
@@ -88,127 +51,84 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
       const resultado = await uploadImageService.subirImagen(file, comercioId);
       setItems(prev => {
         const newItems = [...prev];
-        const opciones = [...newItems[catIdx].opciones];
-        opciones[optIdx] = { ...opciones[optIdx], imagen: resultado.url };
-        newItems[catIdx] = { ...newItems[catIdx], opciones };
+        newItems[catIdx].opciones[optIdx].imagen = resultado.url;
         return newItems;
       });
       showToast('✅ Imagen guardada');
-    } catch (err) {
-      showToast('❌ Error al subir imagen', true);
-    } finally {
-      setSaving(false);
-    }
+    } catch (err) { showToast('❌ Error al subir', true); }
+    finally { setSaving(false); }
   };
 
-  // 3. Añadir Plato
+  // RESTAURADAS: Las funciones que daban error no-undef
   const handleAddPlato = (catIdx) => {
     setItems(prev => {
       const newItems = [...prev];
-      const nuevasOpciones = [...newItems[catIdx].opciones, { 
-        nombre: '', 
-        precio: 0, 
-        imagen: '', 
-        descripcion: '' 
-      }];
-      newItems[catIdx] = { ...newItems[catIdx], opciones: nuevasOpciones };
+      newItems[catIdx].opciones.push({ nombre: '', precio: 0, imagen: '', descripcion: '' });
       return newItems;
     });
-    setTimeout(() => setExpandidas(prev => ({ ...prev, [catIdx]: true })), 0);
+    setExpandidas(prev => ({ ...prev, [catIdx]: true }));
   };
 
-  // 4. Papelera (Borrado Lógico)
   const handleToggleDeletePlato = (catIdx, optIdx) => {
     setItems(prev => {
       const newItems = [...prev];
-      const categoria = { ...newItems[catIdx] };
-      const opciones = [...categoria.opciones];
-      const plato = opciones[optIdx];
-      const isDeleted = !!plato._deleted;
-
-      opciones[optIdx] = isDeleted 
-        ? { ...plato, _deleted: false, nombre: plato._originalNombre || plato.nombre }
-        : { ...plato, _deleted: true, _originalNombre: plato.nombre || '(Sin nombre)' };
-
-      categoria.opciones = opciones;
-      newItems[catIdx] = categoria;
-
-      showToast(isDeleted ? '✅ Plato restaurado' : '🗑️ Plato marcado para eliminar');
+      const plato = newItems[catIdx].opciones[optIdx];
+      plato._deleted = !plato._deleted;
       return newItems;
     });
   };
 
-  // 5. Ofertas
   const abrirModalOferta = (catIdx, optIdx) => {
     const plato = items[catIdx].opciones[optIdx];
     setPlatoSeleccionado({ catIdx, optIdx });
-    setOfertaData({
-      descuento: plato.descuentoAplicado || '',
-      tag: plato.tagPromo || ''
+    setOfertaData({ 
+        descuento: plato.descuentoAplicado || '', 
+        tag: plato.tagPromo || 'Día de la Madre' 
     });
     setShowOfertaModal(true);
   };
 
   const aplicarOferta = () => {
-    if (!platoSeleccionado) return;
     const { catIdx, optIdx } = platoSeleccionado;
-    const descuento = parseFloat(ofertaData.descuento);
-    
-    if (isNaN(descuento) || descuento <= 0 || descuento > 100) {
-      showToast('❌ Ingresa un descuento válido (1-100)', true);
-      return;
-    }
+    const desc = parseFloat(ofertaData.descuento);
+    if (isNaN(desc) || desc <= 0) return showToast('❌ Indica un descuento', true);
 
     setItems(prev => {
       const newItems = [...prev];
-      const plato = newItems[catIdx].opciones[optIdx];
-      const precioOriginal = plato.precioOriginal || plato.precio;
-      const precioConDescuento = precioOriginal * (1 - descuento / 100);
-      
       newItems[catIdx].opciones[optIdx] = {
-        ...plato,
-        precioOriginal,
-        precio: precioConDescuento,
+        ...newItems[catIdx].opciones[optIdx],
         enOferta: true,
-        descuentoAplicado: descuento,
+        descuentoAplicado: desc,
         tagPromo: ofertaData.tag.toUpperCase()
       };
       return newItems;
     });
-    
     setShowOfertaModal(false);
-    showToast('✅ Oferta aplicada');
   };
 
   const eliminarOferta = (catIdx, optIdx) => {
     setItems(prev => {
       const newItems = [...prev];
       const plato = newItems[catIdx].opciones[optIdx];
-      const { precioOriginal, enOferta, descuentoAplicado, tagPromo, ...resto } = plato;
-      newItems[catIdx].opciones[optIdx] = { ...resto, precio: precioOriginal || plato.precio };
+      const { enOferta, descuentoAplicado, tagPromo, ...resto } = plato;
+      newItems[catIdx].opciones[optIdx] = resto;
       return newItems;
     });
-    showToast('🏷️ Oferta eliminada');
   };
 
-  // 6. Guardar
   const handleGuardarTodo = async () => {
     setSaving(true);
     try {
-      saveMenuBorrador(comercioId, items);
+      await saveMenuBorrador(comercioId, items);
       if (onSave) await onSave(items);
-      showToast('✅ Cambios guardados en borrador');
-      setTimeout(() => onClose(), 1000);
-    } catch (err) {
-      showToast('❌ Error al guardar', true);
-    } finally {
-      setSaving(false);
-    }
+      showToast('✅ Cambios publicados');
+      setTimeout(onClose, 1000);
+    } catch (err) { showToast('❌ Error al guardar', true); }
+    finally { setSaving(false); }
   };
 
-  // ============================================
-  // RENDER CON ESTILOS MINIMALISTAS
-  // ============================================
+  if (!open) return null;
+
   return (
     <>
       <div style={S.drawer}>
@@ -216,7 +136,7 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
           <button onClick={onClose} style={S.closeBtn}>✕</button>
           <h2 style={S.title}>Rejilla de Trabajo</h2>
           <button onClick={handleGuardarTodo} disabled={saving} style={S.saveBtn}>
-            {saving ? '...' : 'Guardar'}
+            {saving ? '...' : 'Publicar'}
           </button>
         </div>
 
@@ -231,76 +151,41 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
               {expandidas[catIdx] && (
                 <div style={S.platosList}>
                   {cat.opciones.map((plato, optIdx) => (
-                    <div key={optIdx} style={{ ...S.platoItem, opacity: plato._deleted ? 0.6 : 1 }}>
-                      <div style={S.imgContainer}>
-                        {plato.imagen ? (
-                          <img src={plato.imagen} style={S.platoImg} alt="plato" />
-                        ) : (
-                          <div style={S.placeholderImg}>🖼️</div>
-                        )}
-                        <input 
-                          type="file" 
-                          onChange={(e) => handleUploadPlato(catIdx, optIdx, e.target.files[0])}
-                          style={S.fileInput}
-                          disabled={plato._deleted}
-                        />
-                      </div>
+                    <div key={optIdx} style={{ ...S.platoItem, opacity: plato._deleted ? 0.5 : 1 }}>
+                      <label style={S.imgContainer}>
+                        {plato.imagen ? <img src={plato.imagen} style={S.platoImg} alt="" /> : <div style={S.placeholderImg}>🖼️</div>}
+                        <input type="file" style={{display:'none'}} onChange={(e) => handleUploadPlato(catIdx, optIdx, e.target.files[0])} disabled={plato._deleted} />
+                      </label>
                       
                       <div style={S.inputs}>
-                        <input 
-                          placeholder="Nombre" 
-                          value={plato.nombre} 
-                          onChange={e => {
-                            const newItems = [...items];
-                            newItems[catIdx].opciones[optIdx].nombre = e.target.value;
-                            setItems(newItems);
-                          }}
-                          style={S.inputNombre}
-                          disabled={plato._deleted}
-                        />
-                        
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                          <InputPrecioDinamico 
-                            valorInicial={plato.precio}
-                            onChangeFinal={(nuevoPrecio) => {
-                              const newItems = [...items];
-                              newItems[catIdx].opciones[optIdx].precio = nuevoPrecio;
-                              setItems(newItems);
-                            }}
-                            disabled={plato._deleted}
-                            style={{ ...S.inputPrecio, flex: 1 }}
-                          />
-                          
-                          <button
-                            type="button"
-                            onClick={() => abrirModalOferta(catIdx, optIdx)}
-                            style={S.ofertaBtn}
-                            disabled={plato._deleted}
-                            title="Configurar oferta"
-                          >
-                            🏷️
-                          </button>
-                          
-                          <button
-                            type="button"
-                            onClick={() => handleToggleDeletePlato(catIdx, optIdx)}
-                            style={S.deleteBtn}
-                            title={plato._deleted ? 'Restaurar plato' : 'Eliminar plato'}
-                          >
-                            {plato._deleted ? '↩️' : '🗑️'}
-                          </button>
-                        </div>
-                        
-                        {plato.enOferta && !plato._deleted && (
-                          <div style={S.ofertaBadge}>
-                            🔥 -{plato.descuentoAplicado}% {plato.tagPromo}
-                            <button onClick={() => eliminarOferta(catIdx, optIdx)} style={S.quitarOfertaBtn}>✕</button>
+                        <input style={S.inputNombre} value={plato.nombre} placeholder="Nombre del plato" onChange={e => {
+                          const n = [...items]; n[catIdx].opciones[optIdx].nombre = e.target.value; setItems(n);
+                        }} />
+                        <input style={S.inputDescripcion} value={plato.descripcion || ''} placeholder='"Descripción"' onChange={e => {
+                          const n = [...items]; n[catIdx].opciones[optIdx].descripcion = e.target.value; setItems(n);
+                        }} />
+
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{fontWeight:'700'}}>$</span>
+                            <InputPrecioDinamico valorInicial={plato.precio} style={S.inputPrecio} onChangeFinal={v => {
+                                const n = [...items]; n[catIdx].opciones[optIdx].precio = v; setItems(n);
+                            }} />
+
+                            {plato.enOferta && (
+                              <div style={S.badgeInformativo} onClick={() => eliminarOferta(catIdx, optIdx)}>
+                                {plato.descuentoAplicado}%🎟 {plato.tagPromo}
+                              </div>
+                            )}
                           </div>
-                        )}
-                        
-                        {plato._deleted && (
-                          <div style={S.deletedBadge}>⚠️ Se eliminará al publicar</div>
-                        )}
+
+                          <div style={{ display: 'flex', gap: '10px' }}>
+                            <button onClick={() => abrirModalOferta(catIdx, optIdx)} style={S.miniBtn}>🏷️</button>
+                            <button onClick={() => handleToggleDeletePlato(catIdx, optIdx)} style={S.miniBtn}>
+                              {plato._deleted ? '↩️' : '🗑️'}
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -310,73 +195,58 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
             </div>
           ))}
         </div>
-        
-        {toast && (
-          <div style={{ ...S.toast, background: toast.isError ? '#e63946' : '#333' }}>
-            {toast.msg}
-          </div>
-        )}
       </div>
 
-      {/* MODAL OFERTA */}
       {showOfertaModal && (
         <div style={S.modalOverlay} onClick={() => setShowOfertaModal(false)}>
           <div style={S.modalContent} onClick={e => e.stopPropagation()}>
-            <h3 style={S.modalTitle}>🏷️ Configurar Oferta</h3>
-            <div style={S.formGroup}>
-              <label style={S.label}>Descuento (%):</label>
-              <input type="number" min="1" max="100" style={S.modalInput} value={ofertaData.descuento} onChange={e => setOfertaData({...ofertaData, descuento: e.target.value})} placeholder="Ej: 20" autoFocus />
-            </div>
-            <div style={S.formGroup}>
-              <label style={S.label}>Etiqueta (opcional):</label>
-              <input type="text" style={S.modalInput} value={ofertaData.tag} onChange={e => setOfertaData({...ofertaData, tag: e.target.value})} placeholder="Ej: BLACK FRIDAY" />
-            </div>
+            <h3 style={{margin:'0 0 15px'}}>Lanzar Oferta</h3>
+            <label style={S.label}>Evento:</label>
+            <select style={S.select} value={ofertaData.tag} onChange={e => setOfertaData({...ofertaData, tag: e.target.value})}>
+              {EVENTOS_PROMO.map(ev => <option key={ev} value={ev}>{ev}</option>)}
+            </select>
+            <label style={S.label}>Descuento (%):</label>
+            <input type="number" style={S.modalInput} value={ofertaData.descuento} onChange={e => setOfertaData({...ofertaData, descuento: e.target.value})} placeholder="Ej: 10" />
             <div style={S.modalActions}>
-              <button onClick={() => setShowOfertaModal(false)} style={S.cancelBtn}>Cancelar</button>
-              <button onClick={aplicarOferta} style={S.applyBtn}>Aplicar Oferta</button>
+              <button onClick={() => setShowOfertaModal(false)} style={S.cancelBtn}>Cerrar</button>
+              <button onClick={aplicarOferta} style={S.applyBtn}>Activar</button>
             </div>
           </div>
         </div>
       )}
+      {toast && <div style={S.toast}>{toast.msg}</div>}
     </>
   );
 }
 
-// ============================================
-// ESTILOS MINIMALISTAS (CONSERVADOS)
-// ============================================
 const S = {
-  drawer: { position: 'fixed', top: 0, right: 0, bottom: 0, width: '100%', maxWidth: '450px', background: '#f8f9fa', zIndex: 4000, boxShadow: '-5px 0 25px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column' },
-  header: { padding: '20px', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee' },
-  title: { margin: 0, fontSize: '1.2rem' },
-  closeBtn: { background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' },
-  content: { flex: 1, overflowY: 'auto', padding: '15px' },
-  categoryCard: { background: '#fff', borderRadius: '15px', marginBottom: '10px', overflow: 'hidden', border: '1px solid #eee' },
-  catHeader: { padding: '15px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between', cursor: 'pointer', background: '#fafafa' },
+  drawer: { position: 'fixed', inset: 0, left: 'auto', width: '100%', maxWidth: '450px', background: '#fff', zIndex: 4000, display: 'flex', flexDirection: 'column', boxShadow: '-5px 0 25px rgba(0,0,0,0.1)' },
+  header: { padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee' },
+  title: { margin: 0, fontSize: '1.1rem', fontWeight: '800' },
+  saveBtn: { background: '#00c805', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '15px', fontWeight: '700', cursor: 'pointer' },
+  closeBtn: { background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer' },
+  content: { flex: 1, overflowY: 'auto', padding: '15px', background: '#fcfcfc' },
+  categoryCard: { background: '#fff', border: '1px solid #eee', borderRadius: '18px', marginBottom: '10px', overflow: 'hidden' },
+  catHeader: { padding: '15px', background: '#f9f9f9', display: 'flex', justifyContent: 'space-between', fontWeight: '700', cursor: 'pointer' },
   platosList: { padding: '10px' },
-  platoItem: { display: 'flex', gap: '10px', marginBottom: '15px', background: '#fdfdfd', padding: '10px', borderRadius: '10px' },
-  imgContainer: { position: 'relative', width: '70px', height: '70px', flexShrink: 0 },
-  platoImg: { width: '70px', height: '70px', borderRadius: '8px', objectFit: 'cover' },
-  placeholderImg: { width: '70px', height: '70px', borderRadius: '8px', background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' },
-  fileInput: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' },
-  inputs: { flex: 1, display: 'flex', flexDirection: 'column', gap: '5px' },
-  inputNombre: { padding: '8px', borderRadius: '5px', border: '1px solid #ddd', fontSize: '0.9rem' },
-  inputPrecio: { padding: '8px', borderRadius: '5px', border: '1px solid #ddd', fontSize: '0.9rem', width: '100%' },
-  addBtn: { width: '100%', padding: '10px', background: 'none', border: '1px dashed #ccc', borderRadius: '10px', cursor: 'pointer', color: '#666', marginTop: '10px' },
-  saveBtn: { background: '#FF4500', color: '#fff', border: 'none', padding: '8px 20px', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer' },
-  toast: { position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)', color: '#fff', padding: '10px 25px', borderRadius: '30px', fontSize: '0.9rem', zIndex: 5000 },
-  ofertaBtn: { background: '#f59e0b', border: 'none', borderRadius: '5px', width: '32px', height: '32px', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0 },
-  deleteBtn: { background: '#e63946', border: 'none', borderRadius: '5px', width: '32px', height: '32px', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0 },
-  ofertaBadge: { marginTop: '5px', padding: '4px 8px', background: '#fff3cd', borderRadius: '5px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
-  quitarOfertaBtn: { background: 'none', border: 'none', fontSize: '0.8rem', cursor: 'pointer', color: '#999' },
-  deletedBadge: { marginTop: '5px', padding: '4px 8px', background: '#f8d7da', borderRadius: '5px', fontSize: '0.75rem', color: '#721c24' },
-  modalOverlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 5000, display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  modalContent: { background: 'white', borderRadius: '20px', padding: '25px', width: '90%', maxWidth: '400px' },
-  modalTitle: { margin: '0 0 20px 0', fontSize: '1.3rem' },
-  formGroup: { marginBottom: '15px' },
-  label: { display: 'block', marginBottom: '5px', fontWeight: '600', fontSize: '0.9rem' },
-  modalInput: { width: '100%', padding: '10px', borderRadius: '10px', border: '1px solid #ddd', fontSize: '1rem' },
-  modalActions: { display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' },
-  cancelBtn: { padding: '10px 20px', background: '#eee', border: 'none', borderRadius: '10px', cursor: 'pointer' },
-  applyBtn: { padding: '10px 20px', background: '#f59e0b', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }
+  platoItem: { display: 'flex', gap: '12px', padding: '15px', borderBottom: '1px solid #f5f5f5' },
+  imgContainer: { width: '65px', height: '65px', flexShrink: 0, cursor: 'pointer' },
+  platoImg: { width: '100%', height: '100%', borderRadius: '12px', objectFit: 'cover' },
+  placeholderImg: { width: '100%', height: '100%', background: '#eee', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  inputs: { flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' },
+  inputNombre: { border: 'none', fontWeight: '700', fontSize: '1rem', outline: 'none', width: '100%' },
+  inputDescripcion: { border: 'none', fontSize: '0.8rem', color: '#666', fontStyle: 'italic', outline: 'none', width: '100%' },
+  inputPrecio: { border: 'none', width: '55px', fontWeight: '700', background: '#f0f0f0', borderRadius: '6px', padding: '2px 5px' },
+  badgeInformativo: { background: 'rgba(255, 59, 48, 0.1)', color: '#ff3b30', padding: '2px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: '800', border: '1px solid rgba(255, 59, 48, 0.2)', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' },
+  miniBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem' },
+  addBtn: { width: '100%', padding: '10px', background: 'none', border: '1px dashed #ccc', borderRadius: '10px', color: '#999', marginTop: '10px', cursor: 'pointer' },
+  modalOverlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', zIndex: 5000, display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  modalContent: { background: 'white', padding: '25px', borderRadius: '25px', width: '85%', maxWidth: '350px' },
+  label: { display: 'block', fontSize: '0.75rem', fontWeight: '700', color: '#666', marginBottom: '5px' },
+  select: { width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', marginBottom: '15px' },
+  modalInput: { width: '100%', padding: '10px', borderRadius: '12px', border: '1px solid #ddd', boxSizing: 'border-box' },
+  modalActions: { display: 'flex', gap: '10px', marginTop: '20px' },
+  applyBtn: { flex: 1, padding: '12px', background: '#ff3b30', color: 'white', border: 'none', borderRadius: '15px', fontWeight: '700' },
+  cancelBtn: { flex: 1, padding: '12px', background: '#eee', border: 'none', borderRadius: '15px' },
+  toast: { position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)', background: '#333', color: '#fff', padding: '10px 20px', borderRadius: '20px', fontSize: '0.8rem' }
 };
