@@ -155,6 +155,31 @@ export default function AdminComercio({ comercioId, onBack }) {
           <button onClick={handleLogout} style={styles.logoutButton} title="Cerrar Sesión">
             🚪 <span className="hide-on-mobile">Cerrar Sesión</span>
           </button>
+          <button 
+  onClick={() => {
+    const menuDemo = [
+      { nombre: 'Picoteo', opciones: [
+        { nombre: 'Alitas BBQ', precio: 8.50, imagen: 'https://images.pexels.com/photos/2338407/pexels-photo-2338407.jpeg?auto=compress&cs=tinysrgb&w=600' },
+        { nombre: 'Nachos Supreme', precio: 9.90, imagen: 'https://images.pexels.com/photos/2608049/pexels-photo-2608049.jpeg?auto=compress&cs=tinysrgb&w=600' }
+      ]},
+      { nombre: 'Entrantes', opciones: [
+        { nombre: 'Croquetas Caseras', precio: 7.50, imagen: 'https://images.pexels.com/photos/566345/pexels-photo-566345.jpeg?auto=compress&cs=tinysrgb&w=600' }
+      ]},
+      { nombre: 'Gourmets', opciones: [
+        { nombre: 'Solomillo al Foie', precio: 24.00, imagen: 'https://images.pexels.com/photos/675951/pexels-photo-675951.jpeg?auto=compress&cs=tinysrgb&w=600' }
+      ]},
+      { nombre: 'Bebidas', opciones: [
+        { nombre: 'Cerveza Artesanal', precio: 4.50, imagen: 'https://images.pexels.com/photos/1089930/pexels-photo-1089930.jpeg?auto=compress&cs=tinysrgb&w=600' }
+      ]}
+    ];
+    localStorage.setItem('menu_comercio_1', JSON.stringify(menuDemo));
+    localStorage.setItem('borrador_comercio_1', JSON.stringify(menuDemo));
+    alert('✅ Menú cargado. Recarga la página.');
+  }}
+  style={{ background: 'green', color: 'white', padding: '8px', margin: '4px' }}
+>
+  🚀 Cargar Demo
+</button>
         </div>
       </div>
 
