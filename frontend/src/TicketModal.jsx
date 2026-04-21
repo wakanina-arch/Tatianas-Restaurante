@@ -1,7 +1,7 @@
 import React from "react";
 import CodigoQR from "./CodigoQR";
+import { captureTicketAsHTML, downloadTicketHTML, saveTicketToCollection } from "./services/ticketService";
 
-// Asegúrate de recibir 'user' como prop para que no de error al buscar el RUC
 export default function TicketModal({ open, onClose, order, user }) {
   if (!open || !order) return null;
 
@@ -9,33 +9,42 @@ export default function TicketModal({ open, onClose, order, user }) {
   const { texto = "El barro espera paciente a que lo moldees.", icono = "⛰️" } = fraseGuardada;
 
   const handlePrintAndSend = async () => {
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    // CORRECCIÓN: También usamos Number() aquí para evitar el error en el mensaje de WA
-    const mensajeWA = `*¡Hola! Mi pedido es el #${order.numero || order.ordenId}*%0A` +
-      `--------------------------%0A` +
-      order.items.map(i => `- ${i.cantidad}x ${i.nombre}`).join('%0A') +
-      `%0A--------------------------%0A` +
-      `*Total: $${Number(order.total || 0).toFixed(2)}*%0A%0A` + // ← CORREGIDO
-      `_Ref: ${texto}_`;
+    try {
+      // 1. Capturar el ticket como HTML profesional (sin botones)
+      const ticketData = await captureTicketAsHTML();
+      
+      if (!ticketData.success) {
+        alert('❌ Error al generar el ticket');
+        return;
+      }
 
-    // CORRECCIÓN: Falta el "/" y "?" en la URL de WhatsApp
-    const urlWA = `https://wa.me{mensajeWA}`;
+      const orderNumber = order.numero || order.ordenId || 'OTO-001';
+      
+      // 2. Descargar el archivo HTML (para guardar o enviar por email)
+      downloadTicketHTML(ticketData.html, orderNumber);
 
-    const ticketElement = document.querySelector('.ticket-content');
-    const ticketClone = ticketElement.cloneNode(true);
-    ticketClone.querySelectorAll('button').forEach(b => b.remove());
+      // 3. Guardar en la colección local (histórico del comercio)
+      saveTicketToCollection(order, ticketData.html);
 
-    const htmlContent = `<html><head><style>body{display:flex;justify-content:center;padding:20px;background:#f0f0f0;font-family:sans-serif;}.ticket-content{background:white;padding:2rem;border-radius:32px;max-width:350px;}</style></head><body>${ticketClone.innerHTML}</body></html>`;
-    
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Ticket_${order.numero || '001'}.html`;
-    a.click();
+      // 4. Generar mensaje para WhatsApp (CORREGIDO)
+      const itemsList = order.items.map(i => `- ${i.cantidad}x ${i.nombre}`).join('%0A');
+      const totalFormateado = Number(order.total || 0).toFixed(2);
+      
+      const mensajeWA = `*¡Hola! Mi pedido es el #${orderNumber}*%0A` +
+        `--------------------------%0A` +
+        itemsList +
+        `%0A--------------------------%0A` +
+        `*Total: $${totalFormateado}*%0A%0A` +
+        `_Ref: ${texto}_`;
 
-    window.open(urlWA, '_blank');
+      // 5. Abrir WhatsApp (URL CORREGIDA)
+      const urlWA = `https://wa.me/?text=${mensajeWA}`;
+      window.open(urlWA, '_blank');
+
+    } catch (error) {
+      console.error('Error en handlePrintAndSend:', error);
+      alert('❌ Ocurrió un error inesperado');
+    }
   };
 
   return (
@@ -50,7 +59,7 @@ export default function TicketModal({ open, onClose, order, user }) {
         </div>
 
         <div id="ticket-qr" style={styles.qrContainer}>
-          <CodigoQR valor={order.numero || order.ordenId || "OTO-001"} tamaño={130} />
+          <CodigoQR valor={order.numero || order.ordenId || "OTO-001"} tamaño={100} />
         </div>
 
         <div style={styles.orderInfo}>
@@ -113,7 +122,6 @@ export default function TicketModal({ open, onClose, order, user }) {
   );
 }
 
-
 const styles = {
   overlay: {
     position: "fixed",
@@ -131,11 +139,11 @@ const styles = {
     padding: "1rem"
   },
   modal: {
-    background: "rgba(255, 255, 255, 0.95)",
-    backdropFilter: "blur(10px)",
-    WebkitBackdropFilter: "blur(10px)",
+    background: 'rgba(255, 255, 255, 0.85)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
     borderRadius: "32px",
-    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)",
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.3) inset',
     padding: "1.5rem",
     maxWidth: "360px",
     width: "90%",
@@ -145,7 +153,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    border: "1px solid rgba(255, 255, 255, 0.3)",
+    border: '1px solid rgba(255, 255, 255, 0.5)',
     animation: "slideUp 0.3s ease-out"
   },
   printContainer: {
@@ -263,16 +271,8 @@ const styles = {
     fontWeight: "700"
   },
   qrContainer: {
-//   marginBottom: '1rem',
-padding: '10px',
-//   background: 'rgba(255, 255, 255, 0.2)',
-//   backdropFilter: 'blur(10px)',
-//   WebkitBackdropFilter: 'blur(10px)',
-//   borderRadius: '20px',
-//   display: 'inline-block',
-//   border: '1px solid rgba(255, 255, 255, 0.3)',
-//   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-},
+    padding: '5px',
+  },
   orderInfo: {
     textAlign: "center",
     marginBottom: "1rem"
@@ -290,6 +290,16 @@ padding: '10px',
     fontWeight: "700",
     color: "var(--morado-primario)",
     letterSpacing: "1px"
+  },
+  fiscalInfo: {
+    width: '100%',
+    textAlign: 'center',
+    marginBottom: '1rem',
+  },
+  fiscalText: {
+    display: 'block',
+    fontSize: '0.65rem',
+    color: 'var(--gris-texto)',
   },
   finishBtn: {
     width: "100%",
@@ -339,11 +349,12 @@ styleSheet.textContent = `
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2) !important;
   }
-    #ticket-qr canvas, #ticket-qr img {
-  width: 200px !important;
-  height: 200px !important;
-  border-radius: 16px;
-}
+  
+  #ticket-qr canvas, #ticket-qr img {
+    width: 140px !important;
+    height: 140px !important;
+    border-radius: 16px;
+  }
   
   .finish-btn:hover {
     transform: translateY(-2px);
@@ -357,4 +368,4 @@ styleSheet.textContent = `
 
 if (typeof document !== 'undefined') {
   document.head.appendChild(styleSheet);
-} 
+}

@@ -243,7 +243,7 @@ const totalFinal = (subtotal - ahorro).toFixed(2);
           </div>
           
           <button onClick={() => setPayOpen(true)} style={CS.checkoutBtn}>PAGAR</button>
-          <button onClick={onVolverAlMenu} style={CS.backBtn}>Seguir Comprando</button>
+          <button onClick={onVolverAlMenu} style={CS.backBtn}>🔱 Seguir Comprando</button>
         </div>
       </div>
 
@@ -258,6 +258,9 @@ const totalFinal = (subtotal - ahorro).toFixed(2);
   );
 }
 
+// ============================================
+// ESTILOS DEL HEADER (S)
+// ============================================
 const S = {
   header: { position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, background: 'rgba(20, 10, 10, 0.75)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,215,0,0.15)', height: '60px', display: 'flex', alignItems: 'center' },
   headerContent: { width: '100%', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
@@ -270,57 +273,263 @@ const S = {
   badge: { position: 'absolute', top: -6, right: -6, background: '#FF4500', color: 'white', borderRadius: '50%', width: '16px', height: '16px', fontSize: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center' },
 };
 
+// ============================================
+// ESTILOS DEL CARRITO (CS) - UNIFICADOS Y MINIMALISTAS
+// ============================================
 const CS = {
+  // Contenedores principales
   container: { maxWidth: 600, margin: '0 auto', padding: '1rem' },
-  pageTitle: { fontSize: '1.6rem', fontWeight: '600', color: '#039921', textAlign: 'center' },
+  pageTitle: { fontSize: '1.6rem', fontWeight: '600', color: '#039921', textAlign: 'center', marginBottom: '1rem' },
   cartCard: { background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(20px)', borderRadius: 32, padding: '1.2rem' },
   itemsList: { marginBottom: '1rem' },
-  cartItem: { padding: '1rem 0', borderBottom: '1px solid rgba(0,0,0,0.05)' },
-  itemInfo: { marginBottom: '0.5rem' },
-  itemName: { margin: 0, fontSize: '1rem', fontWeight: '600', color: '#01400e' },
-  itemPrice: { fontSize: '0.9rem', fontWeight: '700', color: '#333'},
-  precioTachado: { fontSize: '0.8rem', textDecoration: 'line-through', color: '#999' },
-  precioNuevo: { fontSize: '0.9rem', fontWeight: '700', color: '#333' },
-  ahorroTag: { fontSize: '0.7rem', color: '#8a2be2', fontWeight: '600', background: 'rgba(138, 43, 226, 0.05)', padding: '2px 6px', borderRadius: '4px' },
-  itemActions: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' },
-  quantityControl: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0,0,0,0.03)', borderRadius: 30 },
-  qtyBtn: { background: 'transparent', border: 'none', width: 32, height: 32, fontSize: '1.2rem', color: '#FF8C42', cursor: 'pointer' },
-  qtyValue: { minWidth: 32, textAlign: 'center', fontWeight: '600' },
-  itemTotal: { fontWeight: '700', fontSize: '1rem', minWidth: '60px', textAlign: 'right' },
-  removeBtn: { background: 'none', border: 'none', fontSize: '1rem', cursor: 'pointer', opacity: 0.5 },
-  summaryCard: { borderTop: '1px solid rgba(0,0,0,0.05)', paddingTop: '1rem' },
-  summaryRow: { display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: '#666' },
-  ahorroRow: { display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: '#00a86b', fontWeight: '600' },
-  totalRow: { display: 'flex', justifyContent: 'space-between', margin: '1rem 0', fontSize: '1.1rem', fontWeight: '700' },
-  totalAmount: { color: '#FF8C42', fontSize: '1.2rem' },
-  checkoutBtn: { width: '100%', padding: '0.8rem', background: 'linear-gradient(135deg, #01400e, #2a6b2f)', color: 'white', border: 'none', borderRadius: 40, fontWeight: '600', cursor: 'pointer', marginBottom: '0.5rem' },
-  backBtn: { width: '100%', padding: '0.8rem', background: 'transparent', border: '1px solid rgba(255,179,71,0.3)', borderRadius: 40, color: '#666', cursor: 'pointer' },
   emptyCard: { textAlign: 'center', padding: '2rem', background: 'rgba(255,255,255,0.7)', borderRadius: 32 },
-  emptyIcon: { fontSize: '3rem' },
+  emptyIcon: { fontSize: '3rem', display: 'block', marginBottom: '1rem' },
+
+  // 📋 Ticket Minimalista (Items del carrito)
+  itemRow: {
+    padding: '8px 0',
+    borderBottom: '1px solid rgba(0,0,0,0.05)'
+  },
+  itemHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '4px'
+  },
+  itemName: {
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    color: '#01400e'
+  },
+  priceLine: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    fontSize: '0.8rem',
+    color: '#666'
+  },
+  itemPrice: {
+    fontSize: '0.85rem',
+    fontWeight: '600',
+    color: '#333'
+  },
+  precioTachado: {
+    fontSize: '0.75rem',
+    textDecoration: 'line-through',
+    color: '#999'
+  },
+  precioNuevo: {
+    fontSize: '0.85rem',
+    fontWeight: '700',
+    color: '#01400e'
+  },
+  ahorroTag: {
+    fontSize: '0.65rem',
+    color: '#8a2be2',
+    fontWeight: '600',
+    background: 'rgba(138, 43, 226, 0.05)',
+    padding: '2px 6px',
+    borderRadius: '4px'
+  },
+  ahorroMini: {
+    fontSize: '0.65rem',
+    color: '#8a2be2',
+    background: 'rgba(138, 43, 226, 0.05)',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    fontWeight: '600'
+  },
+
+  // Acciones del item (cantidad, eliminar)
+  itemActions: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: '4px'
+  },
+  quantityControl: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    background: 'rgba(0,0,0,0.03)',
+    borderRadius: 30,
+    padding: '2px'
+  },
+  qtyBtn: {
+    background: 'transparent',
+    border: 'none',
+    width: 28,
+    height: 28,
+    fontSize: '1.1rem',
+    color: '#FF8C42',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  qtyValue: {
+    minWidth: 20,
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: '0.9rem'
+  },
+  subtotalItem: {
+    fontWeight: '600',
+    fontSize: '0.9rem',
+    color: '#01400e'
+  },
+  itemTotal: {
+    fontWeight: '700',
+    fontSize: '0.95rem',
+    color: '#01400e',
+    minWidth: '60px',
+    textAlign: 'right'
+  },
+  removeBtn: {
+    background: 'none',
+    border: 'none',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    opacity: 0.5,
+    padding: '4px',
+    transition: 'opacity 0.2s'
+  },
+
+  // 💰 Resumen de Compra (Desglose final)
+  summaryCard: {
+    marginTop: '1rem',
+    paddingTop: '1rem',
+    borderTop: '2px solid rgba(0,0,0,0.05)'
+  },
+  divider: {
+    textAlign: 'center',
+    color: '#ccc',
+    margin: '12px 0',
+    letterSpacing: '2px',
+    fontSize: '0.8rem'
+  },
+  resumenFinal: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px'
+  },
+  row: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '0.95rem',
+    color: '#666'
+  },
+  summaryRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '0.5rem',
+    color: '#666',
+    fontSize: '0.95rem'
+  },
+  rowAhorro: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '0.95rem',
+    color: '#00a86b',
+    fontWeight: '600'
+  },
+  ahorroRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '0.5rem',
+    color: '#00a86b',
+    fontWeight: '600',
+    fontSize: '0.95rem'
+  },
+  rowPromo: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '0.95rem',
+    color: '#ff3b30',
+    fontWeight: '700'
+  },
+  rowTotal: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: '8px',
+    paddingTop: '12px',
+    borderTop: '1px dashed #ccc',
+    fontSize: '1.2rem',
+    fontWeight: '700',
+    color: '#01400e'
+  },
+  totalRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '1rem 0',
+    fontSize: '1.2rem',
+    fontWeight: '700',
+    color: '#01400e'
+  },
+  totalAmount: {
+    color: '#FF8C42',
+    fontSize: '1.3rem'
+  },
+
+  // Botones de acción
+  checkoutBtn: {
+    width: '100%',
+    padding: '0.9rem',
+    background: 'linear-gradient(135deg, #01400e, #2a6b2f)',
+    color: 'white',
+    border: 'none',
+    borderRadius: 40,
+    fontWeight: '700',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    marginTop: '1.5rem',
+    transition: 'transform 0.2s, box-shadow 0.2s'
+  },
+  btnPagar: {
+    width: '100%',
+    padding: '0.9rem',
+    background: 'linear-gradient(135deg, #01400e, #2a6b2f)',
+    color: 'white',
+    border: 'none',
+    borderRadius: 40,
+    fontWeight: '700',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    marginTop: '1.5rem',
+    transition: 'transform 0.2s, box-shadow 0.2s'
+  },
+  backBtn: {
+    width: '100%',
+    padding: '0.4rem',
+    background: 'transparent',
+    border: '4px solid rgba(239, 162, 54, 0.3)',
+    borderRadius: 40,
+    color: '#666',
+    cursor: 'pointer',
+    marginTop: '0.5rem',
+    fontSize: '0.95rem',
+    transition: 'background 0.2s'
+  },
+
+  // Sección de resumen (legacy - mantenida por compatibilidad)
   summarySection: {
     marginTop: '20px',
     paddingTop: '15px',
     borderTop: '2px solid #f0f0f0',
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px' // Espacio uniforme entre filas
+    gap: '8px'
   },
-  row: {
-    display: 'flex',
-    justifyContent: 'space-between', // Esto empuja el precio a la derecha
-    alignItems: 'center',
-    fontSize: '0.95rem',
-    width: '100%'
+  // Estilos para el item del carrito (legacy - mantenidos por compatibilidad)
+  cartItem: {
+    padding: '8px 0',
+    borderBottom: '1px solid rgba(0,0,0,0.05)'
   },
-  rowPromo: {
-    display: 'flex',
-    justifyContent: 'space-between', // Esto empuja el descuento a la derecha
-    alignItems: 'center',
-    fontSize: '0.95rem',
-    color: '#ff3b30', // Rojo para el ahorro
-    fontWeight: '700',
-    width: '100%'
-  },
-  
-  
+  itemInfo: {
+    marginBottom: '4px'
+  }
 };

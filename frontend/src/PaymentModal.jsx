@@ -282,15 +282,18 @@ const styles = {
     justifyContent: 'center',
     padding: '1rem'
   },
-  modal: {
-    width: '100%',
-    maxWidth: 420,
-    background: '#FFFFFF',
-    borderRadius: 32,
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-    overflow: 'hidden',
-    animation: 'slideUp 0.3s ease-out'
-  },
+ modal: {
+  width: '100%',
+  maxWidth: 420,
+  background: 'rgba(255, 255, 255, 0.85)',      // ← El mismo blanco luminoso
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  borderRadius: 32,
+  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.3) inset',
+  overflow: 'hidden',
+  animation: 'slideUp 0.3s ease-out',
+  border: '1px solid rgba(255, 255, 255, 0.5)',
+},
   header: {
     padding: '1rem 1.5rem',
     background: '#FFFFFF',
@@ -317,12 +320,12 @@ const styles = {
     width: 32,
     height: 32,
     borderRadius: 16,
-    fontSize: '1rem',
+    fontSize: '1.5rem',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    color: '#999',
+    color: '#FF8C42',
     transition: 'all 0.2s ease'
   },
   form: {
@@ -415,7 +418,8 @@ const styles = {
     borderRadius: 24,
     border: '1px solid #e0e0e0',
     fontSize: '0.9rem',
-    background: '#FFFFFF',
+    background: 'rgba(255, 255, 255, 0.6)',
+  backdropFilter: 'blur(4px)',
     transition: 'all 0.2s ease',
     width: '100%',
     outline: 'none'
@@ -452,7 +456,8 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '0.8rem 1rem',
-    background: '#f8f8f8',
+    background: 'rgba(255, 255, 255, 0.4)',
+  backdropFilter: 'blur(4px)',
     borderRadius: 28,
     marginTop: '0.5rem'
   },
