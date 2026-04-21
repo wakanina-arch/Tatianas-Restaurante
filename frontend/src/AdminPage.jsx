@@ -10,14 +10,17 @@ export default function AdminPage({
   comercioId,
   menuItems,
   onSaveMenu,
+  onOpenEditor,
   log,
   addLog,
   pendingOrders,
   setPendingOrders,
   finishedOrders,
   setFinishedOrders,
-  onBack
+  onBack,
+  
 }) {
+  const [hojaDeTrabajo, setHojaDeTrabajo] = useState('dashboard'); // 'dashboard', 'editor', 'preview'
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [ordersOpen, setOrdersOpen] = useState(false);
   const [logOpen, setLogOpen] = useState(false);
@@ -147,6 +150,7 @@ export default function AdminPage({
       }}>
         <Acordeon
           menuItems={menuItems}
+          onOpenDrawer={onOpenEditor}
           finishedOrders={finishedOrders}
           setFinishedOrders={setFinishedOrders}
           pendingOrders={pendingOrders}

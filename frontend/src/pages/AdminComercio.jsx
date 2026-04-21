@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import AdminPage from '../AdminPage';
 import HomePage from './HomePage';
+import EditMenuDrawer from '../EditMenuDrawer';
+import AdminNavbar from '../components/AdminNavbar'; // Asegúrate de que la ruta sea correcta
 import { 
   getMenuBorrador, 
   saveMenuBorrador,
@@ -10,12 +12,9 @@ import {
 } from '../services/menuService';
 
 export default function AdminComercio({ comercioId, onBack }) {
-  const [vista, setVista] = useState('dashboard');
+  const [hojaDeTrabajo, setHojaDeTrabajo] = useState('dashboard'); 
   const [menuBorrador, setMenuBorrador] = useState([]);
   const [comercioInfo, setComercioInfo] = useState(null);
-  const [pendingOrders, setPendingOrders] = useState([]);
-  const [finishedOrders, setFinishedOrders] = useState([]);
-  const [log, setLog] = useState([]);
   const [hayCambios, setHayCambios] = useState(false);
 
   useEffect(() => {
@@ -30,14 +29,8 @@ export default function AdminComercio({ comercioId, onBack }) {
       if (encontrado) {
         setComercioInfo({
           ...encontrado,
-          imagen: encontrado.imagen || encontrado.logo,
-          logo: encontrado.logo || encontrado.imagen
-        });
-      } else {
-        setComercioInfo({
-          id: comercioId,
-          nombre: `Comercio #${comercioId}`,
-          imagen: '/casas/default.JPG'
+          nombre: encontrado.nombre,
+          imagen: encontrado.imagen || encontrado.logo
         });
       }
     } catch (e) {
@@ -45,394 +38,133 @@ export default function AdminComercio({ comercioId, onBack }) {
     }
   }, [comercioId]);
 
-  const handleSaveMenu = (updatedMenu) => {
-    setMenuBorrador(updatedMenu);
-    saveMenuBorrador(comercioId, updatedMenu);
-    setHayCambios(true);
-  };
-
-  const handlePublicar = () => {
-    if (!window.confirm('🚀 ¿Publicar cambios? Los clientes verán el nuevo menú inmediatamente.')) {
-      return;
-    }
-    
-    const resultado = publicarMenu(comercioId);
-    if (resultado.success) {
-      setHayCambios(false);
-      alert('✅ Menú publicado correctamente');
+  // --- LÓGICA DE EVENTOS PARA EL NAVBAR ---
+  const handleActionPrincipal = () => {
+    if (hojaDeTrabajo === 'editor') {
+      saveMenuBorrador(comercioId, menuBorrador);
+      setHayCambios(true);
+      alert('✅ Cambios guardados en borrador');
     } else {
-      alert('❌ Error al publicar: ' + resultado.error);
+      if (!window.confirm('🚀 ¿Publicar cambios ahora?')) return;
+      const resultado = publicarMenu(comercioId);
+      if (resultado.success) {
+        setHayCambios(false);
+        alert('✅ Menú publicado');
+      }
     }
   };
 
   const handleDescartar = () => {
-    if (!window.confirm('⚠️ ¿Descartar todos los cambios sin publicar? Esta acción no se puede deshacer.')) {
-      return;
-    }
-    
-    const menuPublicado = descartarBorrador(comercioId);
-    setMenuBorrador(menuPublicado);
+    if (!window.confirm('⚠️ ¿Descartar cambios sin publicar?')) return;
+    setMenuBorrador(descartarBorrador(comercioId));
     setHayCambios(false);
   };
 
-  const handleVolver = () => {
-    if (vista === 'preview') {
-      setVista('dashboard');
-    }
-  };
-
-  const handleVerPreview = () => {
-    setVista('preview');
-  };
-
   const handleLogout = () => {
-    if (hayCambios) {
-      const opcion = window.confirm(
-        '⚠️ Tienes cambios sin publicar.\n\n' +
-        '• Aceptar = Publicar y salir\n' +
-        '• Cancelar = Salir sin publicar'
-      );
-      
-      if (opcion) {
-        publicarMenu(comercioId);
-      }
+    if (hayCambios && window.confirm('⚠️ Tienes cambios pendientes. ¿Publicar antes de salir?')) {
+      publicarMenu(comercioId);
     }
     onBack();
   };
 
-  const addLog = (entry) => {
-    setLog(prev => [...prev, { ...entry, timestamp: new Date().toISOString() }]);
+  const handleVolver = () => {
+    if (hojaDeTrabajo !== 'dashboard') setHojaDeTrabajo('dashboard');
+    else onBack();
   };
 
   return (
-    <div style={{
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      background: 'radial-gradient(circle at 30% 30%, #2a0a0a 0%, #0a0a0a 100%)',
-      overflow: 'hidden'
-    }}>
-      {/* HEADER PRINCIPAL - RESPONSIVE */}
-      <div style={styles.header}>
-        <button onClick={handleVolver} style={styles.backButton}>
-          ← <span className="hide-on-mobile">Panel</span>
-        </button>
-        <div style={styles.spacer}></div>
-        <div style={styles.headerRight}>
-          <div style={styles.comercioBadge}>
-  <span style={{ marginRight: '6px', fontSize: '1rem' }}>🔱</span>
-  <span className="hide-on-mobile">
-    {comercioInfo?.nombre || `ID: ${comercioId}`}
-  </span>
-  <span className="show-on-mobile">
-    {comercioInfo?.nombre || `#${comercioId}`}
-  </span>
-</div>
-          
-          <button onClick={handleVerPreview} style={styles.previewButton} title="Vista Previa">
-            👁️ <span className="hide-on-mobile">Vista Previa</span>
-          </button>
-          
-          {vista === 'dashboard' && (
-            <>
-              {hayCambios ? (
-                <>
-                  <button onClick={handleDescartar} style={styles.discardButton} title="Descartar">
-                    🗑️ <span className="hide-on-mobile">Descartar</span>
-                  </button>
-                  <button onClick={handlePublicar} style={styles.publishButton} title="Publicar">
-                    🚀 <span className="hide-on-mobile">Publicar</span>
-                  </button>
-                </>
-              ) : (
-                <span style={styles.syncedBadge}>
-                  ✅ <span className="hide-on-mobile">Publicado</span>
-                </span>
-              )}
-            </>
-          )}
-          
-          <button onClick={handleLogout} style={styles.logoutButton} title="Cerrar Sesión">
-            🚪 <span className="hide-on-mobile">Cerrar Sesión</span>
-          </button>
-          <button 
-  onClick={() => {
-    const menuDemo = [
-      { nombre: 'Picoteo', opciones: [
-        { nombre: 'Alitas BBQ', precio: 8.50, imagen: 'https://images.pexels.com/photos/2338407/pexels-photo-2338407.jpeg?auto=compress&cs=tinysrgb&w=600' },
-        { nombre: 'Nachos Supreme', precio: 9.90, imagen: 'https://images.pexels.com/photos/2608049/pexels-photo-2608049.jpeg?auto=compress&cs=tinysrgb&w=600' }
-      ]},
-      { nombre: 'Entrantes', opciones: [
-        { nombre: 'Croquetas Caseras', precio: 7.50, imagen: 'https://images.pexels.com/photos/566345/pexels-photo-566345.jpeg?auto=compress&cs=tinysrgb&w=600' }
-      ]},
-      { nombre: 'Gourmets', opciones: [
-        { nombre: 'Solomillo al Foie', precio: 24.00, imagen: 'https://images.pexels.com/photos/675951/pexels-photo-675951.jpeg?auto=compress&cs=tinysrgb&w=600' }
-      ]},
-      { nombre: 'Bebidas', opciones: [
-        { nombre: 'Cerveza Artesanal', precio: 4.50, imagen: 'https://images.pexels.com/photos/1089930/pexels-photo-1089930.jpeg?auto=compress&cs=tinysrgb&w=600' }
-      ]}
-    ];
-    localStorage.setItem('menu_comercio_1', JSON.stringify(menuDemo));
-    localStorage.setItem('borrador_comercio_1', JSON.stringify(menuDemo));
-    alert('✅ Menú cargado. Recarga la página.');
-  }}
-  style={{ background: 'green', color: 'white', padding: '8px', margin: '4px' }}
->
-  🚀 Cargar Demo
-</button>
-        </div>
-      </div>
+    <div style={styles.mainContainer}>
+      
+      {/* NAVBAR UNIFICADO (ONE TO ONE) */}
+      <AdminNavbar 
+        onBack={handleVolver}
+        onHome={() => setHojaDeTrabajo('dashboard')}
+        onLogout={handleLogout}
+        onDelete={handleDescartar}
+        onView={() => setHojaDeTrabajo('preview')}
+        onAction={handleActionPrincipal}
+        nombreComercio={comercioInfo?.nombre}
+        hayCambios={hayCambios}
+        hojaDeTrabajo={hojaDeTrabajo}
+      />
 
       {/* BANNER DE PREVIEW */}
-      {vista === 'preview' && (
+      {hojaDeTrabajo === 'preview' && (
         <div style={styles.previewBanner}>
-          <div style={styles.previewBannerContent}>
-            <span style={styles.previewIcon}>🚀</span>
-            <div style={styles.previewTextWrapper}>
-              <span style={styles.previewText}>
-                <strong>Modo de visualización previa — Vuelva al Panel Administrativo — 
-                Presione <span style={styles.publishHighlight}>Publicar</span> para hacer visible su contenido al público.</strong>
-              </span>
-            </div>
-          </div>
+          <span>🚀 Modo Visualización — Vuelva al Panel para Publicar</span>
         </div>
       )}
 
-      {/* CONTENIDO PRINCIPAL */}
-      <div style={{
-        flex: 1,
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column'
-      }}>
-        {vista === 'dashboard' && (
-          <AdminPage
+      {/* CONTENIDO DINÁMICO */}
+      <div style={styles.contentWrapper}>
+        {hojaDeTrabajo === 'dashboard' && (
+  <AdminPage
+    comercioId={comercioId}
+    menuItems={menuBorrador}
+    onOpenEditor={() => setHojaDeTrabajo('editor')}
+    isDraftMode={true}
+    // 👇 AÑADE ESTAS LÍNEAS PARA EVITAR EL ERROR
+    finishedOrders={[]} 
+    pendingOrders={[]}
+    log={[]}
+    addLog={() => {}}
+    setFinishedOrders={() => {}}
+  />
+)}
+
+        
+        {hojaDeTrabajo === 'editor' && (
+          <EditMenuDrawer
+            open={true}
+            onClose={() => setHojaDeTrabajo('dashboard')}
             comercioId={comercioId}
             menuItems={menuBorrador}
-            onSaveMenu={handleSaveMenu}
-            log={log}
-            addLog={addLog}
-            pendingOrders={pendingOrders}
-            setPendingOrders={setPendingOrders}
-            finishedOrders={finishedOrders}
-            setFinishedOrders={setFinishedOrders}
-            onBack={onBack}
-            isDraftMode={true}
-            fixedMode={true}
+            onSave={(updated) => {
+              setMenuBorrador(updated);
+              setHayCambios(true);
+            }}
           />
         )}
-
-        {vista === 'preview' && comercioInfo && (
+        
+        {hojaDeTrabajo === 'preview' && (
           <HomePage
             comercio={comercioInfo}
             platillos={menuBorrador}
-            user={null}
-            itemCount={0}
-            onOpenPerfil={() => {}}
-            onBackToWelcome={() => setVista('dashboard')}
-            setCurrentPage={() => {}}
+            onBackToWelcome={() => setHojaDeTrabajo('dashboard')}
             isPreviewMode={true}
           />
         )}
       </div>
 
-      {/* PIE DE PÁGINA */}
-      {vista === 'dashboard' && hayCambios && (
-        <div style={styles.draftFooter}>
-          ⚠️ <span className="hide-on-mobile">Estás editando el </span>BORRADOR<span className="hide-on-mobile">. Los cambios NO son visibles para los clientes hasta que publiques.</span>
-        </div>
-      )}
-      
-      {/* ESTILOS RESPONSIVE */}
-      {/* ESTILOS RESPONSIVE */}
-<style>{`
-  .show-on-mobile {
-    display: none;
-  }
-  @media (max-width: 480px) {
-    .hide-on-mobile {
-      display: none !important;
-    }
-    .show-on-mobile {
-      display: inline !important;
-    }
-  }
-`}</style>
+      <style>{`
+        @media (max-width: 480px) { .hide-on-mobile { display: none !important; } }
+      `}</style>
     </div>
   );
 }
 
 const styles = {
-  header: {
-    padding: '0.5rem 0.75rem',
+  mainContainer: {
+    height: '100vh',
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    background: 'rgba(20,10,10,0.85)',
-    backdropFilter: 'blur(20px)',
-    borderBottom: '1px solid rgba(255,215,0,0.2)',
-    position: 'sticky',
-    top: 0,
-    zIndex: 100,
-    flexWrap: 'wrap',
-    gap: '0.25rem',
+    flexDirection: 'column',
+    background: 'radial-gradient(circle at 30% 30%, #2a0a0a 0%, #0a0a0a 100%)',
+    overflow: 'hidden'
   },
-  backButton: {
-    background: 'transparent',
-    border: '1px solid rgba(255,215,0,0.3)',
-    borderRadius: '30px',
-    padding: '0.4rem 0.8rem',
-    color: '#FFD700',
-    cursor: 'pointer',
-    fontSize: '0.8rem',
-    transition: 'all 0.2s ease',
-    whiteSpace: 'nowrap',
-  },
-  spacer: {
+  contentWrapper: {
     flex: 1,
-  },
-  headerRight: {
+    overflow: 'hidden',
     display: 'flex',
-    alignItems: 'center',
-    gap: '0.4rem',
-    flexWrap: 'wrap',
-  },
-  comercioBadge: {
-  background: 'rgba(0, 0, 0, 0.3)',        // Fondo sutil
-  backdropFilter: 'blur(8px)',              // Efecto esmerilado
-  WebkitBackdropFilter: 'blur(8px)',
-  padding: '0.3rem 1rem',
-  borderRadius: '30px',
-  color: 'rgba(255, 255, 255, 0.9)',       // Blanco cristal
-  fontSize: '1rem',
-  fontWeight: '500',                        // Semi-negrita (menos agresiva)
-  letterSpacing: '0.3px',
-  whiteSpace: 'nowrap',
-  maxWidth: '180px',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  border: '1px solid rgba(255, 255, 255, 0.15)', // Borde sutil para definir
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-  transition: 'all 0.2s ease',
-},
-  previewButton: {
-    background: 'rgba(59, 130, 246, 0.2)',
-    border: '1px solid rgba(59, 130, 246, 0.5)',
-    borderRadius: '30px',
-    padding: '0.4rem',
-    minWidth: '36px',
-    color: '#60a5fa',
-    cursor: 'pointer',
-    fontSize: '1rem',
-    transition: 'all 0.2s ease',
-    whiteSpace: 'nowrap',
-  },
-  publishButton: {
-    background: 'linear-gradient(135deg, #00a86b, #2ecc71)',
-    border: 'none',
-    borderRadius: '30px',
-    padding: '0.4rem',
-    minWidth: '36px',
-    color: 'white',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    fontSize: '1rem',
-    transition: 'all 0.2s ease',
-    whiteSpace: 'nowrap',
-  },
-  discardButton: {
-    background: 'rgba(230, 57, 70, 0.2)',
-    border: '1px solid rgba(230, 57, 70, 0.5)',
-    borderRadius: '30px',
-    padding: '0.4rem',
-    minWidth: '36px',
-    color: '#ff6b6b',
-    cursor: 'pointer',
-    fontSize: '1rem',
-    transition: 'all 0.2s ease',
-    whiteSpace: 'nowrap',
-  },
-  syncedBadge: {
-    color: '#2ecc71',
-    fontSize: '0.8rem',
-    padding: '0.4rem',
-    whiteSpace: 'nowrap',
-  },
-  logoutButton: {
-    background: 'rgba(230, 57, 70, 0.2)',
-    border: '1px solid rgba(230, 57, 70, 0.5)',
-    borderRadius: '30px',
-    padding: '0.4rem',
-    minWidth: '36px',
-    color: '#ff6b6b',
-    cursor: 'pointer',
-    fontSize: '1rem',
-    fontWeight: '600',
-    transition: 'all 0.2s ease',
-    whiteSpace: 'nowrap',
+    flexDirection: 'column'
   },
   previewBanner: {
-    padding: '0.4rem 1rem',
-    background: 'rgba(59, 130, 246, 0.15)',
-    borderBottom: '1px solid rgba(59, 130, 246, 0.3)',
-    color: '#60a5fa',
-    fontSize: '0.75rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-  previewBannerContent: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    maxWidth: '900px',
-  },
-  previewIcon: {
-    fontSize: '1.1rem',
-    lineHeight: 1,
-    flexShrink: 0,
-  },
-  previewTextWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  previewText: {
-    lineHeight: 1.4,
-    letterSpacing: '0.3px',
-  },
-  publishHighlight: {
-    color: '#2ecc71',
-    fontWeight: '700',
-    marginLeft: '3px',
-    marginRight: '3px',
-  },
-  draftFooter: {
-    padding: '0.4rem 1rem',
-    background: 'rgba(20, 10, 5, 0.95)',
-    backdropFilter: 'blur(10px)',
-    borderTop: '1px solid rgba(255, 193, 7, 0.3)',
-    color: '#ffc107',
-    fontSize: '0.7rem',
+    padding: '8px',
+    background: '#FFD700',
+    color: '#000',
     textAlign: 'center',
-    flexShrink: 0,
-  },
+    fontSize: '0.75rem',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    letterSpacing: '1px'
+  }
 };
-
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-  button:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.1);
-  }
-  @media (max-width: 480px) {
-    button {
-      padding: 0.3rem !important;
-      min-width: 32px !important;
-      font-size: 0.9rem !important;
-    }
-  }
-`;
-if (typeof document !== 'undefined') {
-  document.head.appendChild(styleSheet);
-}
