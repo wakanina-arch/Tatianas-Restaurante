@@ -64,13 +64,23 @@ export default function EditMenuDrawer({ open, onClose, comercioId, menuItems, o
   };
 
   const handleAddPlato = (catIdx) => {
-    setItems(prev => {
-      const newItems = [...prev];
-      newItems[catIdx].opciones.push({ nombre: '', precio: 0, imagen: '', descripcion: '' });
-      return newItems;
-    });
+  setItems(prev => {
+    const newItems = [...prev];
+    const nuevasOpciones = [...newItems[catIdx].opciones, { 
+      nombre: '', 
+      precio: 0, 
+      imagen: '', 
+      descripcion: '' 
+    }];
+    newItems[catIdx] = { ...newItems[catIdx], opciones: nuevasOpciones };
+    return newItems;
+  });
+  
+  // Expandir la categoría (con micro-retraso)
+  setTimeout(() => {
     setExpandidas(prev => ({ ...prev, [catIdx]: true }));
-  };
+  }, 10);
+};
 
   const handleToggleDeletePlato = (catIdx, optIdx) => {
     setItems(prev => {

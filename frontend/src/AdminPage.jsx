@@ -80,14 +80,15 @@ export default function AdminPage({
   };
 
   return (
-    <section className="admin-page" style={{
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden',
-      padding: '0.75rem',
-      paddingBottom: '0'
-    }}>
+   <section className="admin-page" style={{
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+  padding: '1.5rem',
+  paddingTop: '56px',   // ← Espacio para el AdminNavbar
+  paddingBottom: '0'
+}}>
       {/* HERO COMPACTO */}
       <div style={{
         marginBottom: '0.75rem',
@@ -157,7 +158,7 @@ export default function AdminPage({
           log={log}
           addLog={addLog}
           total={total}
-          onOpenDrawer={() => setDrawerOpen(true)}
+          
           onOpenOrders={() => setOrdersOpen(true)}
           onOpenLog={() => setLogOpen(true)}
           onOpenPromos={() => setPromosOpen(true)}

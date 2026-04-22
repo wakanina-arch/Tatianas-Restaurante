@@ -134,7 +134,11 @@ function MainApp() {
             </header>
           )}
           <RegisterModal open={perfilAbierto} onClose={() => setPerfilAbierto(false)} onRegister={(d, m) => { setUser(m === 'logout' ? null : d); setPerfilAbierto(false); }} />
-          <main style={{ paddingTop: (!isAdminMode && !isTransition) ? '100px' : 0, minHeight: 'calc(100vh - 100px)' }}>
+          <main style={{ 
+  paddingTop: (!isAdminMode && !isTransition) ? '100px' : '0',
+  minHeight: 'calc(100vh - 100px)',
+  overflow: isAdminMode ? 'hidden' : 'auto'
+}}>
             {currentPage === 'home' && <HomePage comercio={comercioActivo} platillos={menuItems} user={user} itemCount={itemCount} onOpenPerfil={() => setPerfilAbierto(true)} onBackToWelcome={handleBackToWelcome} setCurrentPage={setCurrentPage} />}
             {currentPage === 'carrito' && <CartPage onVolverAlMenu={() => setCurrentPage('home')} />}
             {currentPage === 'admin' && <AdminPage menuItems={menuItems} onSaveMenu={() => {}} log={[]} addLog={() => {}} pendingOrders={[]} setPendingOrders={() => {}} finishedOrders={[]} setFinishedOrders={() => {}} onBack={() => setCurrentPage('home')} />}
@@ -178,7 +182,7 @@ const totalFinal = (subtotal - ahorro).toFixed(2);
       <div style={CS.emptyCard}>
         <span style={CS.emptyIcon}>🛒</span>
         <h2>Tu carrito está vacío</h2>
-        <button onClick={onVolverAlMenu} style={CS.backBtn}>Volver</button>
+        <button onClick={onVolverAlMenu} style={CS.backBtn}>🔱 Volver</button>
       </div>
     );
   }
@@ -282,8 +286,35 @@ const CS = {
   pageTitle: { fontSize: '1.6rem', fontWeight: '600', color: '#039921', textAlign: 'center', marginBottom: '1rem' },
   cartCard: { background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(20px)', borderRadius: 32, padding: '1.2rem' },
   itemsList: { marginBottom: '1rem' },
-  emptyCard: { textAlign: 'center', padding: '2rem', background: 'rgba(255,255,255,0.7)', borderRadius: 32 },
-  emptyIcon: { fontSize: '3rem', display: 'block', marginBottom: '1rem' },
+  emptyCard: {
+  textAlign: 'center',
+  padding: '1.5rem',
+  background: 'rgba(255, 255, 255, 0.7)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  borderRadius: '24px',
+  maxWidth: '280px',
+  margin: '2rem auto',
+  border: '1px solid rgba(255, 255, 255, 0.3)',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+},
+emptyIcon: {
+  fontSize: '2rem',
+  display: 'block',
+  marginBottom: '0.75rem',
+  opacity: 0.7,
+},
+emptyTitle: {
+  fontSize: '1rem',
+  fontWeight: '600',
+  color: '#01400e',
+  marginBottom: '0.5rem',
+},
+emptyText: {
+  fontSize: '0.8rem',
+  color: '#666',
+  marginBottom: '1.25rem',
+},
 
   // 📋 Ticket Minimalista (Items del carrito)
   itemRow: {

@@ -5,45 +5,21 @@ export default function PlatoCard({ plato, onUpdateCart }) {
   
   const precio = plato.precio || 0;
   const imagen = plato.imagen || plato.imagenes?.[0] || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22 font-size=%2214%22 fill=%22%23999%22%3ESin imagen%3C/text%3E%3C/svg%3E';
-  const s = document.createElement('style');
-s.id = 'fog-pulse-style';
-s.textContent = `
-  @keyframes fogPulse {
-    0% { 
-      /* Sombra negra traslúcida, derrame corto */
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); 
-      border-color: rgba(255, 255, 255, 0.05);
-    }
-    50% { 
-      /* Derrame más largo y suave, como humo gris */
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4); 
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-    100% { 
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); 
-      border-color: rgba(255, 255, 255, 0.05);
-    }
-  }
-`;
-if (!document.getElementById('fog-pulse-style')) {
-  document.head.appendChild(s);
-}
-
 
   const actualizarCantidad = (nueva) => {
-  setCantidad(nueva);
-  onUpdateCart?.({
-    id: plato.id || plato.nombre,  // ← ID FIJO (sin Date.now)
-    nombre: plato.nombre,
-    precio: plato.precio,
-    precioOriginal: plato.precioOriginal || plato.precio,  // ← AÑADIR
-    enOferta: plato.enOferta || false,                      // ← AÑADIR
-    descuentoAplicado: plato.descuentoAplicado || 0,        // ← AÑADIR
-    tagPromo: plato.tagPromo || '',                         // ← AÑADIR
-    cantidad: nueva,
-    imagen: plato.imagen
-  }, nueva);
-};
+    setCantidad(nueva);
+    onUpdateCart?.({
+      id: plato.id || plato.nombre,
+      nombre: plato.nombre,
+      precio: plato.precio,
+      precioOriginal: plato.precioOriginal || plato.precio,
+      enOferta: plato.enOferta || false,
+      descuentoAplicado: plato.descuentoAplicado || 0,
+      tagPromo: plato.tagPromo || '',
+      cantidad: nueva,
+      imagen: plato.imagen
+    }, nueva);
+  };
 
   return (
     <div style={styles.card}>
@@ -53,28 +29,17 @@ if (!document.getElementById('fog-pulse-style')) {
         <p style={styles.descripcion}>{plato.descripcion || 'Deliciosa opción para tu paladar'}</p>
         
         <div style={styles.fila}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={styles.precioContainer}>
             <span style={styles.precio}>${precio.toFixed(2)}</span>
             
-            {/* 🏷️ TAG DE PROMOCIÓN INFORMATIVO */}
+            {/* 🏷️ TAG DE PROMOCIÓN NANO PLUS */}
             {plato.enOferta && (
-  <div style={styles.badgePromo}>
-    <span style={{ filter: 'grayscale(1) brightness(0.8)', fontSize: '0.9rem' }}>†</span>
-    
-    {/* EL DATO CLAVE: El porcentaje con un brillo sutil */}
-    <span style={styles.cifraMistica}>{plato.descuentoAplicado}%</span>
-    
-    <span style={{ textShadow: '0 0 8px rgba(138, 43, 226, 0.6)', flex: 1 }}>
-      {plato.tagPromo}
-    </span>
-    
-    <span style={{ color: '#8a2be2', fontSize: '0.7rem', fontWeight: 'bold' }}>🔱</span>
-  </div>
-)}
-
-
-
-
+              <div style={styles.badgePromo}>
+                <span style={styles.cifraMistica}>{plato.descuentoAplicado}%</span>
+                <span style={styles.tagPromoTexto}>{plato.tagPromo}</span>
+                <span style={styles.tridenteIcono}>🔱</span>
+              </div>
+            )}
           </div>
           
           {cantidad === 0 ? (
@@ -85,7 +50,7 @@ if (!document.getElementById('fog-pulse-style')) {
             <div style={styles.botonCantidad}>
               <button onClick={() => actualizarCantidad(0)} style={styles.botonAccion} title="Eliminar">🗑</button>
               {cantidad > 1 && (
-                <button onClick={() => actualizarCantidad(cantidad - 1)} style={styles.botonAccion}>-</button>
+                <button onClick={() => actualizarCantidad(cantidad - 1)} style={styles.botonAccion}>−</button>
               )}
               <span style={styles.cantidad}>{cantidad}</span>
               <button onClick={() => actualizarCantidad(cantidad + 1)} style={styles.botonSimple}>
@@ -103,117 +68,141 @@ const styles = {
   card: {
     display: 'flex',
     gap: '12px',
-    background: 'rgba(255,255,255,0.95)',
-    borderRadius: '20px',
-    margin: '8px 16px',
+    background: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: '18px',
+    margin: '10px 14px',
     padding: '12px',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-    border: '1px solid rgba(255,215,0,0.2)',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+    border: '1px solid rgba(255, 215, 0, 0.12)',
   },
   imagen: {
-    width: '80px',
-    height: '80px',
-    borderRadius: '16px',
+    width: '70px',
+    height: '70px',
+    borderRadius: '12px',
     objectFit: 'cover',
+    flexShrink: 0,
   },
   info: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    minWidth: 0,
   },
   titulo: {
-    margin: '0 0 4px 0',
-    fontSize: '1rem',
-    fontWeight: '600',
+    margin: '0 0 3px 0',
+    fontSize: '0.95rem',
+    fontWeight: '700',
     color: '#1a1a1a',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   descripcion: {
-    margin: '0 0 8px 0',
-    fontSize: '0.75rem',
+    margin: '0 0 6px 0',
+    fontSize: '0.7rem',
     color: '#666',
     lineHeight: '1.3',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
   },
   fila: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    gap: '6px',
+  },
+  precioContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '3px',
   },
   precio: {
-    fontSize: '1rem',
+    fontSize: '0.95rem',
     fontWeight: '700',
     color: '#FF8C42',
+    lineHeight: 1.2,
   },
-  /* ESTILO DEL CARMELITO INFORMATIVO */
-badgePromo: {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '3px',
-  padding: '1px 6px',
-  background: 'rgba(153, 153, 161, 0.5)',
-  backdropFilter: 'blur(3px)',
-  WebkitBackdropFilter: 'blur(3px)',
-  color: '#f6eeee',
-  borderRadius: '3px 10px 3px 10px',
-  fontSize: '0.55rem',
-  fontWeight: '600',
-  letterSpacing: '0.5px',
-  textTransform: 'uppercase',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-  border: '1px solid rgba(138, 43, 226, 0.15)',
-  whiteSpace: 'nowrap',
-  lineHeight: 1.2,
-},
-cifraMistica: {
-  fontWeight: '600',
-  fontSize: '0.7rem',
-  color: '#01400e',
-  textShadow: '0 0 5px rgba(162, 155, 254, 0.4)',
-  letterSpacing: '-0.2px',
-  marginRight: '1px',
-},
-
-
+  badgePromo: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '3px',
+    padding: '2px 5px',
+    background: 'rgba(153, 153, 161, 0.45)',
+    backdropFilter: 'blur(2px)',
+    WebkitBackdropFilter: 'blur(2px)',
+    color: '#f6eeee',
+    borderRadius: '3px 7px 3px 7px',
+    fontSize: '0.5rem',
+    fontWeight: '600',
+    letterSpacing: '0.2px',
+    textTransform: 'uppercase',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.15)',
+    border: '1px solid rgba(138, 43, 226, 0.12)',
+    whiteSpace: 'nowrap',
+    lineHeight: 1,
+    maxWidth: '100%',
+  },
+  cifraMistica: {
+    fontWeight: '700',
+    fontSize: '0.6rem',
+    color: '#01400e',
+    textShadow: '0 0 3px rgba(162, 155, 254, 0.3)',
+    letterSpacing: '-0.1px',
+  },
+  tagPromoTexto: {
+    fontSize: '0.5rem',
+    fontWeight: '500',
+    textShadow: '0 0 4px rgba(138, 43, 226, 0.4)',
+  },
+  tridenteIcono: {
+    color: '#8a2be2',
+    fontSize: '0.6rem',
+    fontWeight: 'bold',
+  },
   botonSimple: {
     background: 'transparent',
-    border: '1px solid rgba(1, 64, 14, 0.3)',
-    borderRadius: '30px',
-    width: '32px',
-    height: '32px',
+    border: '1px solid rgba(1, 64, 14, 0.25)',
+    borderRadius: '22px',
+    width: '28px',
+    height: '28px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
+    flexShrink: 0,
   },
   masIcono: {
-    fontSize: '1.2rem',
+    fontSize: '1rem',
     color: '#01400e',
     fontWeight: '600',
   },
   botonCantidad: {
     display: 'flex',
     alignItems: 'center',
-    gap: '6px',
-    background: 'rgba(1, 64, 14, 0.08)',
-    borderRadius: '30px',
-    padding: '2px 4px',
+    gap: '2px',
+    background: 'rgba(1, 64, 14, 0.05)',
+    borderRadius: '22px',
+    padding: '1px 2px',
   },
   botonAccion: {
     background: 'transparent',
     border: 'none',
-    fontSize: '1rem',
+    fontSize: '0.85rem',
     cursor: 'pointer',
     color: '#01400e',
-    width: '28px',
-    height: '28px',
+    width: '24px',
+    height: '24px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
   cantidad: {
-    fontSize: '0.9rem',
+    fontSize: '0.8rem',
     fontWeight: '600',
-    minWidth: '24px',
+    minWidth: '18px',
     textAlign: 'center',
     color: '#01400e',
   },
