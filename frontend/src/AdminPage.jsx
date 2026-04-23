@@ -85,23 +85,24 @@ export default function AdminPage({
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
-  padding: '1.5rem',
-  paddingTop: '56px',   // ← Espacio para el AdminNavbar
+  padding: '0.25rem 1.5rem 0',
+  paddingTop: '8px',   // ← Espacio para el AdminNavbar
   paddingBottom: '0'
 }}>
       {/* HERO COMPACTO */}
-      <div style={{
-        marginBottom: '0.75rem',
-        padding: '0.75rem 1rem',
-        background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 69, 0, 0.03) 100%)',
-        borderRadius: '40px',
-        border: '1px solid rgba(255, 215, 0, 0.15)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
-        textAlign: 'center',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-        flexShrink: 0
-      }}>
+     <div style={{
+  marginTop: '0',                  // ← Sin margen superior extra
+  marginBottom: '0.5rem',          // ← Reducido de 0.75rem
+  padding: '0.75rem 1rem',
+  background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 69, 0, 0.03) 100%)',
+  borderRadius: '40px',
+  border: '1px solid rgba(255, 215, 0, 0.15)',
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
+  textAlign: 'center',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+  flexShrink: 0
+}}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
