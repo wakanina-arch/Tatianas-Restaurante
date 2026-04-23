@@ -123,24 +123,34 @@ export default function AdminComercio({ comercioId, onBack }) {
   };
 
   return (
-    <div style={styles.mainContainer}>
-      
-      {/* NAVBAR UNIFICADO */}
-      <AdminNavbar 
-        onBack={handleVolver}
-        onHome={() => setHojaDeTrabajo('dashboard')}
-        onLogout={handleLogout}
-        onDelete={handleDescartar}
-        onView={() => setHojaDeTrabajo('preview')}
-        onAction={handleActionPrincipal}
-        nombreComercio={comercioInfo?.nombre}
-        hayCambios={hayCambios}
-        hojaDeTrabajo={hojaDeTrabajo}
-      />
+  <div style={styles.mainContainer}>
+    
+    {/* NAVBAR UNIFICADO */}
+    <AdminNavbar 
+      onBack={handleVolver}
+      onHome={() => setHojaDeTrabajo('dashboard')}
+      onLogout={handleLogout}
+      onDelete={handleDescartar}
+      onView={() => setHojaDeTrabajo('preview')}
+      onAction={handleActionPrincipal}
+      nombreComercio={comercioInfo?.nombre}
+      hayCambios={hayCambios}
+      hojaDeTrabajo={hojaDeTrabajo}
+    />
 
-      {/* 🚀 BOTÓN CARGAR DEMO (TEMPORAL) */}
+    {/* BANNER DE PREVIEW */}
+    {hojaDeTrabajo === 'preview' && (
+      <div style={styles.previewBanner}>
+        <span>🚀 Modo Visualización — Vuelva al Panel para Publicar</span>
+      </div>
+    )}
+
+    {/* CONTENIDO DINÁMICO */}
+    <div style={styles.contentWrapper}>
+      
+      {/* 🚀 BOTÓN CARGAR DEMO - AQUÍ, DENTRO DEL CONTENT WRAPPER */}
       {hojaDeTrabajo === 'dashboard' && (
-        <div style={{ padding: '8px 16px', textAlign: 'center' }}>
+        <div style={{ padding: '6px 16px', textAlign: 'center', flexShrink: 0 }}>
           <button 
             onClick={handleCargarDemo}
             style={{
@@ -155,46 +165,24 @@ export default function AdminComercio({ comercioId, onBack }) {
               boxShadow: '0 2px 8px rgba(255, 215, 0, 0.3)',
             }}
           >
-            🚀 Cargar Demo (24 platos)
+            🚀 Cargar Demo 
           </button>
         </div>
       )}
 
-      {/* BANNER DE PREVIEW */}
-      {hojaDeTrabajo === 'preview' && (
-        <div style={styles.previewBanner}>
-          <span>🚀 Modo Visualización — Vuelva al Panel para Publicar</span>
-        </div>
+      {hojaDeTrabajo === 'dashboard' && (
+        <AdminPage
+          comercioId={comercioId}
+          menuItems={menuBorrador}
+          onOpenEditor={() => setHojaDeTrabajo('editor')}
+          isDraftMode={true}
+          finishedOrders={[]} 
+          pendingOrders={[]}
+          log={[]}
+          addLog={() => {}}
+          setFinishedOrders={() => {}}
+        />
       )}
-
-      {/* CONTENIDO DINÁMICO */}
-      <div style={styles.contentWrapper}>
-        {hojaDeTrabajo === 'dashboard' && (
-          <AdminPage
-            comercioId={comercioId}
-            menuItems={menuBorrador}
-            onOpenEditor={() => setHojaDeTrabajo('editor')}
-            isDraftMode={true}
-            finishedOrders={[]} 
-            pendingOrders={[]}
-            log={[]}
-            addLog={() => {}}
-            setFinishedOrders={() => {}}
-          />
-        )}
-        
-        {hojaDeTrabajo === 'editor' && (
-          <EditMenuDrawer
-            open={true}
-            onClose={() => setHojaDeTrabajo('dashboard')}
-            comercioId={comercioId}
-            menuItems={menuBorrador}
-            onSave={(updated) => {
-              setMenuBorrador(updated);
-              setHayCambios(true);
-            }}
-          />
-        )}
         
         {hojaDeTrabajo === 'preview' && (
           <HomePage
