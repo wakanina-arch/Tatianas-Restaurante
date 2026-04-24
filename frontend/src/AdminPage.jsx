@@ -20,7 +20,7 @@ export default function AdminPage({
   onBack,
   
 }) {
-  const [hojaDeTrabajo, setHojaDeTrabajo] = useState('dashboard'); // 'dashboard', 'editor', 'preview'
+  
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [ordersOpen, setOrdersOpen] = useState(false);
   const [logOpen, setLogOpen] = useState(false);
@@ -203,42 +203,42 @@ export default function AdminPage({
       <ArchivoDrawer open={logOpen} onClose={() => setLogOpen(false)} log={log} />
       <PromosDrawer open={promosOpen} onClose={() => setPromosOpen(false)} menuItems={menuItems} onSaveMenu={onSaveMenu} />
 
-      <style jsx>{`
-        .modal-backdrop {
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: rgba(0,0,0,0.7);
-          z-index: 3000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          backdrop-filter: blur(4px);
-        }
-        .modal-content {
-          background: white;
-          border-radius: 24px;
-          padding: 1.5rem;
-          max-width: 500px;
-          width: 90%;
-          position: relative;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        .modal-close {
-          position: absolute;
-          top: 10px; right: 10px;
-          background: #f0f0f0;
-          border: none;
-          width: 30px; height: 30px;
-          border-radius: 50%;
-          cursor: pointer;
-          font-size: 1rem;
-        }
-        @media (max-width: 480px) {
-          .modal-content {
-            padding: 1rem;
-          }
-        }
-      `}</style>
+      <style>{`
+  .modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-content {
+    background: white;
+    border-radius: 24px;
+    padding: 1.5rem;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  .modal-close {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: #f0f0f0;
+    border: none;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  @media (max-width: 480px) {
+    .modal-content {
+      padding: 1rem;
+    }
+  }
+`}</style>
     </section>
   );
 }

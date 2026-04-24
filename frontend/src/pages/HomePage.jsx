@@ -258,7 +258,7 @@ export default function HomePage({ comercio: comercioProp, platillos: platillosP
             <div
               ref={(el) => (sentinelRef.current[cat.id] = el)}
               data-categoria={cat.id}
-              style={{ height: '1px', margin: 0, padding: 0, background: 'transparent' }}
+              style={{ height: '10px', margin: 0, padding: 0, background: 'transparent' }}
             />
             <h3 style={styles.seccionTitulo}>{cat.nombre}</h3>
             {platillosPorCategoria(cat.id).map((plato, idx) => (
@@ -281,7 +281,7 @@ export default function HomePage({ comercio: comercioProp, platillos: platillosP
           <div
             ref={(el) => (sentinelRef.current['Nosotros'] = el)}
             data-categoria="Nosotros"
-            style={{ height: '1px', margin: 0, padding: 0, background: 'transparent' }}
+            style={{ height: '10px', margin: 0, padding: 0, background: 'transparent' }}
           />
           <h3 style={styles.seccionTitulo}>⚙️ NOSOTROS</h3>
           <div style={styles.infoCard}>

@@ -54,7 +54,19 @@ export default function Acordeon({
       content: (
         <>
           <p style={styles.cardDescription}>Configura Menú Diario y agrega precios e imágenes</p>
-          <button className="admin-btn" onClick={onOpenDrawer} style={styles.actionBtn}>
+          <button 
+  className="admin-btn" 
+  onClick={() => {
+    console.log('🖱️ Botón Editar Menú clickeado');
+    console.log('🖱️ onOpenDrawer:', typeof onOpenDrawer);
+    if (onOpenDrawer) {
+      onOpenDrawer();
+    } else {
+      console.error('❌ onOpenDrawer no está definido');
+    }
+  }} 
+  style={styles.actionBtn}
+>
             🚀 Editar Menú
           </button>
         </>

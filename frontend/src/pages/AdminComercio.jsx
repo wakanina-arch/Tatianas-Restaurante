@@ -121,7 +121,7 @@ export default function AdminComercio({ comercioId, onBack }) {
     if (hojaDeTrabajo !== 'dashboard') setHojaDeTrabajo('dashboard');
     else onBack();
   };
-
+console.log('🔄 Renderizando AdminComercio. hojaDeTrabajo:', hojaDeTrabajo);
   return (
   <div style={styles.mainContainer}>
     
@@ -146,53 +146,69 @@ export default function AdminComercio({ comercioId, onBack }) {
     )}
 
     {/* CONTENIDO DINÁMICO */}
-    <div style={styles.contentWrapper}>
-      
-      {/* 🚀 BOTÓN CARGAR DEMO - AQUÍ, DENTRO DEL CONTENT WRAPPER */}
-      {hojaDeTrabajo === 'dashboard' && (
-        <div style={{ padding: '6px 16px', textAlign: 'center', flexShrink: 0 }}>
-          <button 
-            onClick={handleCargarDemo}
-            style={{
-              background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-              color: '#1a0a0a',
-              border: 'none',
-              borderRadius: '24px',
-              padding: '8px 16px',
-              fontSize: '0.8rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(255, 215, 0, 0.3)',
-            }}
-          >
-            🚀 Cargar Demo 
-          </button>
-        </div>
-      )}
+   <div style={styles.contentWrapper}>
+  
+  {/* BOTÓN CARGAR DEMO */}
+  {hojaDeTrabajo === 'dashboard' && (
+    <div style={{ padding: '6px 16px', textAlign: 'center', flexShrink: 0 }}>
+      <button 
+  onClick={handleCargarDemo}
+  style={{
+    background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+    color: '#1a0a0a',
+    border: 'none',
+    borderRadius: '24px',
+    padding: '8px 16px',
+    fontSize: '0.8rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    boxShadow: '0 2px 8px rgba(255, 215, 0, 0.3)',
+  }}
+>
+  🚀 Cargar Demo
+</button>
+    </div>
+  )}
 
-      {hojaDeTrabajo === 'dashboard' && (
-        <AdminPage
-          comercioId={comercioId}
-          menuItems={menuBorrador}
-          onOpenEditor={() => setHojaDeTrabajo('editor')}
-          isDraftMode={true}
-          finishedOrders={[]} 
-          pendingOrders={[]}
-          log={[]}
-          addLog={() => {}}
-          setFinishedOrders={() => {}}
-        />
-      )}
-        
-        {hojaDeTrabajo === 'preview' && (
-          <HomePage
-            comercio={comercioInfo}
-            platillos={menuBorrador}
-            onBackToWelcome={() => setHojaDeTrabajo('dashboard')}
-            isPreviewMode={true}
-          />
-        )}
-      </div>
+  {/* DASHBOARD */}
+  {hojaDeTrabajo === 'dashboard' && (
+    <AdminPage
+      comercioId={comercioId}
+      menuItems={menuBorrador}
+      onOpenEditor={() => setHojaDeTrabajo('editor')}
+      isDraftMode={true}
+      finishedOrders={[]} 
+      pendingOrders={[]}
+      log={[]}
+      addLog={() => {}}
+      setFinishedOrders={() => {}}
+    />
+  )}
+  
+  {/* ✅ EDITOR - ¡ESTO FALTABA! */}
+  {hojaDeTrabajo === 'editor' && (
+    <EditMenuDrawer
+      open={true}
+      onClose={() => setHojaDeTrabajo('dashboard')}
+      comercioId={comercioId}
+      menuItems={menuBorrador}
+      onSave={(updated) => {
+        setMenuBorrador(updated);
+        setHayCambios(true);
+      }}
+    />
+  )}
+  
+  {/* PREVIEW */}
+  {hojaDeTrabajo === 'preview' && (
+    <HomePage
+      comercio={comercioInfo}
+      platillos={menuBorrador}
+      onBackToWelcome={() => setHojaDeTrabajo('dashboard')}
+      isPreviewMode={true}
+    />
+  )}
+</div>
 
       <style>{`
         @media (max-width: 480px) { .hide-on-mobile { display: none !important; } }
