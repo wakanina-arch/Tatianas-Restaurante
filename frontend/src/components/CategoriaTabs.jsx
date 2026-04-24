@@ -71,21 +71,21 @@ export default function CategoriaTabs({ categorias, categoriaActiva, onSelectCat
 
 const styles = {
   container: {
-    display: 'flex',
-    overflowX: 'auto',
-    gap: '6px',
-    padding: '8px 10px',
-    background: 'rgba(20, 10, 10, 0.85)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    borderBottom: '1px solid rgba(255, 215, 0, 0.15)',
-    position: 'sticky',
-    top: 0,
-    zIndex: 100,
-    scrollBehavior: 'smooth',
-    msOverflowStyle: 'none',
-    scrollbarWidth: 'none',
-  },
+  display: 'flex',
+  overflowX: 'auto',
+  gap: '6px',
+  padding: '8px 10px',
+  background: 'rgba(20, 10, 10, 0.55)',   // ← Más transparente (antes 0.85)
+  backdropFilter: 'blur(20px)',             // ← Efecto esmerilado
+  WebkitBackdropFilter: 'blur(20px)',
+  borderBottom: '1px solid rgba(255, 215, 0, 0.12)', // ← Borde más sutil
+  position: 'sticky',
+  top: 0,
+  zIndex: 100,
+  scrollBehavior: 'smooth',
+  msOverflowStyle: 'none',
+  scrollbarWidth: 'none',
+},
   tab: {
     display: 'flex',
     alignItems: 'center',

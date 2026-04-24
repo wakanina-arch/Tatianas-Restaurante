@@ -137,68 +137,55 @@ export default function HomePage({ comercio: comercioProp, platillos: platillosP
   };
 
   const scrollASeccion = (categoriaId) => {
-    console.log('📍 Click en:', categoriaId);
-    isScrollingProgrammatically.current = true;
-    bloqueoSincronizacionRef.current = true;
-    setCategoriaActiva(categoriaId);
+  bloqueoSincronizacionRef.current = true;
+  setCategoriaActiva(categoriaId);
 
-    const sentinel = document.querySelector(`[data-categoria="${categoriaId}"]`);
-    console.log('📍 Centinela encontrado:', !!sentinel);
+  // Buscar el centinela (más fiable que el div completo)
+  const sentinel = sentinelRef.current[categoriaId] || document.querySelector(`[data-categoria="${categoriaId}"]`);
+  
+  if (sentinel) {
+    const offset = 340; // Altura del Hero + Tabs
+    const top = sentinel.getBoundingClientRect().top + window.scrollY - offset;
     
-    if (sentinel) {
-      const offset = 100;
-      const rect = sentinel.getBoundingClientRect();
-      const top = rect.top + window.scrollY - offset;
-      
-      console.log('📍 Haciendo scroll a:', top);
-      
-      window.scrollTo({
-        top: top,
-        behavior: 'smooth'
-      });
-    } else {
-      console.error('❌ Centinela NO encontrado para:', categoriaId);
-    }
-    
-    setTimeout(() => { 
-      bloqueoSincronizacionRef.current = false;
-      setTimeout(() => {
-        isScrollingProgrammatically.current = false;
-      }, 100);
-    }, 600);
-  };
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: 'smooth'
+    });
+  }
+  
+  // Liberar el bloqueo después de que termine el scroll
+  setTimeout(() => { 
+    bloqueoSincronizacionRef.current = false; 
+  }, 600);
+};
 
   // Sincronización tabs ↔ scroll
-  useEffect(() => {
-    const TRIGGER_LINE = 100;
-
-    const handleScroll = () => {
-      if (bloqueoSincronizacionRef.current || isScrollingProgrammatically.current) return;
-
-      let categoriaVisible = CATEGORIAS_LIST[0].id;
-      
-      for (let i = CATEGORIAS_LIST.length - 1; i >= 0; i--) {
-        const cat = CATEGORIAS_LIST[i];
-        const el = sentinelRef.current[cat.id] || document.getElementById(cat.id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= TRIGGER_LINE) {
-            categoriaVisible = cat.id;
-            break;
-          }
+  // 🚨 PARCHE TEMPORAL: Sincronización forzada cada 500ms
+useEffect(() => {
+  const interval = setInterval(() => {
+    const TRIGGER_LINE = 340;
+    let categoriaVisible = CATEGORIAS_LIST[0].id;
+    
+    for (let i = CATEGORIAS_LIST.length - 1; i >= 0; i--) {
+      const cat = CATEGORIAS_LIST[i];
+      const el = sentinelRef.current[cat.id] || document.querySelector(`[data-categoria="${cat.id}"]`);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= TRIGGER_LINE) {
+          categoriaVisible = cat.id;
+          break;
         }
       }
+    }
+    
+    if (categoriaVisible !== categoriaActiva) {
+      console.log('🔄 Sincronizando tab a:', categoriaVisible);
+      setCategoriaActiva(categoriaVisible);
+    }
+  }, 500); // Cada medio segundo
 
-      if (categoriaVisible !== categoriaActiva) {
-        setCategoriaActiva(categoriaVisible);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [categoriaActiva]);
+  return () => clearInterval(interval);
+}, [categoriaActiva]);
 
   const updateCarrito = (plato, cantidad) => {
     if (cantidad > 0) {
@@ -223,7 +210,7 @@ export default function HomePage({ comercio: comercioProp, platillos: platillosP
       {/* HERO + TABS - ABSOLUTAMENTE FIJOS (NO SCROLL) */}
       <div style={{
         position: 'fixed',
-        top: 0,
+        top: 60,
         left: 0,
         right: 0,
         zIndex: 100,
@@ -240,43 +227,45 @@ export default function HomePage({ comercio: comercioProp, platillos: platillosP
       </div>
 
       {/* ESPACIADOR INVISIBLE (Empuja el contenido debajo del Hero + Tabs) */}
-      <div style={{ height: '104px', flexShrink: 0 }} />
+      <div style={{ height: '250px ', flexShrink: 0 }} />
 
       {/* CONTENIDO SCROLLEABLE */}
       <div style={{ flex: 1, paddingBottom: '80px' }}>
         {CATEGORIAS_LIST.filter(c => c.id !== 'Nosotros').map((cat, i) => (
-          <div
-            key={cat.id}
-            id={cat.id}
-            ref={(el) => (seccionesRef.current[cat.id] = el)}
-            className="jelly-section"
-            style={{ 
-              scrollMarginTop: '100px',
-              animationDelay: `${i * 0.04}s`,
-            }}
-          >
-            <div
-              ref={(el) => (sentinelRef.current[cat.id] = el)}
-              data-categoria={cat.id}
-              style={{ height: '10px', margin: 0, padding: 0, background: 'transparent' }}
-            />
-            <h3 style={styles.seccionTitulo}>{cat.nombre}</h3>
-            {platillosPorCategoria(cat.id).map((plato, idx) => (
-              <PlatoCard 
-                key={`${cat.id}-${idx}`} 
-                plato={plato} 
-                onUpdateCart={updateCarrito} 
-              />
-            ))}
-          </div>
-        ))}
+  <div
+  key={cat.id}
+  id={cat.id}
+  ref={(el) => (seccionesRef.current[cat.id] = el)}
+  className="jelly-section"
+  style={{ 
+    scrollMarginTop: '340px',
+    animationDelay: `${i * 0.04}s`,
+  }}
+>
+  {/* 🎯 CENTINELA RESTAURADO */}
+  <div
+    ref={(el) => (sentinelRef.current[cat.id] = el)}
+    data-categoria={cat.id}
+    style={{ height: '1px', margin: 0, padding: 0, background: 'rgba(255, 0, 0, 0.3)' }}
+  />
+  
+  <h3 style={styles.seccionTitulo}>{cat.nombre}</h3>
+  {platillosPorCategoria(cat.id).map((plato, idx) => (
+    <PlatoCard 
+      key={`${cat.id}-${idx}`} 
+      plato={plato} 
+      onUpdateCart={updateCarrito} 
+    />
+  ))}
+</div>
+))}
 
         {/* SECCIÓN NOSOTROS */}
         <div 
           id="Nosotros"
           ref={(el) => (seccionesRef.current['Nosotros'] = el)}
           className="jelly-section"
-          style={{ scrollMarginTop: '100px', marginTop: '32px' }}
+          style={{ scrollMarginTop: '290px', marginTop: '32px' }}
         >
           <div
             ref={(el) => (sentinelRef.current['Nosotros'] = el)}
@@ -328,7 +317,7 @@ export default function HomePage({ comercio: comercioProp, platillos: platillosP
 
 const styles = {
   seccionTitulo: {
-    padding: '16px 14px 6px',
+    padding: '20px 14px 6px',
     margin: 0,
     fontSize: '1rem',
     fontWeight: '800',
