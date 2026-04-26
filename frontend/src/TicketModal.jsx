@@ -2,7 +2,7 @@ import React from "react";
 import CodigoQR from "./CodigoQR";
 import { captureTicketAsHTML, downloadTicketHTML, saveTicketToCollection } from "./services/ticketService";
 
-export default function TicketModal({ open, onClose, order, user }) {
+export default function TicketModal({ open, onClose, order, user, onBackToWelcome }) {
   if (!open || !order) return null;
 
   const fraseGuardada = JSON.parse(localStorage.getItem('fraseOraculo') || '{}');
@@ -108,9 +108,16 @@ export default function TicketModal({ open, onClose, order, user }) {
           <p style={styles.fraseTexto}>"{texto}"</p>
         </div>
 
-        <button style={styles.finishBtn} onClick={onClose} className="finish-btn">
-          Finalizar y Cerrar
-        </button>
+        <button 
+  style={styles.finishBtn} 
+  onClick={() => {
+    onClose();              // ← Cerrar el TicketModal
+    onBackToWelcome();      // ← Volver a Welcome
+  }} 
+  className="finish-btn"
+>
+  Finalizar y Cerrar
+</button>
 
         <div style={styles.linkContainer}>
           <a href="https://vercel.app" target="_blank" style={styles.link}>
@@ -153,7 +160,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    border: '1px solid rgba(255, 255, 255, 0.5)',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
     animation: "slideUp 0.3s ease-out"
   },
   printContainer: {
@@ -166,28 +173,29 @@ const styles = {
     gap: "2px"
   },
   printBtn: {
-    background: "linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%)",
-    border: "none",
-    borderRadius: "30px",
-    width: "40px",
-    height: "40px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    transition: "all 0.2s ease"
-  },
-  printIcon: {
-    fontSize: "1.2rem"
-  },
+  background: '#250e0e',                    // ← Mismo bgColor del QR
+  border: '2px solid #F5F5F5',             // ← Mismo fgColor del QR (blanco roto)
+  borderRadius: '50%',                      // ← Redondo
+  width: '40px',
+  height: '40px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+},
+printIcon: {
+  fontSize: '1.2rem',
+  color: '#F5F5F5',                        // ← Mismo color que el QR
+},
   printText: {
-    color: "var(--gris-texto)",
-    fontWeight: "600",
-    fontSize: "0.55rem",
-    lineHeight: "1",
-    textAlign: "center",
-    opacity: 0.7
-  },
+  color: '#250e0e',
+  fontWeight: '600',
+  fontSize: '0.5rem',
+  lineHeight: '1',
+  textAlign: 'center',
+  opacity: 0.7,
+},
   tridenteContainer: {
     marginBottom: "0.8rem",
     display: "flex",
@@ -225,7 +233,7 @@ const styles = {
     borderRadius: "24px",
     padding: "0.8rem",
     marginBottom: "1rem",
-    border: "1px solid rgba(255, 179, 71, 0.2)"
+    border: "1px solid #8b5cf6 100%)"
   },
   summaryTitle: {
     color: "var(--verde-selva)",

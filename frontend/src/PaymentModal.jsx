@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from './CartContext';
 import TicketModal from './TicketModal';
 
-export default function PaymentModal({ open, onClose, total, addLog, setPendingOrders }) {
+export default function PaymentModal({ open, onClose, total, addLog, setPendingOrders, onBackToWelcome  }) {
   const [step, setStep] = useState(1);  // ← Directamente en paso 1 (formulario de pago)
   const [form, setForm] = useState({
     nombre: '',
@@ -83,6 +83,7 @@ export default function PaymentModal({ open, onClose, total, addLog, setPendingO
     setShowTicket(false);
     clearCart();
     onClose();                  // ← Cerrar PaymentModal
+    onBackToWelcome();
     setStep(0);
   };
 

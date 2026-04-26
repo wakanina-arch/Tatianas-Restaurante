@@ -140,7 +140,7 @@ function MainApp() {
   overflow: isAdminMode ? 'hidden' : 'auto'
 }}>
             {currentPage === 'home' && <HomePage comercio={comercioActivo} platillos={menuItems} user={user} itemCount={itemCount} onOpenPerfil={() => setPerfilAbierto(true)} onBackToWelcome={handleBackToWelcome} setCurrentPage={setCurrentPage} />}
-            {currentPage === 'carrito' && <CartPage onVolverAlMenu={() => setCurrentPage('home')} />}
+            {currentPage === 'carrito' && <CartPage onVolverAlMenu={() => setCurrentPage('home')} onBackToWelcome={handleBackToWelcome}/>}
             {currentPage === 'admin' && <AdminPage menuItems={menuItems} onSaveMenu={() => {}} log={[]} addLog={() => {}} pendingOrders={[]} setPendingOrders={() => {}} finishedOrders={[]} setFinishedOrders={() => {}} onBack={() => setCurrentPage('home')} />}
           </main>
         </>
@@ -150,7 +150,7 @@ function MainApp() {
 }
 
 // 📋 COMPONENTE CARRITO CORREGIDO
-function CartPage({ onVolverAlMenu }) {
+function CartPage({ onVolverAlMenu, onBackToWelcome }) {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
   const [payOpen, setPayOpen] = useState(false);
 
@@ -177,15 +177,7 @@ const totalFinal = (subtotal - ahorro).toFixed(2);
 
 
 
-  if (cartItems.length === 0) {
-    return (
-      <div style={CS.emptyCard}>
-        <span style={CS.emptyIcon}>🛒</span>
-        <h2>Tu carrito está vacío</h2>
-        <button onClick={onVolverAlMenu} style={CS.backBtn}>🔱 Volver</button>
-      </div>
-    );
-  }
+  
 
   return (
     <section style={CS.container}>
@@ -255,6 +247,7 @@ const totalFinal = (subtotal - ahorro).toFixed(2);
         open={payOpen} 
         onClose={() => setPayOpen(false)} 
         total={parseFloat(totalFinal)} 
+        onBackToWelcome={onBackToWelcome}
         addLog={() => {}} 
         setPendingOrders={() => {}} 
       />
@@ -268,12 +261,37 @@ const totalFinal = (subtotal - ahorro).toFixed(2);
 const S = {
   header: { position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, background: 'rgba(20, 10, 10, 0.95)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,215,0,0.15)', height: '60px', display: 'flex', alignItems: 'center' },
   headerContent: { width: '100%', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
-  backBtn: { background: 'transparent', border: 'none', fontSize: '1.3rem', color: '#FFD700', padding: '8px', cursor: 'pointer' },
+  backBtn: { 
+  background: 'transparent', 
+  border: '1px solid rgba(255, 215, 0, 0.2)',   // ← Añadir borde sutil
+  borderRadius: '50%',                            // ← Redondo
+  width: '36px',                                  // ← Ancho fijo
+  height: '36px',                                 // ← Alto fijo
+  fontSize: '1.1rem',                             // ← Ligeramente más pequeña para que quepa
+  color: '#FFD700', 
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: 0,                                     // ← Sin padding extra
+},
   logoContainer: { display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' },
   logoIcon: { fontSize: '1.3rem' },
   logoText: { fontSize: '1rem', fontWeight: '700', background: 'linear-gradient(135deg, #FF4500, #FFD700)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
   rightIcons: { display: 'flex', gap: '8px' },
-  iconBtn: { background: 'transparent', border: 'none', fontSize: '1.5rem', cursor: 'pointer', position: 'relative' },
+  iconBtn: { 
+  background: 'transparent', 
+  border: '1px solid rgba(255, 215, 0, 0.2)',   // ← Añadir borde sutil
+  borderRadius: '50%',                            // ← Redondo
+  width: '36px',                                  // ← Ancho fijo
+  height: '36px',                                 // ← Alto fijo
+  fontSize: '1.3rem', 
+  cursor: 'pointer', 
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
   badge: { position: 'absolute', top: -6, right: -6, background: '#FF4500', color: 'white', borderRadius: '50%', width: '16px', height: '16px', fontSize: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center' },
 };
 

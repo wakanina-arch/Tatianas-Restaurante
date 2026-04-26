@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ContratoModal from './ContratoModal';
+import NosotrosSection from './NosotrosSection'; // Ajusta la ruta si es necesario
 
 export default function AdminNavbar({ 
   onBack, onHome, onLogout, onDelete, onView, onAction, 
@@ -7,6 +8,7 @@ export default function AdminNavbar({
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showContrato, setShowContrato] = useState(false);
+  const [showNosotros, setShowNosotros] = useState(false);
 
   // Cerrar dropdown al hacer clic fuera
   const handleBlur = (e) => {
@@ -16,104 +18,92 @@ export default function AdminNavbar({
   };
 
   return (
-    <div style={S.navbar}>
-      {/* 1. LADO IZQUIERDO: ← Volver */}
-      <button onClick={onBack} style={S.backButton} title="Volver">
-        ← <span className="hide-on-mobile">
-          {hojaDeTrabajo === 'preview' ? 'Admin' : 'Panel'}
-        </span>
+  <div style={S.navbar}>
+    {/* 1. LADO IZQUIERDO: ← Volver */}
+    <button onClick={onBack} style={S.backButton} title="Volver">
+      ← <span className="hide-on-mobile">
+        {hojaDeTrabajo === 'preview' ? 'Admin' : 'Panel'}
+      </span>
+    </button>
+
+    {/* 2. CENTRO: 🔱 Comercio */}
+    <div style={S.titleContainer} onClick={onHome}>
+      <span style={S.icon}>🔱</span>
+      <span style={S.title}>
+        {hojaDeTrabajo === 'editor' ? 'Editor' : nombreComercio?.substring(0, 12)}
+      </span>
+    </div>
+
+    {/* 3. LADO DERECHO: BOTONES FIJOS */}
+    <div style={S.actionsContainer}>
+      
+      {/* ⚙️ BOTÓN AJUSTES CON DROPDOWN */}
+      <div style={{ position: 'relative' }} onBlur={handleBlur} tabIndex={-1}>
+        <button 
+          onClick={() => setShowDropdown(!showDropdown)} 
+          style={S.iconButton} 
+          title="Ajustes"
+        >
+          ⚙️
+        </button>
+
+        {showDropdown && (
+          <div style={S.dropdown}>
+            <button onClick={() => { setShowNosotros(true); setShowDropdown(false); }} style={S.dropdownItem}>
+              🏪 Sobre Nosotros
+            </button>
+            <button onClick={() => { onLogout(); setShowDropdown(false); }} style={S.dropdownItem}>
+              🚪 Cerrar Sesión
+            </button>
+            <button onClick={() => { setShowContrato(true); setShowDropdown(false); }} style={S.dropdownItem}>
+              📜 Contrato de Suscripción
+            </button>
+            <button onClick={() => setShowDropdown(false)} style={S.dropdownItem}>
+              ✕ Cerrar
+            </button>
+          </div>
+        )}
+      </div>
+      
+      {/* 🗑️ Descartar */}
+      <button onClick={onDelete} style={{...S.iconButton, opacity: hayCambios ? 1 : 0.5, cursor: hayCambios ? 'pointer' : 'not-allowed', border: hayCambios ? '1px solid rgba(230, 57, 70, 0.5)' : '1px solid rgba(255, 215, 0, 0.2)', color: hayCambios ? '#ff6b6b' : '#FFD700'}} title={hayCambios ? "Descartar cambios" : "Sin cambios pendientes"} disabled={!hayCambios}>
+        🗑️
       </button>
 
-      {/* 2. CENTRO: 🔱 Comercio */}
-      <div style={S.titleContainer} onClick={onHome}>
-        <span style={S.icon}>🔱</span>
-        <span style={S.title}>
-          {hojaDeTrabajo === 'editor' ? 'Editor' : nombreComercio?.substring(0, 12)}
-        </span>
-      </div>
+      {/* 👁️ Vista Previa */}
+      <button onClick={onView} style={S.iconButton} title="Vista Previa">👁️</button>
 
-      {/* 3. LADO DERECHO: BOTONES FIJOS */}
-      <div style={S.actionsContainer}>
-        
-        {/* 🚪 BOTÓN MULTISERVICIO CON DROPDOWN */}
-        <div style={{ position: 'relative' }} onBlur={handleBlur} tabIndex={-1}>
-          <button 
-            onClick={() => setShowDropdown(!showDropdown)} 
-            style={S.iconButton} 
-            title="Más opciones"
-          >
-            🚪
-          </button>
-
-          {showDropdown && (
-            <div style={S.dropdown}>
-              <button 
-                onClick={() => { onLogout(); setShowDropdown(false); }} 
-                style={S.dropdownItem}
-              >
-                🚪 Cerrar Sesión
-              </button>
-              <button 
-                onClick={() => { 
-                  setShowContrato(true);
-                  setShowDropdown(false);
-                }} 
-                style={S.dropdownItem}
-              >
-                📜 Contrato de Suscripción
-              </button>
-              <button 
-                onClick={() => setShowDropdown(false)} 
-                style={S.dropdownItem}
-                title="Cerrar menú"
-              >
-                ✕ Cerrar
-              </button>
-            </div>
-          )}
-          
-        </div>
-        
-        {/* 🗑️ Descartar */}
-        <button 
-          onClick={onDelete} 
-          style={{
-            ...S.iconButton,
-            opacity: hayCambios ? 1 : 0.5,
-            cursor: hayCambios ? 'pointer' : 'not-allowed',
-            border: hayCambios ? '1px solid rgba(230, 57, 70, 0.5)' : '1px solid rgba(255, 215, 0, 0.2)',
-            color: hayCambios ? '#ff6b6b' : '#FFD700',
-          }} 
-          title={hayCambios ? "Descartar cambios" : "Sin cambios pendientes"}
-          disabled={!hayCambios}
-        >
-          🗑️
-        </button>
-
-        {/* 👁️ Vista Previa (FIJO) */}
-        <button onClick={onView} style={S.iconButton} title="Vista Previa">
-          👁️
-        </button>
-
-        {/* 🚀 Publicar (FIJO) */}
-        <button onClick={onAction} style={S.iconButton} title="Publicar">
-          🚀
-        </button>
-      </div>
-
-      <style>{`
-        .show-on-mobile { display: none; }
-        @media (max-width: 480px) {
-          .hide-on-mobile { display: none !important; }
-          .show-on-mobile { display: inline !important; }
-        }
-      `}</style>
-      <ContratoModal 
-  open={showContrato} 
-  onClose={() => setShowContrato(false)} 
-/>
+      {/* 🚀 Publicar */}
+      <button onClick={onAction} style={S.iconButton} title="Publicar">🚀</button>
     </div>
-  );
+
+    <style>{`
+      .show-on-mobile { display: none; }
+      @media (max-width: 480px) {
+        .hide-on-mobile { display: none !important; }
+        .show-on-mobile { display: inline !important; }
+      }
+    `}</style>
+
+    {/* ✅ MODALES FUERA DEL TODO */}
+    <ContratoModal open={showContrato} onClose={() => setShowContrato(false)} />
+    
+    {showNosotros && (
+      <div style={S.modalOverlay} onClick={() => setShowNosotros(false)}>
+        <div style={S.modalContent} onClick={e => e.stopPropagation()}>
+          <NosotrosSection 
+            comercio={{ id: 'comercio_1' }}
+            editMode={true} 
+            onSave={(data) => {
+              console.log('✅ Guardado:', data);
+              setShowNosotros(false);
+            }} 
+          />
+        </div>
+      </div>
+    )}
+  </div>
+);
 }
 
 const S = {
@@ -215,6 +205,24 @@ const S = {
     transition: 'all 0.15s ease',
     whiteSpace: 'nowrap',
   },
+  modalOverlay: {
+  position: 'fixed',
+  top: 0, left: 0, right: 0, bottom: 0,
+  background: 'rgba(0, 0, 0, 0.7)',
+  backdropFilter: 'blur(8px)',
+  zIndex: 5000,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '1rem',
+},
+modalContent: {
+  width: '100%',
+  maxWidth: '500px',
+  maxHeight: '85vh',
+  overflowY: 'auto',
+  borderRadius: '24px',
+},
 };
 
 // Estilos hover
