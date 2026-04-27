@@ -62,17 +62,32 @@ function MainApp() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [perfilAbierto, setPerfilAbierto] = useState(false);
   const [menuItems, setMenuItems] = useState(DEFAULT_MENU_ITEMS);
-  const [COMERCIOS, setComerciosRegistrados] = useLocalStorage('registros_comercios', [
-    { id: 1, nombre: "En su punto", imagen: "/casas/en_su_punto.JPG" },
-    { id: 2, nombre: "Ceremoniales", imagen: "/casas/Ceremoniales.JPG" },
-    { id: 3, nombre: "Como en casa", imagen: "/casas/Como_en_casa.JPG" },
-    { id: 4, nombre: "Gusto", imagen: "/casas/IMG_4552.JPG" },
-    { id: 5, nombre: "Candela Obscura", imagen: "/casas/IMG_4555.JPG" },
-    { id: 6, nombre: "Kattapa", imagen: "/casas/Kattapa.JPG" },
-    { id: 7, nombre: "Llap Grill", imagen: "/casas/Llap_Grill.JPG" },
-    { id: 8, nombre: "Pollo a la leña", imagen: "/casas/Pollo_a_la_leña.JPG" },
-    { id: 9, nombre: "Tradicional", imagen: "/casas/Tradicional.JPG" },
-  ]);
+ const [COMERCIOS, setComerciosRegistrados] = useLocalStorage('registros_comercios', [
+  {
+    id: 1,
+    nombre: "ONO TO ONE",
+    direccion: "Calle Principal 123",
+    telefono: "600 000 000",
+    descripcion: "Sabores únicos que conectan contigo. Cocina de autor con ingredientes frescos y pasión por el buen comer.",
+    imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600'
+  },
+  {
+    id: 2,
+    nombre: "Sabores del Origen",
+    direccion: "Malecón de Ayangue, Santa Elena",
+    telefono: "+593 988 555 111",
+    descripcion: "Rescatamos las recetas ancestrales de la Costa ecuatoriana. Productos frescos del mar y la tierra.",
+    imagen: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600'
+  },
+  {
+    id: 3,
+    nombre: "Sierra y Fuego",
+    direccion: "Calle de los Volcanes, Patate, Tungurahua",
+    telefono: "+593 988 555 222",
+    descripcion: "Cocina de altura con productos de los Andes ecuatorianos. Hornos de leña y recetas ancestrales.",
+    imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600'
+  }
+]);
 
   const comercioActivo = useMemo(() => {
     if (!selectedComercio) return null;
@@ -196,13 +211,13 @@ const totalFinal = (subtotal - ahorro).toFixed(2);
                   <h4 style={CS.itemName}>{item.nombre}</h4>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
   {tienePromo ? (
-    <>
-      <span style={CS.itemPrice}>${pBase.toFixed(2)} c/u</span>
-      <span style={CS.ahorroTag}>ahorro: -${ahorroIndividual.toFixed(2)}</span>
-    </>
-  ) : (
-    <span style={CS.itemPrice}>${pFinal.toFixed(2)} c/u</span>
-  )}
+  <>
+    <span style={CS.itemPrice}>${pBase.toFixed(2)} c/u</span>
+    <span style={CS.promoBadge}>-{item.descuentoAplicado}% {item.tagPromo}</span>
+  </>
+) : (
+  <span style={CS.itemPrice}>${pFinal.toFixed(2)} c/u</span>
+)}
 </div>
                 </div>
                 

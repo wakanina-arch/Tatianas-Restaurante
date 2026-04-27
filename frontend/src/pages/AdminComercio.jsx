@@ -88,6 +88,107 @@ export default function AdminComercio({ comercioId, onBack }) {
     setHayCambios(true);
     alert('✅ Menú de demostración cargado. Ya puedes salir al comercio.');
   };
+  // 🚀 FUNCIÓN PARA CARGAR DEMO 2: SABORES DEL ORIGEN
+const handleCargarDemo2 = () => {
+  const menuDemo = [
+    { nombre: 'Picoteo', opciones: [
+      { nombre: 'Ceviche de Sardina', precio: 6.50, descripcion: 'Sardina fresca curtida en limón', imagen: 'https://images.pexels.com/photos/725991/pexels-photo-725991.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Empanadas de Verde', precio: 3.50, descripcion: 'Verde majado relleno de carne', imagen: 'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Muchines de Yuca', precio: 4.00, descripcion: 'Yuca rallada con queso', imagen: 'https://images.pexels.com/photos/1600727/pexels-photo-1600727.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 4.00, descuentoAplicado: 20, tagPromo: 'ORIGEN'}
+    ]},
+    { nombre: 'Entrantes', opciones: [
+      { nombre: 'Sopa de Cangrejo', precio: 8.50, descripcion: 'Cangrejo azul con yuca', imagen: 'https://images.pexels.com/photos/842571/pexels-photo-842571.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Caldo de Albóndigas', precio: 7.00, descripcion: 'Albacora desmenuzada', imagen: 'https://images.pexels.com/photos/2338407/pexels-photo-2338407.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 7.00, descuentoAplicado: 15, tagPromo: 'MARINO', },
+      { nombre: 'Consomé de Pinchagua', precio: 5.50, descripcion: 'Sardina majada con refrito', imagen: 'https://images.pexels.com/photos/2608049/pexels-photo-2608049.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]},
+    { nombre: 'Gourmets', opciones: [
+      { nombre: 'Langosta a la Plancha', precio: 22.00, descripcion: 'Langosta verde del Pacífico', imagen: 'https://images.pexels.com/photos/675951/pexels-photo-675951.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 22.00, descuentoAplicado: 25, tagPromo: 'FESTIVAL'},
+      { nombre: 'Encocado de Mariscos', precio: 18.00, descripcion: 'Pescado y mariscos en coco', imagen: 'https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Ostras Gratinadas', precio: 16.00, descripcion: 'Ostras del Pacífico', imagen: 'https://images.pexels.com/photos/2983098/pexels-photo-2983098.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]},
+    { nombre: 'Escuderos', opciones: [
+      { nombre: 'Sancocho de Pescado', precio: 9.00, descripcion: 'Pescado con yuca y choclo', imagen: 'https://images.pexels.com/photos/2097090/pexels-photo-2097090.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Cazuela de Pescado', precio: 10.50, descripcion: 'Albacora horneada en barro', imagen: 'https://images.pexels.com/photos/1143754/pexels-photo-1143754.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Arroz Ayanguero', precio: 11.00, descripcion: 'Arroz con mariscos', imagen: 'https://images.pexels.com/photos/1213710/pexels-photo-1213710.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 11.00, descuentoAplicado: 10, tagPromo: 'COSTA' }
+    ]},
+    { nombre: 'Zombies', opciones: [
+      { nombre: 'Picada Marinera', precio: 24.00, descripcion: 'Bandeja 5 mariscos', imagen: 'https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 24.00, descuentoAplicado: 30, tagPromo: 'MEGA'},
+      { nombre: 'Wahoo en Salsa de Langostino', precio: 18.50, descripcion: 'Pescado wahoo en salsa', imagen: 'https://images.pexels.com/photos/1639562/pexels-photo-1639562.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Pato Relleno', precio: 20.00, descripcion: 'Pato al horno', imagen: 'https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]},
+    { nombre: 'FastFurious', opciones: [
+      { nombre: 'Cevicangre', precio: 12.00, descripcion: 'Ceviche + encocado', imagen: 'https://images.pexels.com/photos/1603898/pexels-photo-1603898.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Tigrillo de Pulpo', precio: 9.50, descripcion: 'Pulpo con verde', imagen: 'https://images.pexels.com/photos/1126359/pexels-photo-1126359.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 9.50, descuentoAplicado: 15, tagPromo: 'RAPIDO' },
+      { nombre: 'Chicharrón de Camarón', precio: 10.00, descripcion: 'Camarón apanado', imagen: 'https://images.pexels.com/photos/3026804/pexels-photo-3026804.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]},
+    { nombre: 'Postres', opciones: [
+      { nombre: 'Tambores de Yuca', precio: 4.00, descripcion: 'Yuca con panela', imagen: 'https://images.pexels.com/photos/5946725/pexels-photo-5946725.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Dulce de Guayaba', precio: 3.50, descripcion: 'Guayaba cremosa', imagen: 'https://images.pexels.com/photos/1089930/pexels-photo-1089930.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Mermelada de Tagua', precio: 4.50, descripcion: 'Pulpa de tagua', imagen: 'https://images.pexels.com/photos/2912108/pexels-photo-2912108.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]},
+    { nombre: 'Bebidas', opciones: [
+      { nombre: 'Chicha de Maní', precio: 2.50, descripcion: 'Bebida tradicional', imagen: 'https://images.pexels.com/photos/5946725/pexels-photo-5946725.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Chocolate de Cacao', precio: 3.00, descripcion: 'Cacao tostado', imagen: 'https://images.pexels.com/photos/3026804/pexels-photo-3026804.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Mara Piña', precio: 3.50, descripcion: 'Piña y maracuyá', imagen: 'https://images.pexels.com/photos/1126359/pexels-photo-1126359.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]}
+  ];
+  localStorage.setItem('menu_comercio_2', JSON.stringify(menuDemo));
+  localStorage.setItem('borrador_comercio_2', JSON.stringify(menuDemo));
+  setMenuBorrador(menuDemo);
+  setHayCambios(true);
+  alert('✅ Demo Sabores del Origen cargada. Ya puedes salir al comercio.');
+};
+
+// 🚀 FUNCIÓN PARA CARGAR DEMO 3: SIERRA Y FUEGO
+const handleCargarDemo3 = () => {
+  const menuDemo = [
+    { nombre: 'Picoteo', opciones: [
+      { nombre: 'Tortillas con Mishki', precio: 3.00, descripcion: 'Tortillas de trigo con miel', imagen: 'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Empanadas Celicanas', precio: 2.50, descripcion: 'Empanadas de queso', imagen: 'https://images.pexels.com/photos/1600727/pexels-photo-1600727.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 2.50, descuentoAplicado: 20, tagPromo: 'ANDES' },
+      { nombre: 'Muchines de Gallina', precio: 4.50, descripcion: 'Yuca rellena de gallina', imagen: 'https://images.pexels.com/photos/2338407/pexels-photo-2338407.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]},
+    { nombre: 'Entrantes', opciones: [
+      { nombre: 'Locro de Papas', precio: 5.50, descripcion: 'Papas chola con queso', imagen: 'https://images.pexels.com/photos/725991/pexels-photo-725991.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Sopa de Chochos', precio: 4.50, descripcion: 'Chochos con papas', imagen: 'https://images.pexels.com/photos/2608049/pexels-photo-2608049.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Crema de Zapallo', precio: 5.00, descripcion: 'Zapallo maduro', imagen: 'https://images.pexels.com/photos/842571/pexels-photo-842571.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 5.00, descuentoAplicado: 15, tagPromo: 'CALOR' }
+    ]},
+    { nombre: 'Gourmets', opciones: [
+      { nombre: 'Borrego Asado', precio: 16.00, descripcion: 'Borrego al carbón', imagen: 'https://images.pexels.com/photos/675951/pexels-photo-675951.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 16.00, descuentoAplicado: 25, tagPromo: 'FESTIVAL' },
+      { nombre: 'Cuy con Colada', precio: 18.00, descripcion: 'Cuy asado y dorado', imagen: 'https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Trucha a la Mandarina', precio: 14.00, descripcion: 'Trucha fresca macerada', imagen: 'https://images.pexels.com/photos/2983098/pexels-photo-2983098.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]},
+    { nombre: 'Escuderos', opciones: [
+      { nombre: 'Puchero', precio: 8.00, descripcion: 'Cerdo con papas', imagen: 'https://images.pexels.com/photos/2097090/pexels-photo-2097090.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Sopa de Cauca', precio: 7.50, descripcion: 'Maíz cao molido', imagen: 'https://images.pexels.com/photos/1143754/pexels-photo-1143754.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Chuchuca', precio: 9.00, descripcion: 'Sopa de maíz', imagen: 'https://images.pexels.com/photos/1213710/pexels-photo-1213710.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 9.00, descuentoAplicado: 10, tagPromo: 'TRADICION' }
+    ]},
+    { nombre: 'Zombies', opciones: [
+      { nombre: 'Pato al Lodo', precio: 22.00, descripcion: 'Pato en barro 4h', imagen: 'https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 22.00, descuentoAplicado: 30, tagPromo: 'MEGA' },
+      { nombre: 'Cascaritas de Chancho', precio: 15.00, descripcion: 'Chancho crocante', imagen: 'https://images.pexels.com/photos/1639562/pexels-photo-1639562.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Seco de Chivo', precio: 16.50, descripcion: 'Chivo estofado', imagen: 'https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]},
+    { nombre: 'FastFurious', opciones: [
+      { nombre: 'Llapingachos', precio: 6.00, descripcion: 'Tortillas de papa', imagen: 'https://images.pexels.com/photos/1603898/pexels-photo-1603898.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Tortillas de Choclo', precio: 4.00, descripcion: 'Choclo asado', imagen: 'https://images.pexels.com/photos/1126359/pexels-photo-1126359.jpeg?auto=compress&cs=tinysrgb&w=600', enOferta: true, precioOriginal: 4.00, descuentoAplicado: 15, tagPromo: 'RAPIDO' },
+      { nombre: 'Cariucho Quereño', precio: 10.00, descripcion: 'Chuleta con salsa', imagen: 'https://images.pexels.com/photos/3026804/pexels-photo-3026804.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]},
+    { nombre: 'Postres', opciones: [
+      { nombre: 'Dulce de Zapallo', precio: 3.50, descripcion: 'Zapallo con panela', imagen: 'https://images.pexels.com/photos/5946725/pexels-photo-5946725.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Tomate de Árbol al Almíbar', precio: 3.00, descripcion: 'Tomate dulce', imagen: 'https://images.pexels.com/photos/1089930/pexels-photo-1089930.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Pan de Camote', precio: 4.00, descripcion: 'Camote morado', imagen: 'https://images.pexels.com/photos/2912108/pexels-photo-2912108.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]},
+    { nombre: 'Bebidas', opciones: [
+      { nombre: 'Javishca', precio: 2.50, descripcion: 'Colada de zapallo', imagen: 'https://images.pexels.com/photos/5946725/pexels-photo-5946725.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Chicha de Jora', precio: 3.00, descripcion: 'Maíz fermentado', imagen: 'https://images.pexels.com/photos/3026804/pexels-photo-3026804.jpeg?auto=compress&cs=tinysrgb&w=600' },
+      { nombre: 'Café de Habas', precio: 2.00, descripcion: 'Habas tostadas', imagen: 'https://images.pexels.com/photos/1126359/pexels-photo-1126359.jpeg?auto=compress&cs=tinysrgb&w=600' }
+    ]}
+  ];
+  localStorage.setItem('menu_comercio_3', JSON.stringify(menuDemo));
+  localStorage.setItem('borrador_comercio_3', JSON.stringify(menuDemo));
+  setMenuBorrador(menuDemo);
+  setHayCambios(true);
+  alert('✅ Demo Sierra y Fuego cargada. Ya puedes salir al comercio.');
+};
 
   const handleActionPrincipal = () => {
     if (hojaDeTrabajo === 'editor') {
@@ -149,26 +250,31 @@ console.log('🔄 Renderizando AdminComercio. hojaDeTrabajo:', hojaDeTrabajo);
    <div style={styles.contentWrapper}>
   
   {/* BOTÓN CARGAR DEMO */}
-  {hojaDeTrabajo === 'dashboard' && (
-    <div style={{ padding: '6px 16px', textAlign: 'center', flexShrink: 0 }}>
-      <button 
-  onClick={handleCargarDemo}
-  style={{
-    background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-    color: '#1a0a0a',
-    border: 'none',
-    borderRadius: '24px',
-    padding: '8px 16px',
-    fontSize: '0.8rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    boxShadow: '0 2px 8px rgba(255, 215, 0, 0.3)',
-  }}
->
-  🚀 Cargar Demo
-</button>
-    </div>
-  )}
+  {/* BOTÓN CARGAR DEMO */}
+{hojaDeTrabajo === 'dashboard' && (
+  <div style={{ padding: '6px 16px', textAlign: 'center', flexShrink: 0 }}>
+    <button 
+      onClick={() => {
+        if (comercioId === 1 || comercioId === '1') handleCargarDemo1();
+        else if (comercioId === 2 || comercioId === '2') handleCargarDemo2();
+        else if (comercioId === 3 || comercioId === '3') handleCargarDemo3();
+      }}
+      style={{
+        background: 'linear-gradient(135deg, #FFD700, #FFA500)',
+        color: '#1a0a0a',
+        border: 'none',
+        borderRadius: '24px',
+        padding: '8px 16px',
+        fontSize: '0.8rem',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        boxShadow: '0 2px 8px rgba(255, 215, 0, 0.3)',
+      }}
+    >
+      🚀 Cargar Demo
+    </button>
+  </div>
+)}
 
   {/* DASHBOARD */}
   {hojaDeTrabajo === 'dashboard' && (

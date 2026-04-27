@@ -31,7 +31,7 @@ const CATEGORIAS_LIST = [
   { id: 'Nosotros', nombre: 'NOSOTROS', icono: '🏪' },
 ];
 
-// DATOS DEMO AUTOMÁTICOS
+// DATOS DEMO POR DEFECTO (si no hay props)
 const COMERCIO_DEMO = {
   id: 1,
   nombre: "ONO TO ONE",
@@ -40,47 +40,9 @@ const COMERCIO_DEMO = {
   descripcion: "Sabores únicos que conectan contigo. Cocina de autor con ingredientes frescos y pasión por el buen comer."
 };
 
-const PLATILLOS_DEMO = [
-  { nombre: 'Picoteo', opciones: [
-    { id: 1, nombre: 'Papas fritas con salsa brava', precio: 4.50 },
-    { id: 2, nombre: 'Nuggets de pollo crujientes', precio: 5.00 },
-    { id: 3, nombre: 'Aros de cebolla', precio: 4.00 }
-  ]},
-  { nombre: 'Entrantes', opciones: [
-    { id: 4, nombre: 'Ensalada César', precio: 7.50 },
-    { id: 5, nombre: 'Bruschetta italiana', precio: 6.00 },
-    { id: 6, nombre: 'Croquetas caseras', precio: 6.50 }
-  ]},
-  { nombre: 'Gourmets', opciones: [
-    { id: 7, nombre: 'Solomillo al foie', precio: 18.00 },
-    { id: 8, nombre: 'Risotto de setas', precio: 14.50 },
-    { id: 9, nombre: 'Carrillera al vino tinto', precio: 16.00 }
-  ]},
-  { nombre: 'Escuderos', opciones: [
-    { id: 10, nombre: 'Cocido completo', precio: 12.00 },
-    { id: 11, nombre: 'Lentejas estofadas', precio: 9.00 }
-  ]},
-  { nombre: 'Zombies', opciones: [
-    { id: 12, nombre: 'Pizza zombie', precio: 11.00 },
-    { id: 13, nombre: 'Burger zombie doble carne', precio: 10.50 }
-  ]},
-  { nombre: 'FastFurious', opciones: [
-    { id: 14, nombre: 'Perrito racing', precio: 6.00 },
-    { id: 15, nombre: 'Wrap nitro', precio: 7.50 }
-  ]},
-  { nombre: 'Postres', opciones: [
-    { id: 16, nombre: 'Tarta de queso', precio: 4.50 },
-    { id: 17, nombre: 'Brownie con helado', precio: 5.00 }
-  ]},
-  { nombre: 'Bebidas', opciones: [
-    { id: 18, nombre: 'Refresco', precio: 2.00 },
-    { id: 19, nombre: 'Cerveza artesana', precio: 3.50 }
-  ]},
-];
-
 export default function HomePage({ comercio: comercioProp, platillos: platillosProp, user, setCurrentPage }) {
   const [comercio, setComercio] = useState(COMERCIO_DEMO);
-  const [platillos, setPlatillos] = useState(PLATILLOS_DEMO);
+  const [platillos, setPlatillos] = useState([]);
   const [categoriaActiva, setCategoriaActiva] = useState(CATEGORIAS_LIST[0].id);
   const { addToCart } = useCart();
   
@@ -88,10 +50,20 @@ export default function HomePage({ comercio: comercioProp, platillos: platillosP
   const sentinelRef = useRef({});
   const bloqueoSincronizacionRef = useRef(false);
 
+  // Cargar datos de props o de localStorage
   useEffect(() => {
-    if (comercioProp && Object.keys(comercioProp).length > 0) setComercio(comercioProp);
-    if (platillosProp && platillosProp.length > 0) setPlatillos(platillosProp);
-  }, [comercioProp, platillosProp]);
+    if (comercioProp && Object.keys(comercioProp).length > 0) {
+      setComercio(comercioProp);
+    }
+    if (platillosProp && platillosProp.length > 0) {
+      setPlatillos(platillosProp);
+    } else if (comercio?.id) {
+      const saved = localStorage.getItem(`menu_comercio_${comercio.id}`);
+      if (saved) {
+        setPlatillos(JSON.parse(saved));
+      }
+    }
+  }, [comercioProp, platillosProp, comercio?.id]);
 
   const platillosPorCategoria = (categoriaId) => {
     if (categoriaId === 'Nosotros') return [];
@@ -110,6 +82,7 @@ export default function HomePage({ comercio: comercioProp, platillos: platillosP
     setTimeout(() => { bloqueoSincronizacionRef.current = false; }, 600);
   };
 
+  // Sincronización tabs ↔ scroll
   useEffect(() => {
     const interval = setInterval(() => {
       const TRIGGER_LINE = 300;
