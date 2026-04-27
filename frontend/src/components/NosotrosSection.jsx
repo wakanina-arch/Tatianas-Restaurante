@@ -17,13 +17,148 @@ export default function NosotrosSection({ comercio, editMode = false, onSave, op
   if (typeof open !== 'undefined' && !open) return null;
 
   // Vista pública (solo lectura)
-  if (!editMode) {
-    return (
-      <div style={S.publicContainer}>
-        {/* ... el contenido público que ya tenías ... */}
+ 
+if (!editMode) {
+  return (
+    <div style={S.publicContainer}>
+      {/* Mapa simulado */}
+      <div style={S.mapContainer}>
+        <div style={S.mapPlaceholder}>
+          <span style={S.mapIcon}>📍</span>
+          <p style={S.mapText}>{direccion || "Calle Principal 123, Quito, Ecuador"}</p>
+          <div style={S.fakeMap}>
+            <div style={S.fakeMapGrid}>
+              {[...Array(6)].map((_, i) => (
+                <div key={i} style={S.fakeMapLine} />
+              ))}
+            </div>
+            {/* Mapa Simulado Ultra Realista */}
+<div style={{
+  width: '100%',
+  height: '200px',
+  background: '#e0e0e0',
+  borderRadius: '16px',
+  marginTop: '12px',
+  position: 'relative',
+  overflow: 'hidden',
+  border: '1px solid rgba(0,0,0,0.15)',
+  boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)',
+}}>
+  
+  {/* Manzanas (bloques grises más oscuros) */}
+  {[
+    { top: '8%', left: '5%', w: '18%', h: '20%' },
+    { top: '8%', left: '28%', w: '14%', h: '20%' },
+    { top: '8%', left: '48%', w: '16%', h: '20%' },
+    { top: '8%', left: '70%', w: '22%', h: '20%' },
+    { top: '38%', left: '5%', w: '18%', h: '18%' },
+    { top: '38%', left: '28%', w: '14%', h: '18%' },
+    { top: '38%', left: '48%', w: '16%', h: '18%' },
+    { top: '38%', left: '70%', w: '22%', h: '18%' },
+    { top: '66%', left: '5%', w: '18%', h: '22%' },
+    { top: '66%', left: '28%', w: '14%', h: '22%' },
+    { top: '66%', left: '48%', w: '16%', h: '22%' },
+    { top: '66%', left: '70%', w: '22%', h: '22%' },
+  ].map((b, i) => (
+    <div key={i} style={{
+      position: 'absolute',
+      top: b.top, left: b.left,
+      width: b.w, height: b.h,
+      background: '#d5d5d5',
+      borderRadius: '2px',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    }} />
+  ))}
+
+  {/* Carretera principal horizontal (más ancha) */}
+  <div style={{
+    position: 'absolute',
+    top: '33%', left: 0, right: 0,
+    height: '8px',
+    background: 'linear-gradient(to right, #f0f0f0 0%, #f5f5f5 50%, #f0f0f0 100%)',
+    boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+    zIndex: 2,
+  }} />
+  
+  {/* Línea discontinua en la carretera principal */}
+  <div style={{
+    position: 'absolute',
+    top: 'calc(33% + 3px)', left: '2%', right: '2%',
+    height: '2px',
+    background: 'repeating-linear-gradient(to right, #999 0px, #999 12px, transparent 12px, transparent 20px)',
+    zIndex: 3,
+  }} />
+
+  {/* Carretera principal vertical (más ancha) */}
+  <div style={{
+    position: 'absolute',
+    top: 0, bottom: 0,
+    left: '25%',
+    width: '8px',
+    background: 'linear-gradient(to bottom, #f0f0f0 0%, #f5f5f5 50%, #f0f0f0 100%)',
+    boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+    zIndex: 2,
+  }} />
+
+  {/* Río o zona verde (parte inferior derecha) */}
+  <div style={{
+    position: 'absolute',
+    bottom: 0, right: 0,
+    width: '35%', height: '30%',
+    background: 'linear-gradient(135deg, #c8d6e5 0%, #a4b0c0 100%)',
+    borderRadius: '0 0 16px 0',
+    zIndex: 1,
+    opacity: 0.7,
+  }} />
+
+  {/* Pin de ubicación */}
+  <div style={{
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    fontSize: '2.2rem',
+    filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.4))',
+    zIndex: 10,
+  }}>
+    📍
+  </div>
+</div>
+          </div>
+        </div>
+        <a 
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion || "Quito, Ecuador")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={S.mapLink}
+        >
+          📍 Abrir en Google Maps
+        </a>
       </div>
-    );
-  }
+
+      {/* Descripción */}
+      {descripcion && (
+        <div style={S.descripcionContainer}>
+          <h3 style={S.titulo}>Sobre Nosotros</h3>
+          <p style={S.texto}>{descripcion}</p>
+        </div>
+      )}
+
+      {/* Teléfono y WhatsApp */}
+      {telefono && (
+        <div style={S.contactoContainer}>
+          <a href={`tel:${telefono}`} style={S.contactoLink}>📞 {telefono}</a>
+          <a 
+            href={`https://wa.me/${telefono?.replace(/\s+/g, '')}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={S.contactoLink}
+          >💬 WhatsApp</a>
+        </div>
+      )}
+    </div>
+  );
+}
 
   // Vista de edición como MODAL CENTRADO
   return (
@@ -260,8 +395,8 @@ mapLink: {
   },
 fakeMap: {
   width: '100%',
-  height: '160px',
-  background: 'linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 50%, #e0e0e0 100%)',
+  height: '180px',
+  background: '#e8e8e8',                              // ← Gris claro de fondo
   borderRadius: '12px',
   marginTop: '12px',
   position: 'relative',
@@ -274,12 +409,12 @@ fakeMapGrid: {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-around',
-  opacity: 0.3,
+  opacity: 0.4,                                        // ← Más visible
 },
 fakeMapLine: {
   width: '100%',
   height: '1px',
-  background: '#999',
+  background: '#bbb',                                  // ← Gris medio
 },
 fakeMapPin: {
   position: 'absolute',
@@ -288,5 +423,43 @@ fakeMapPin: {
   transform: 'translate(-50%, -50%)',
   fontSize: '2rem',
   filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
+  },
+publicContainer: {
+  background: 'rgba(255, 255, 255, 0.05)',
+  backdropFilter: 'blur(10px)',
+  borderRadius: '24px',
+  margin: '10px 16px',
+  padding: '20px',
+  paddingBottom: '30px',
+  border: '1px solid rgba(0, 200, 5, 0.3)',
 },
+descripcionContainer: {
+  marginTop: '20px',
+  marginBottom: '20px',
+},
+titulo: {
+  color: '#00c805',
+  fontSize: '1rem',
+  fontWeight: '700',
+  marginBottom: '8px',
+},
+texto: {
+  color: '#eee',
+  fontSize: '0.9rem',
+  lineHeight: '1.6',
+  fontStyle: 'italic',
+},
+contactoContainer: {
+  display: 'flex',
+  gap: '16px',
+  justifyContent: 'center',
+  marginTop: '20px',
+},
+contactoLink: {
+  color: '#FFD700',
+  fontSize: '0.9rem',
+  textDecoration: 'none',
+  fontWeight: '600',
+  },
+
 };

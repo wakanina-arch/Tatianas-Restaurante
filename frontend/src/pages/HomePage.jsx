@@ -168,21 +168,20 @@ export default function HomePage({ comercio: comercioProp, platillos: platillosP
         ))}
 
         {/* SECCIÓN NOSOTROS */}
-        {/* SECCIÓN NOSOTROS */}
-<div 
-  id="Nosotros"
-  ref={(el) => (seccionesRef.current['Nosotros'] = el)}
-  className="jelly-section"
-  style={S.nosotrosContainer}
->
-  <div 
-    ref={(el) => (sentinelRef.current['Nosotros'] = el)} 
-    data-categoria="Nosotros" 
-    style={S.sentinel} 
-  />
-  <h3 style={S.seccionTitulo}>🏪 NOSOTROS</h3>
-  <NosotrosSection comercio={comercio} editMode={false} />
-</div>
+        <div 
+          id="Nosotros"
+          ref={(el) => (seccionesRef.current['Nosotros'] = el)}
+          className="jelly-section"
+          style={S.nosotrosContainer}
+        >
+          <div 
+            ref={(el) => (sentinelRef.current['Nosotros'] = el)} 
+            data-categoria="Nosotros" 
+            style={S.sentinel} 
+          />
+          <h3 style={S.seccionTitulo}>🏪 NOSOTROS</h3>
+          <NosotrosSection comercio={comercio} editMode={false} />
+        </div>
       </div>
     </div>
   );
