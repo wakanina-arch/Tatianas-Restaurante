@@ -11,6 +11,8 @@ import RegistroComercio from './pages/RegistroComercio';
 import uploadImageService from "./services/uploadImageService";
 import { getMenuPublicado } from './services/menuService';
 
+const DATA_VERSION = "2.0.0";
+
 const DEFAULT_MENU_ITEMS = [
   { id: 1, nombre: 'Picoteo', opciones: [
     { nombre: 'Alitas BBQ', precio: 8.50 }, { nombre: 'Patatas Bravas', precio: 5.50 }, { nombre: 'Nachos con queso', precio: 7.50 }
@@ -38,6 +40,22 @@ const DEFAULT_MENU_ITEMS = [
   ]},
 ];
 
+const COMERCIOS_INICIALES = [
+  { id: 1, nombre: "ONO TO ONE", direccion: "Calle Principal 123", telefono: "600 000 000", descripcion: "Sabores únicos que conectan contigo. Cocina de autor con ingredientes frescos y pasión por el buen comer.", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 2, nombre: "Sabores del Origen", direccion: "Malecón de Ayangue, Santa Elena", telefono: "+593 988 555 111", descripcion: "Rescatamos las recetas ancestrales de la Costa ecuatoriana. Productos frescos del mar y la tierra.", imagen: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 3, nombre: "Sierra y Fuego", direccion: "Calle de los Volcanes, Patate, Tungurahua", telefono: "+593 988 555 222", descripcion: "Cocina de altura con productos de los Andes ecuatorianos. Hornos de leña y recetas ancestrales.", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' }
+];
+
+function syncDataWithVersion() {
+  const storedVersion = localStorage.getItem("app_data_version");
+  if (storedVersion !== DATA_VERSION) {
+    localStorage.setItem("comercios", JSON.stringify(COMERCIOS_INICIALES));
+    localStorage.setItem("registros_comercios", JSON.stringify(COMERCIOS_INICIALES));
+    localStorage.setItem("app_data_version", DATA_VERSION);
+  }
+}
+syncDataWithVersion();
+
 function useLocalStorage(key, initialValue) {
   const [storedValue, setStoredValue] = useState(() => {
     try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : initialValue; } 
@@ -62,32 +80,7 @@ function MainApp() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [perfilAbierto, setPerfilAbierto] = useState(false);
   const [menuItems, setMenuItems] = useState(DEFAULT_MENU_ITEMS);
- const [COMERCIOS, setComerciosRegistrados] = useLocalStorage('registros_comercios', [
-  {
-    id: 1,
-    nombre: "ONO TO ONE",
-    direccion: "Calle Principal 123",
-    telefono: "600 000 000",
-    descripcion: "Sabores únicos que conectan contigo. Cocina de autor con ingredientes frescos y pasión por el buen comer.",
-    imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600'
-  },
-  {
-    id: 2,
-    nombre: "Sabores del Origen",
-    direccion: "Malecón de Ayangue, Santa Elena",
-    telefono: "+593 988 555 111",
-    descripcion: "Rescatamos las recetas ancestrales de la Costa ecuatoriana. Productos frescos del mar y la tierra.",
-    imagen: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600'
-  },
-  {
-    id: 3,
-    nombre: "Sierra y Fuego",
-    direccion: "Calle de los Volcanes, Patate, Tungurahua",
-    telefono: "+593 988 555 222",
-    descripcion: "Cocina de altura con productos de los Andes ecuatorianos. Hornos de leña y recetas ancestrales.",
-    imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600'
-  }
-]);
+  const [COMERCIOS, setComerciosRegistrados] = useLocalStorage('registros_comercios', COMERCIOS_INICIALES);
 
   const comercioActivo = useMemo(() => {
     if (!selectedComercio) return null;
@@ -149,11 +142,7 @@ function MainApp() {
             </header>
           )}
           <RegisterModal open={perfilAbierto} onClose={() => setPerfilAbierto(false)} onRegister={(d, m) => { setUser(m === 'logout' ? null : d); setPerfilAbierto(false); }} />
-          <main style={{ 
-  paddingTop: (!isAdminMode && !isTransition) ? '100px' : '0',
-  minHeight: 'calc(100vh - 100px)',
-  overflow: isAdminMode ? 'hidden' : 'auto'
-}}>
+          <main style={{ paddingTop: (!isAdminMode && !isTransition) ? '100px' : '0', minHeight: 'calc(100vh - 100px)', overflow: isAdminMode ? 'hidden' : 'auto' }}>
             {currentPage === 'home' && <HomePage comercio={comercioActivo} platillos={menuItems} user={user} itemCount={itemCount} onOpenPerfil={() => setPerfilAbierto(true)} onBackToWelcome={handleBackToWelcome} setCurrentPage={setCurrentPage} />}
             {currentPage === 'carrito' && <CartPage onVolverAlMenu={() => setCurrentPage('home')} onBackToWelcome={handleBackToWelcome}/>}
             {currentPage === 'admin' && <AdminPage menuItems={menuItems} onSaveMenu={() => {}} log={[]} addLog={() => {}} pendingOrders={[]} setPendingOrders={() => {}} finishedOrders={[]} setFinishedOrders={() => {}} onBack={() => setCurrentPage('home')} />}
@@ -164,35 +153,36 @@ function MainApp() {
   );
 }
 
-// 📋 COMPONENTE CARRITO CORREGIDO
 function CartPage({ onVolverAlMenu, onBackToWelcome }) {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
   const [payOpen, setPayOpen] = useState(false);
 
-  // --- DENTRO DE CartPage ---
-const subtotal = cartItems.reduce((acc, i) => {
-  // Siempre usamos el precio base/original para el subtotal
-  const pBase = i.precioOriginal || i.precio;
-  return acc + (pBase * (i.cantidad || 1));
-}, 0);
-
-// 2. Cálculo del Ahorro (La suma de lo que el cliente deja de pagar)
-const ahorro = cartItems.reduce((acc, i) => {
-  if (i.enOferta) {
+  const subtotal = cartItems.reduce((acc, i) => {
     const pBase = i.precioOriginal || i.precio;
-    // Calculamos cuánto se ahorra por cada unidad
-    const descuentoPorUnidad = pBase * (i.descuentoAplicado / 100);
-    return acc + (descuentoPorUnidad * (i.cantidad || 1));
+    return acc + (pBase * (i.cantidad || 1));
+  }, 0);
+
+  const ahorro = cartItems.reduce((acc, i) => {
+    if (i.enOferta) {
+      const pBase = i.precioOriginal || i.precio;
+      const descuentoPorUnidad = pBase * (i.descuentoAplicado / 100);
+      return acc + (descuentoPorUnidad * (i.cantidad || 1));
+    }
+    return acc;
+  }, 0);
+
+  const totalFinal = (subtotal - ahorro).toFixed(2);
+
+  if (cartItems.length === 0) {
+    return (
+      <div style={CS.emptyCard}>
+        <div style={CS.emptyIcon}>🛒</div>
+        <div style={CS.emptyTitle}>Carrito vacío</div>
+        <div style={CS.emptyText}>Aún no has agregado nada</div>
+        <button onClick={onVolverAlMenu} style={{ ...S.backBtn, width: '100%', background: 'rgba(1, 64, 14, 0.05)' }}>Explorar menú</button>
+      </div>
+    );
   }
-  return acc;
-}, 0);
-
-// 3. Total Final (La resta que va al botón de pagar)
-const totalFinal = (subtotal - ahorro).toFixed(2);
-
-
-
-  
 
   return (
     <section style={CS.container}>
@@ -203,24 +193,24 @@ const totalFinal = (subtotal - ahorro).toFixed(2);
             const pBase = item.precioOriginal || item.precio;
             const pFinal = item.precio;
             const tienePromo = item.enOferta && item.precioOriginal;
-            const ahorroIndividual = (pBase - pFinal) * (item.cantidad || 1);
 
             return (
               <div key={item.id} style={CS.cartItem}>
                 <div style={CS.itemInfo}>
                   <h4 style={CS.itemName}>{item.nombre}</h4>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-  {tienePromo ? (
+                    {tienePromo ? (
   <>
     <span style={CS.itemPrice}>${pBase.toFixed(2)} c/u</span>
-    <span style={CS.promoBadge}>-{item.descuentoAplicado}% {item.tagPromo}</span>
+    <span style={CS.badgePromoDark}>
+      -{item.descuentoAplicado}% {item.tagPromo}
+    </span>
   </>
 ) : (
   <span style={CS.itemPrice}>${pFinal.toFixed(2)} c/u</span>
 )}
-</div>
+                  </div>
                 </div>
-                
                 <div style={CS.itemActions}>
                   <div style={CS.quantityControl}>
                     <button onClick={() => updateQuantity(item.id, (item.cantidad || 1) - 1)} disabled={(item.cantidad || 1) <= 1} style={CS.qtyBtn}>−</button>
@@ -234,366 +224,73 @@ const totalFinal = (subtotal - ahorro).toFixed(2);
             );
           })}
         </div>
-
         <div style={CS.summaryCard}>
-          <div style={CS.summaryRow}>
-            <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
-          </div>
-          
-       
-            <div style={CS.ahorroRow}>
-              <span>Ahorro Total</span>
-              <span>-${ahorro.toFixed(2)}</span>
-            </div>
-          
-          
-          <div style={CS.totalRow}>
-            <span>TOTAL</span>
-            <span style={CS.totalAmount}>${totalFinal}</span>
-          </div>
-          
+          <div style={CS.summaryRow}><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
+          <div style={CS.ahorroRow}><span>Ahorro Total</span><span>-${ahorro.toFixed(2)}</span></div>
+          <div style={CS.totalRow}><span>TOTAL</span><span style={CS.totalAmount}>${totalFinal}</span></div>
           <button onClick={() => setPayOpen(true)} style={CS.checkoutBtn}>PAGAR</button>
           <button onClick={onVolverAlMenu} style={CS.backBtn}>🔱 Seguir Comprando</button>
         </div>
       </div>
-
-      <PaymentModal 
-        open={payOpen} 
-        onClose={() => setPayOpen(false)} 
-        total={parseFloat(totalFinal)} 
-        onBackToWelcome={onBackToWelcome}
-        addLog={() => {}} 
-        setPendingOrders={() => {}} 
-      />
+      <PaymentModal open={payOpen} onClose={() => setPayOpen(false)} total={parseFloat(totalFinal)} onBackToWelcome={onBackToWelcome} addLog={() => {}} setPendingOrders={() => {}} />
     </section>
   );
 }
 
-// ============================================
-// ESTILOS DEL HEADER (S)
-// ============================================
 const S = {
   header: { position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, background: 'rgba(20, 10, 10, 0.95)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,215,0,0.15)', height: '60px', display: 'flex', alignItems: 'center' },
   headerContent: { width: '100%', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
-  backBtn: { 
-  background: 'transparent', 
-  border: '1px solid rgba(255, 215, 0, 0.2)',   // ← Añadir borde sutil
-  borderRadius: '50%',                            // ← Redondo
-  width: '36px',                                  // ← Ancho fijo
-  height: '36px',                                 // ← Alto fijo
-  fontSize: '1.1rem',                             // ← Ligeramente más pequeña para que quepa
-  color: '#FFD700', 
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 0,                                     // ← Sin padding extra
-},
+  backBtn: { background: 'transparent', border: '1px solid rgba(255, 215, 0, 0.2)', borderRadius: '50%', width: '36px', height: '36px', fontSize: '1.1rem', color: '#FFD700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 },
   logoContainer: { display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' },
   logoIcon: { fontSize: '1.3rem' },
   logoText: { fontSize: '1rem', fontWeight: '700', background: 'linear-gradient(135deg, #FF4500, #FFD700)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
   rightIcons: { display: 'flex', gap: '8px' },
-  iconBtn: { 
-  background: 'transparent', 
-  border: '1px solid rgba(255, 215, 0, 0.2)',   // ← Añadir borde sutil
-  borderRadius: '50%',                            // ← Redondo
-  width: '36px',                                  // ← Ancho fijo
-  height: '36px',                                 // ← Alto fijo
-  fontSize: '1.3rem', 
-  cursor: 'pointer', 
-  position: 'relative',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-},
+  iconBtn: { background: 'transparent', border: '1px solid rgba(255, 215, 0, 0.2)', borderRadius: '50%', width: '36px', height: '36px', fontSize: '1.3rem', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' },
   badge: { position: 'absolute', top: -6, right: -6, background: '#FF4500', color: 'white', borderRadius: '50%', width: '16px', height: '16px', fontSize: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center' },
 };
 
-// ============================================
-// ESTILOS DEL CARRITO (CS) - UNIFICADOS Y MINIMALISTAS
-// ============================================
 const CS = {
-  // Contenedores principales
   container: { maxWidth: 600, margin: '0 auto', padding: '1rem' },
   pageTitle: { fontSize: '1.6rem', fontWeight: '600', color: '#039921', textAlign: 'center', marginBottom: '1rem' },
   cartCard: { background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(20px)', borderRadius: 32, padding: '1.2rem' },
   itemsList: { marginBottom: '1rem' },
-  emptyCard: {
-  textAlign: 'center',
-  padding: '1.5rem',
-  background: 'rgba(255, 255, 255, 0.7)',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
-  borderRadius: '24px',
-  maxWidth: '280px',
-  margin: '2rem auto',
-  border: '1px solid rgba(255, 255, 255, 0.3)',
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+  emptyCard: { textAlign: 'center', padding: '1.5rem', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderRadius: '24px', maxWidth: '280px', margin: '2rem auto', border: '1px solid rgba(255, 255, 255, 0.3)', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)' },
+  emptyIcon: { fontSize: '2rem', display: 'block', marginBottom: '0.75rem', opacity: 0.7 },
+  emptyTitle: { fontSize: '1rem', fontWeight: '600', color: '#01400e', marginBottom: '0.5rem' },
+  emptyText: { fontSize: '0.8rem', color: '#666', marginBottom: '1.25rem' },
+  cartItem: { padding: '8px 0', borderBottom: '1px solid rgba(0,0,0,0.05)' },
+  itemInfo: { marginBottom: '4px' },
+  itemName: { fontSize: '0.9rem', fontWeight: '600', color: '#01400e' },
+  itemPrice: { fontSize: '0.85rem', fontWeight: '600', color: '#333' },
+  promoBadge: { fontSize: '0.65rem', color: '#8a2be2', fontWeight: '600', background: 'rgba(138, 43, 226, 0.05)', padding: '2px 6px', borderRadius: '4px' },badgePromoDark: {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '3px',
+  padding: '2px 8px',
+  background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%)',
+  color: '#e0e0e0',
+  borderRadius: '3px 10px 3px 10px',
+  fontSize: '0.55rem',
+  fontWeight: '700',
+  letterSpacing: '1px',
+  textTransform: 'uppercase',
+  boxShadow: '0 0 12px rgba(138, 43, 226, 0.4), 0 0 0 1px rgba(138, 43, 226, 0.2) inset',
+  border: '1px solid rgba(138, 43, 226, 0.3)',
+  textShadow: '0 0 6px rgba(255, 255, 255, 0.3)',
+  whiteSpace: 'nowrap',
+  animation: 'fogPulse 3s ease-in-out infinite',
 },
-emptyIcon: {
-  fontSize: '2rem',
-  display: 'block',
-  marginBottom: '0.75rem',
-  opacity: 0.7,
-},
-emptyTitle: {
-  fontSize: '1rem',
-  fontWeight: '600',
-  color: '#01400e',
-  marginBottom: '0.5rem',
-},
-emptyText: {
-  fontSize: '0.8rem',
-  color: '#666',
-  marginBottom: '1.25rem',
-},
-
-  // 📋 Ticket Minimalista (Items del carrito)
-  itemRow: {
-    padding: '8px 0',
-    borderBottom: '1px solid rgba(0,0,0,0.05)'
-  },
-  itemHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '4px'
-  },
-  itemName: {
-    fontSize: '0.9rem',
-    fontWeight: '600',
-    color: '#01400e'
-  },
-  priceLine: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    fontSize: '0.8rem',
-    color: '#666'
-  },
-  itemPrice: {
-    fontSize: '0.85rem',
-    fontWeight: '600',
-    color: '#333'
-  },
-  precioTachado: {
-    fontSize: '0.75rem',
-    textDecoration: 'line-through',
-    color: '#999'
-  },
-  precioNuevo: {
-    fontSize: '0.85rem',
-    fontWeight: '700',
-    color: '#01400e'
-  },
-  ahorroTag: {
-    fontSize: '0.65rem',
-    color: '#8a2be2',
-    fontWeight: '600',
-    background: 'rgba(138, 43, 226, 0.05)',
-    padding: '2px 6px',
-    borderRadius: '4px'
-  },
-  ahorroMini: {
-    fontSize: '0.65rem',
-    color: '#8a2be2',
-    background: 'rgba(138, 43, 226, 0.05)',
-    padding: '2px 6px',
-    borderRadius: '4px',
-    fontWeight: '600'
-  },
-
-  // Acciones del item (cantidad, eliminar)
-  itemActions: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: '4px'
-  },
-  quantityControl: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    background: 'rgba(0,0,0,0.03)',
-    borderRadius: 30,
-    padding: '2px'
-  },
-  qtyBtn: {
-    background: 'transparent',
-    border: 'none',
-    width: 28,
-    height: 28,
-    fontSize: '1.1rem',
-    color: '#FF8C42',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  qtyValue: {
-    minWidth: 20,
-    textAlign: 'center',
-    fontWeight: '600',
-    fontSize: '0.9rem'
-  },
-  subtotalItem: {
-    fontWeight: '600',
-    fontSize: '0.9rem',
-    color: '#01400e'
-  },
-  itemTotal: {
-    fontWeight: '700',
-    fontSize: '0.95rem',
-    color: '#01400e',
-    minWidth: '60px',
-    textAlign: 'right'
-  },
-  removeBtn: {
-    background: 'none',
-    border: 'none',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    opacity: 0.5,
-    padding: '4px',
-    transition: 'opacity 0.2s'
-  },
-
-  // 💰 Resumen de Compra (Desglose final)
-  summaryCard: {
-    marginTop: '1rem',
-    paddingTop: '1rem',
-    borderTop: '2px solid rgba(0,0,0,0.05)'
-  },
-  divider: {
-    textAlign: 'center',
-    color: '#ccc',
-    margin: '12px 0',
-    letterSpacing: '2px',
-    fontSize: '0.8rem'
-  },
-  resumenFinal: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px'
-  },
-  row: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    fontSize: '0.95rem',
-    color: '#666'
-  },
-  summaryRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '0.5rem',
-    color: '#666',
-    fontSize: '0.95rem'
-  },
-  rowAhorro: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    fontSize: '0.95rem',
-    color: '#00a86b',
-    fontWeight: '600'
-  },
-  ahorroRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '0.5rem',
-    color: '#00a86b',
-    fontWeight: '600',
-    fontSize: '0.95rem'
-  },
-  rowPromo: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    fontSize: '0.95rem',
-    color: '#ff3b30',
-    fontWeight: '700'
-  },
-  rowTotal: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: '8px',
-    paddingTop: '12px',
-    borderTop: '1px dashed #ccc',
-    fontSize: '1.2rem',
-    fontWeight: '700',
-    color: '#01400e'
-  },
-  totalRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '1rem 0',
-    fontSize: '1.2rem',
-    fontWeight: '700',
-    color: '#01400e'
-  },
-  totalAmount: {
-    color: '#FF8C42',
-    fontSize: '1.3rem'
-  },
-
-  // Botones de acción
-  checkoutBtn: {
-    width: '100%',
-    padding: '0.9rem',
-    background: 'linear-gradient(135deg, #01400e, #2a6b2f)',
-    color: 'white',
-    border: 'none',
-    borderRadius: 40,
-    fontWeight: '700',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    marginTop: '1.5rem',
-    transition: 'transform 0.2s, box-shadow 0.2s'
-  },
-  btnPagar: {
-    width: '100%',
-    padding: '0.9rem',
-    background: 'linear-gradient(135deg, #01400e, #2a6b2f)',
-    color: 'white',
-    border: 'none',
-    borderRadius: 40,
-    fontWeight: '700',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    marginTop: '1.5rem',
-    transition: 'transform 0.2s, box-shadow 0.2s'
-  },
-  backBtn: {
-    width: '100%',
-    padding: '0.4rem',
-    background: 'transparent',
-    border: '4px solid rgba(239, 162, 54, 0.3)',
-    borderRadius: 40,
-    color: '#666',
-    cursor: 'pointer',
-    marginTop: '0.5rem',
-    fontSize: '0.95rem',
-    transition: 'background 0.2s'
-  },
-
-  // Sección de resumen (legacy - mantenida por compatibilidad)
-  summarySection: {
-    marginTop: '20px',
-    paddingTop: '15px',
-    borderTop: '2px solid #f0f0f0',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px'
-  },
-  // Estilos para el item del carrito (legacy - mantenidos por compatibilidad)
-  cartItem: {
-    padding: '8px 0',
-    borderBottom: '1px solid rgba(0,0,0,0.05)'
-  },
-  itemInfo: {
-    marginBottom: '4px'
-  }
+  itemActions: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' },
+  quantityControl: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0,0,0,0.03)', borderRadius: 30, padding: '2px' },
+  qtyBtn: { background: 'transparent', border: 'none', width: 28, height: 28, fontSize: '1.1rem', color: '#FF8C42', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  qtyValue: { minWidth: 20, textAlign: 'center', fontWeight: '600', fontSize: '0.9rem' },
+  itemTotal: { fontWeight: '700', fontSize: '0.95rem', color: '#01400e', minWidth: '60px', textAlign: 'right' },
+  removeBtn: { background: 'none', border: 'none', fontSize: '1rem', cursor: 'pointer', opacity: 0.5, padding: '4px' },
+  summaryCard: { marginTop: '1rem', paddingTop: '1rem', borderTop: '2px solid rgba(0,0,0,0.05)' },
+  summaryRow: { display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: '#666', fontSize: '0.95rem' },
+  ahorroRow: { display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: '#00a86b', fontWeight: '600', fontSize: '0.95rem' },
+  totalRow: { display: 'flex', justifyContent: 'space-between', margin: '1rem 0', fontSize: '1.2rem', fontWeight: '700', color: '#01400e' },
+  totalAmount: { color: '#FF8C42', fontSize: '1.3rem' },
+  checkoutBtn: { width: '100%', padding: '0.9rem', background: 'linear-gradient(135deg, #01400e, #2a6b2f)', color: 'white', border: 'none', borderRadius: 40, fontWeight: '700', fontSize: '1rem', cursor: 'pointer', marginTop: '1.5rem' },
+  backBtn: { width: '100%', padding: '0.4rem', background: 'transparent', border: '4px solid rgba(239, 162, 54, 0.3)', borderRadius: 40, color: '#666', cursor: 'pointer', marginTop: '0.5rem', fontSize: '0.95rem' },
 };

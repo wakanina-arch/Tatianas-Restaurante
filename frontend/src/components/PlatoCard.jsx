@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 
 export default function PlatoCard({ plato, onUpdateCart }) {
-  const [added, setAdded] = useState(false); // Efecto visual al añadir
-  
+  const [added, setAdded] = useState(false);
   const precio = plato.precio || 0;
   const imagen = plato.imagen || plato.imagenes?.[0] || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22 font-size=%2214%22 fill=%22%23999%22%3ESin imagen%3C/text%3E%3C/svg%3E';
 
   const handleAdd = () => {
     setAdded(true);
     onUpdateCart?.(plato, 1);
-    setTimeout(() => setAdded(false), 600); // Efecto de "añadido"
+    setTimeout(() => setAdded(false), 600);
   };
 
   return (
@@ -18,30 +17,21 @@ export default function PlatoCard({ plato, onUpdateCart }) {
       <div style={styles.info}>
         <h3 style={styles.titulo}>{plato.nombre}</h3>
         <p style={styles.descripcion}>{plato.descripcion || 'Deliciosa opción para tu paladar'}</p>
-        
-        {/* 🎯 LÍNEA ÚNICA: Precio + Badge Promo + Botón Añadir */}
         <div style={styles.fila}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span style={styles.precio}>${precio.toFixed(2)}</span>
-            
-            {/* Badge de promo en la misma línea */}
             {plato.enOferta && (
               <span style={styles.badgePromo}>
                 -{plato.descuentoAplicado}% {plato.tagPromo}
               </span>
             )}
           </div>
-          
-          {/* Botón Añadir con efecto */}
-          <button 
-            onClick={handleAdd} 
-            style={{
-              ...styles.botonAdd,
-              background: added ? '#00c805' : 'transparent',
-              color: added ? 'white' : '#01400e',
-              transform: added ? 'scale(1.1)' : 'scale(1)',
-            }}
-          >
+          <button onClick={handleAdd} style={{
+            ...styles.botonAdd,
+            background: added ? '#00c805' : 'transparent',
+            color: added ? 'white' : '#01400e',
+            transform: added ? 'scale(1.1)' : 'scale(1)',
+          }}>
             {added ? '✓' : '+'}
           </button>
         </div>
@@ -106,23 +96,23 @@ const styles = {
     lineHeight: 1.2,
   },
   badgePromo: {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '3px',
-  padding: '2px 8px',
-  background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%)',
-  color: '#e0e0e0',
-  borderRadius: '3px 10px 3px 10px',
-  fontSize: '0.55rem',
-  fontWeight: '700',
-  letterSpacing: '1px',
-  textTransform: 'uppercase',
-  boxShadow: '0 0 12px rgba(138, 43, 226, 0.4), 0 0 0 1px rgba(138, 43, 226, 0.2) inset',
-  border: '1px solid rgba(138, 43, 226, 0.3)',
-  textShadow: '0 0 6px rgba(255, 255, 255, 0.3)',
-  whiteSpace: 'nowrap',
-  animation: 'fogPulse 3s ease-in-out infinite',
-},
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '3px',
+    padding: '2px 8px',
+    background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%)',
+    color: '#e0e0e0',
+    borderRadius: '3px 10px 3px 10px',
+    fontSize: '0.55rem',
+    fontWeight: '700',
+    letterSpacing: '1px',
+    textTransform: 'uppercase',
+    boxShadow: '0 0 12px rgba(138, 43, 226, 0.4), 0 0 0 1px rgba(138, 43, 226, 0.2) inset',
+    border: '1px solid rgba(138, 43, 226, 0.3)',
+    textShadow: '0 0 6px rgba(255, 255, 255, 0.3)',
+    whiteSpace: 'nowrap',
+    animation: 'fogPulse 3s ease-in-out infinite',
+  },
   botonAdd: {
     width: '30px',
     height: '30px',
