@@ -20,7 +20,8 @@ const getFraseAleatoria = () => {
   };
 };
 
-const COMERCIOS_FIJOS = [
+// IDs 1,2,3 = DEMOS ACTIVAS | IDs 4-9 = PUBLICIDAD (Próximamente)
+const DEMOS_FIJAS = [
   { id: 1, nombre: "ONO TO ONE", imagen: "/casas/en_su_punto.JPG" },
   { id: 2, nombre: "Sabores del Origen", imagen: "/casas/Ceremoniales.JPG" },
   { id: 3, nombre: "Sierra y Fuego", imagen: "/casas/Como_en_casa.JPG" },
@@ -34,7 +35,7 @@ const COMERCIOS_FIJOS = [
 
 export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRegistroComercio, currentPage, comercioSimple }) {
   const [fraseData] = useState(() => getFraseAleatoria());
-  const [comerciosRegistrados, setComerciosRegistrados] = useState([]);
+  const [comerciosRegistrados, setComerciosRegistrados] = useState(DEMOS_FIJAS);
   const [modalComercio, setModalComercio] = useState(null);
 
   useEffect(() => {
@@ -45,40 +46,24 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
     }));
   }, [fraseData]);
 
-
   useEffect(() => {
     try {
       const registros = JSON.parse(localStorage.getItem('registros_comercios') || '[]');
-      setComerciosRegistrados(registros);
+      const registrosSinFijos = registros.filter(r => !DEMOS_FIJAS.some(fijo => fijo.id === r.id));
+      const todos = [...DEMOS_FIJAS, ...registrosSinFijos];
+      setComerciosRegistrados(todos);
     } catch (e) {
-      console.error('Error cargando comercios registrados:', e);
+      console.error('Error cargando comercios:', e);
+      setComerciosRegistrados(DEMOS_FIJAS);
     }
   }, [currentPage]);
 
-  const todosLosComerciosRaw = [
-    ...COMERCIOS_FIJOS.map(c => ({ ...c, tipo: 'fijo' })),
-    ...comerciosRegistrados.map(r => ({
-      id: r.id,
-      nombre: r.nombre,
-      imagen: r.imagen || r.logo,
-      tipo: 'registrado'
-    })),
-    ...(comercioSimple ? [{ ...comercioSimple, tipo: 'simple' }] : []),
-  ];
-
-  // FILTRAR DUPLICADOS POR ID
-  const todosLosComercios = todosLosComerciosRaw.filter((comercio, index, self) =>
-    index === self.findIndex((t) => t.id === comercio.id)
-  );
-
   const handleComercioClick = (comercio) => {
-    // IDs 1, 2, 3 = Demos activas → Abrir normalmente
     if (comercio.id === 1 || comercio.id === 2 || comercio.id === 3) {
       onSelectCategory('Picoteo', comercio.id);
       return;
     }
     
-    // IDs 4+ = Comercios no disponibles → Modal personalizado
     const mensajes = [
       `🏪 ¡Este local está buscando dueño!\n\n"${comercio.nombre}" podría ser tu próximo gran éxito.\n\nPróximamente disponible en ONE TO ONE.`,
       `🍳 ¡Aquí huele a oportunidad!\n\n"${comercio.nombre}" está esperando a que alguien como tú le dé vida.\n\nMuy pronto en nuestra plataforma.`,
@@ -89,78 +74,41 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
   };
 
   return (
-    <div style={S.container}>
-      <div style={S.hero}>
-        <div
-          style={S.moneda}
-          onClick={() => onAccesoComercio && onAccesoComercio()}
-          title="Acceso a comercios"
-        >
-          🔱
-        </div>
-
-        <h1 style={S.titulo}>
-          <span style={S.one}>ONE</span>{' '}
-          <span style={S.to}>TO</span>{' '}
-          <span style={S.oneEnd}>ONE</span>
+    <div style={styles.container}>
+      <div style={styles.hero}>
+        <div style={styles.moneda} onClick={() => onAccesoComercio && onAccesoComercio()} title="Acceso a comercios">🔱</div>
+        <h1 style={styles.titulo}>
+          <span style={styles.one}>ONE</span> <span style={styles.to}>TO</span> <span style={styles.oneEnd}>ONE</span>
         </h1>
-
-        <div style={S.fraseContainer}>
-          <span style={S.fraseIcono}>{fraseData.icono}</span>
-          <p style={S.fraseTexto}>"{fraseData.texto}"</p>
+        <div style={styles.fraseContainer}>
+          <span style={styles.fraseIcono}>{fraseData.icono}</span>
+          <p style={styles.fraseTexto}>"{fraseData.texto}"</p>
         </div>
       </div>
 
-      <div style={S.comerciosContainer}>
-        {todosLosComercios.map((comercio) => {
-          // Usamos el id como key ya que ahora son únicos
-          return (
-            <div
-              key={`${comercio.tipo}-${comercio.id}`}
-              style={S.comercioCard}
-              onClick={() => handleComercioClick(comercio)}
-            >
-              <img
-                src={comercio.imagen}
-                alt={comercio.nombre}
-                style={S.comercioImagen}
-                onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/400x280/2a0a0a/FFD700?text=' + encodeURIComponent(comercio.nombre || 'Comercio');
-                }}
-              />
-              {/* Badge para comercios no disponibles */}
-              {comercio.id >= 4 && (
-                <div style={S.disponibleBadge}>
-                  🔜 Próximamente
-                </div>
-              )}
-            </div>
-          );
-        })}
+      <div style={styles.comerciosContainer}>
+        {comerciosRegistrados.map((comercio) => (
+          <div key={comercio.id} style={styles.comercioCard} onClick={() => handleComercioClick(comercio)}>
+            <img src={comercio.imagen} alt={comercio.nombre} style={styles.comercioImagen} onError={(e) => { e.target.src = 'https://via.placeholder.com/400x280/2a0a0a/FFD700?text=' + encodeURIComponent(comercio.nombre || 'Comercio'); }} />
+            {comercio.id >= 4 && <div style={styles.disponibleBadge}>🔜 Próximamente</div>}
+          </div>
+        ))}
       </div>
 
       {onRegistroComercio && (
-        <div style={S.registroBtnContainer}>
-          <button onClick={onRegistroComercio} style={S.registroBtn}>
-            🏪 Inscribir mi comercio
-          </button>
+        <div style={styles.registroBtnContainer}>
+          <button onClick={onRegistroComercio} style={styles.registroBtn}>🏪 Inscribir mi comercio</button>
         </div>
       )}
 
-      {/* MODAL PERSONALIZADO */}
       {modalComercio && (
-        <div style={S.modalOverlay} onClick={() => setModalComercio(null)}>
-          <div style={S.modalCard} onClick={e => e.stopPropagation()}>
-            <div style={S.modalIcon}>🔱</div>
-            <h3 style={S.modalTitulo}>{modalComercio.nombre}</h3>
-            <p style={S.modalMensaje}>{modalComercio.mensaje}</p>
-            <div style={S.modalBadge}>
-              <span style={S.badgeDot}>●</span>
-              Próximamente disponible
-            </div>
-            <button onClick={() => setModalComercio(null)} style={S.modalBtn}>
-              ← Volver al inicio
-            </button>
+        <div style={styles.modalOverlay} onClick={() => setModalComercio(null)}>
+          <div style={styles.modalCard} onClick={e => e.stopPropagation()}>
+            <div style={styles.modalIcon}>🔱</div>
+            <h3 style={styles.modalTitulo}>{modalComercio.nombre}</h3>
+            <p style={styles.modalMensaje}>{modalComercio.mensaje}</p>
+            <div style={styles.modalBadge}><span style={styles.badgeDot}>●</span>Próximamente disponible</div>
+            <button onClick={() => setModalComercio(null)} style={styles.modalBtn}>← Volver al inicio</button>
           </div>
         </div>
       )}
@@ -168,7 +116,7 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
   );
 }
 
-const S = {
+const styles = {
   container: {
     height: '100vh',
     width: '100vw',
@@ -292,7 +240,6 @@ const S = {
     cursor: 'pointer',
     transition: 'all 0.3s ease',
   },
-  // Modal personalizado
   modalOverlay: {
     position: 'fixed',
     top: 0, left: 0, right: 0, bottom: 0,
@@ -369,47 +316,17 @@ const S = {
   },
 };
 
-// Animaciones unificadas
+// Animaciones
 const styleSheet = document.createElement('style');
 styleSheet.textContent = `
-  @keyframes flotar {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-3px); }
-    100% { transform: translateY(0px); }
-  }
-  @keyframes pulso {
-    0%, 100% { text-shadow: 0 0 0px rgba(255,215,0,0); }
-    50% { text-shadow: 0 0 12px rgba(255,215,0,0.8); }
-  }
-  @keyframes brilloRojo {
-    0% { text-shadow: 0 0 2px rgba(178,34,34,0.3); }
-    100% { text-shadow: 0 0 12px rgba(178,34,34,0.8); }
-  }
-  @keyframes brilloVerde {
-    0% { text-shadow: 0 0 2px rgba(26,59,26,0.3); }
-    100% { text-shadow: 0 0 12px rgba(26,59,26,0.8); }
-  }
-  @keyframes brilloDorado {
-    0% { text-shadow: 0 0 2px rgba(255,215,0,0.3); }
-    100% { text-shadow: 0 0 12px rgba(255,215,0,0.8); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
+  @keyframes flotar { 0% { transform: translateY(0px); } 50% { transform: translateY(-3px); } 100% { transform: translateY(0px); } }
+  @keyframes pulso { 0%, 100% { text-shadow: 0 0 0px rgba(255,215,0,0); } 50% { text-shadow: 0 0 12px rgba(255,215,0,0.8); } }
+  @keyframes brilloRojo { 0% { text-shadow: 0 0 2px rgba(178,34,34,0.3); } 100% { text-shadow: 0 0 12px rgba(178,34,34,0.8); } }
+  @keyframes brilloVerde { 0% { text-shadow: 0 0 2px rgba(26,59,26,0.3); } 100% { text-shadow: 0 0 12px rgba(26,59,26,0.8); } }
+  @keyframes brilloDorado { 0% { text-shadow: 0 0 2px rgba(255,215,0,0.3); } 100% { text-shadow: 0 0 12px rgba(255,215,0,0.8); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 `;
-if (typeof document !== 'undefined') {
-  document.head.appendChild(styleSheet);
-}
+if (typeof document !== 'undefined') document.head.appendChild(styleSheet);

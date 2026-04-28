@@ -11,9 +11,9 @@ import RegistroComercio from './pages/RegistroComercio';
 import uploadImageService from "./services/uploadImageService";
 import { getMenuPublicado } from './services/menuService';
 
-const DATA_VERSION = "2.0.1";
+// ========== DATOS UNIFICADOS ==========
+const DATA_VERSION = "2.0.2";
 
-// 📦 1. PRIMERO definimos los datos iniciales
 const DEFAULT_MENU_ITEMS = [
   { id: 1, nombre: 'Picoteo', opciones: [
     { nombre: 'Alitas BBQ', precio: 8.50 }, { nombre: 'Patatas Bravas', precio: 5.50 }, { nombre: 'Nachos con queso', precio: 7.50 }
@@ -41,13 +41,13 @@ const DEFAULT_MENU_ITEMS = [
   ]},
 ];
 
+// ✅ IMÁGENES UNIFICADAS (mismas que en WelcomeInicio)
 const COMERCIOS_INICIALES = [
-  { id: 1, nombre: "ONO TO ONE", direccion: "Calle Principal 123", telefono: "600 000 000", descripcion: "Sabores únicos que conectan contigo. Cocina de autor con ingredientes frescos y pasión por el buen comer.", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 2, nombre: "Sabores del Origen", direccion: "Malecón de Ayangue, Santa Elena", telefono: "+593 988 555 111", descripcion: "Rescatamos las recetas ancestrales de la Costa ecuatoriana. Productos frescos del mar y la tierra.", imagen: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 3, nombre: "Sierra y Fuego", direccion: "Calle de los Volcanes, Patate, Tungurahua", telefono: "+593 988 555 222", descripcion: "Cocina de altura con productos de los Andes ecuatorianos. Hornos de leña y recetas ancestrales.", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' }
+  { id: 1, nombre: "ONO TO ONE", direccion: "Calle Principal 123", telefono: "600 000 000", descripcion: "Sabores únicos que conectan contigo.", imagen: '/casas/en_su_punto.JPG' },
+  { id: 2, nombre: "Sabores del Origen", direccion: "Malecón de Ayangue, Santa Elena", telefono: "+593 988 555 111", descripcion: "Rescatamos las recetas ancestrales de la Costa ecuatoriana.", imagen: '/casas/Ceremoniales.JPG' },
+  { id: 3, nombre: "Sierra y Fuego", direccion: "Calle de los Volcanes, Patate, Tungurahua", telefono: "+593 988 555 222", descripcion: "Cocina de altura con productos de los Andes ecuatorianos.", imagen: '/casas/Como_en_casa.JPG' }
 ];
 
-// ✅ 2. AHORA SÍ definimos la función (después de que COMERCIOS_INICIALES existe)
 function syncDataWithVersion() {
   const storedVersion = localStorage.getItem("app_data_version");
   if (storedVersion !== DATA_VERSION) {
@@ -60,7 +60,6 @@ function syncDataWithVersion() {
     localStorage.setItem("registros_comercios", JSON.stringify(COMERCIOS_INICIALES));
     localStorage.setItem("app_data_version", DATA_VERSION);
     
-    // Recargar para aplicar cambios
     window.location.reload();
   }
 }
