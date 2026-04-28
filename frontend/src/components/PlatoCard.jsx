@@ -2,36 +2,63 @@ import React, { useState } from 'react';
 
 export default function PlatoCard({ plato, onUpdateCart }) {
   const [added, setAdded] = useState(false);
-  const precio = plato.precio || 0;
-  const imagen = plato.imagen || plato.imagenes?.[0] || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22 font-size=%2214%22 fill=%22%23999%22%3ESin imagen%3C/text%3E%3C/svg%3E';
+  
+  // Limpieza de datos y color naranja corporativo
+  const precio = Number(plato.precio) || 0;
+  const COLOR_NARANJA = '#FF8C42'; 
+  
+  // Fallback para Cloudinary y locales
+  const imagen = plato.imagen || (plato.opciones && plato.opciones?.imagen) || 'https://placeholder.com';
 
-  const handleAdd = () => {
+  const handleAdd = (e) => {
+    e.stopPropagation();
     setAdded(true);
     onUpdateCart?.(plato, 1);
-    setTimeout(() => setAdded(false), 600);
+    setTimeout(() => setAdded(false), 800);
   };
 
   return (
     <div style={styles.card}>
-      <img src={imagen} alt={plato.nombre} style={styles.imagen} />
+      {/* Imagen alineada a la izquierda según tu preferencia */}
+      <div style={styles.containerImagen}>
+        <img 
+          src={imagen} 
+          alt={plato.nombre} 
+          style={styles.imagen}
+          loading="lazy" 
+          onError={(e) => { e.target.src = 'https://placeholder.com'; }}
+        />
+      </div>
+
       <div style={styles.info}>
         <h3 style={styles.titulo}>{plato.nombre}</h3>
-        <p style={styles.descripcion}>{plato.descripcion || 'Deliciosa opción para tu paladar'}</p>
+        <p style={styles.descripcion}>
+          {plato.descripcion || 'Deliciosa opción para tu paladar'}
+        </p>
+        
         <div style={styles.fila}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={styles.precio}>${precio.toFixed(2)}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {/* Precio en Naranja para coincidir con el resumen de compra */}
+            <span style={{ ...styles.precio, color: COLOR_NARANJA }}>
+              ${precio.toFixed(2)}
+            </span>
             {plato.enOferta && (
               <span style={styles.badgePromo}>
                 -{plato.descuentoAplicado}% {plato.tagPromo}
               </span>
             )}
           </div>
-          <button onClick={handleAdd} style={{
-            ...styles.botonAdd,
-            background: added ? '#00c805' : 'transparent',
-            color: added ? 'white' : '#01400e',
-            transform: added ? 'scale(1.1)' : 'scale(1)',
-          }}>
+          
+          <button 
+            onClick={handleAdd} 
+            style={{
+              ...styles.botonAdd,
+              background: added ? '#00c805' : 'transparent',
+              borderColor: added ? '#00c805' : '#01400e',
+              color: added ? 'white' : '#01400e',
+              transform: added ? 'scale(1.1)' : 'scale(1)',
+            }}
+          >
             {added ? '✓' : '+'}
           </button>
         </div>
@@ -43,26 +70,31 @@ export default function PlatoCard({ plato, onUpdateCart }) {
 const styles = {
   card: {
     display: 'flex',
-    gap: '12px',
+    gap: '14px',
     background: 'rgba(255, 255, 255, 0.95)',
     borderRadius: '18px',
-    margin: '6px 8px',
+    margin: '8px 10px',
     padding: '16px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
     border: '1px solid rgba(255, 215, 0, 0.12)',
+    alignItems: 'center',
+  },
+  containerImagen: {
+    width: '75px',
+    height: '75px',
+    flexShrink: 0,
   },
   imagen: {
-    width: '70px',
-    height: '70px',
-    borderRadius: '7px',
+    width: '100%',
+    height: '100%',
+    borderRadius: '10px',
     objectFit: 'cover',
-    flexShrink: 0,
+    backgroundColor: '#f5f5f5'
   },
   info: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
     minWidth: 0,
   },
   titulo: {
@@ -70,13 +102,10 @@ const styles = {
     fontSize: '0.95rem',
     fontWeight: '700',
     color: '#1a1a1a',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
   },
   descripcion: {
-    margin: '0 0 4px 0',
-    fontSize: '0.7rem',
+    margin: '0 0 6px 0',
+    fontSize: '0.72rem',
     color: '#666',
     lineHeight: '1.3',
     display: '-webkit-box',
@@ -90,34 +119,23 @@ const styles = {
     alignItems: 'center',
   },
   precio: {
-    fontSize: '0.95rem',
-    fontWeight: '700',
-    color: '#FF8C42',
-    lineHeight: 1.2,
+    fontSize: '1rem',
+    fontWeight: '800',
   },
   badgePromo: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '3px',
-    padding: '2px 8px',
+    padding: '2px 6px',
     background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%)',
-    color: '#e0e0e0',
-    borderRadius: '3px 10px 3px 10px',
+    color: '#fff',
+    borderRadius: '4px',
     fontSize: '0.55rem',
     fontWeight: '700',
-    letterSpacing: '1px',
     textTransform: 'uppercase',
-    boxShadow: '0 0 12px rgba(138, 43, 226, 0.4), 0 0 0 1px rgba(138, 43, 226, 0.2) inset',
-    border: '1px solid rgba(138, 43, 226, 0.3)',
-    textShadow: '0 0 6px rgba(255, 255, 255, 0.3)',
-    whiteSpace: 'nowrap',
-    animation: 'fogPulse 3s ease-in-out infinite',
   },
   botonAdd: {
-    width: '30px',
-    height: '30px',
+    width: '32px',
+    height: '32px',
     borderRadius: '50%',
-    border: '1.5px solid #01400e',
+    border: '1.5px solid',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
