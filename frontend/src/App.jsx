@@ -11,9 +11,6 @@ import RegistroComercio from './pages/RegistroComercio';
 import uploadImageService from "./services/uploadImageService";
 import { getMenuPublicado } from './services/menuService';
 
-// ========== DATOS UNIFICADOS ==========
-const DATA_VERSION = "2.0.2";
-
 const DEFAULT_MENU_ITEMS = [
   { id: 1, nombre: 'Picoteo', opciones: [
     { nombre: 'Alitas BBQ', precio: 8.50 }, { nombre: 'Patatas Bravas', precio: 5.50 }, { nombre: 'Nachos con queso', precio: 7.50 }
@@ -41,33 +38,6 @@ const DEFAULT_MENU_ITEMS = [
   ]},
 ];
 
-// ✅ IMÁGENES UNIFICADAS (mismas que en WelcomeInicio)
-const COMERCIOS_INICIALES = [
-  { id: 1, nombre: "ONO TO ONE", direccion: "Calle Principal 123", telefono: "600 000 000", descripcion: "Sabores únicos que conectan contigo.", imagen: '/casas/en_su_punto.JPG' },
-  { id: 2, nombre: "Sabores del Origen", direccion: "Malecón de Ayangue, Santa Elena", telefono: "+593 988 555 111", descripcion: "Rescatamos las recetas ancestrales de la Costa ecuatoriana.", imagen: '/casas/Ceremoniales.JPG' },
-  { id: 3, nombre: "Sierra y Fuego", direccion: "Calle de los Volcanes, Patate, Tungurahua", telefono: "+593 988 555 222", descripcion: "Cocina de altura con productos de los Andes ecuatorianos.", imagen: '/casas/Como_en_casa.JPG' }
-];
-
-function syncDataWithVersion() {
-  const storedVersion = localStorage.getItem("app_data_version");
-  if (storedVersion !== DATA_VERSION) {
-    localStorage.removeItem("comercios");
-    localStorage.removeItem("registros_comercios");
-    localStorage.removeItem("menus");
-    localStorage.removeItem("cart");
-    
-    localStorage.setItem("comercios", JSON.stringify(COMERCIOS_INICIALES));
-    localStorage.setItem("registros_comercios", JSON.stringify(COMERCIOS_INICIALES));
-    localStorage.setItem("app_data_version", DATA_VERSION);
-    
-    window.location.reload();
-  }
-}
-
-// ✅ 3. EJECUTAMOS la función
-syncDataWithVersion();
-
-// ✅ 4. El resto de tu código (useLocalStorage, etc.)
 function useLocalStorage(key, initialValue) {
   const [storedValue, setStoredValue] = useState(() => {
     try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : initialValue; } 
@@ -83,7 +53,6 @@ export default function App() {
   return <CartProvider><MainApp /></CartProvider>;
 }
 
-
 function MainApp() {
   const { itemCount } = useCart();
   const [currentPage, setCurrentPage] = useState('home');
@@ -93,7 +62,32 @@ function MainApp() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [perfilAbierto, setPerfilAbierto] = useState(false);
   const [menuItems, setMenuItems] = useState(DEFAULT_MENU_ITEMS);
-  const [COMERCIOS, setComerciosRegistrados] = useLocalStorage('registros_comercios', COMERCIOS_INICIALES);
+  const [COMERCIOS, setComerciosRegistrados] = useLocalStorage('registros_comercios', [
+    {
+      id: 1,
+      nombre: "ONO TO ONE",
+      direccion: "Calle Principal 123",
+      telefono: "600 000 000",
+      descripcion: "Sabores únicos que conectan contigo. Cocina de autor con ingredientes frescos y pasión por el buen comer.",
+      imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600'
+    },
+    {
+      id: 2,
+      nombre: "Sabores del Origen",
+      direccion: "Malecón de Ayangue, Santa Elena",
+      telefono: "+593 988 555 111",
+      descripcion: "Rescatamos las recetas ancestrales de la Costa ecuatoriana. Productos frescos del mar y la tierra.",
+      imagen: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600'
+    },
+    {
+      id: 3,
+      nombre: "Sierra y Fuego",
+      direccion: "Calle de los Volcanes, Patate, Tungurahua",
+      telefono: "+593 988 555 222",
+      descripcion: "Cocina de altura con productos de los Andes ecuatorianos. Hornos de leña y recetas ancestrales.",
+      imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600'
+    }
+  ]);
 
   const comercioActivo = useMemo(() => {
     if (!selectedComercio) return null;
@@ -155,7 +149,11 @@ function MainApp() {
             </header>
           )}
           <RegisterModal open={perfilAbierto} onClose={() => setPerfilAbierto(false)} onRegister={(d, m) => { setUser(m === 'logout' ? null : d); setPerfilAbierto(false); }} />
-          <main style={{ paddingTop: (!isAdminMode && !isTransition) ? '100px' : '0', minHeight: 'calc(100vh - 100px)', overflow: isAdminMode ? 'hidden' : 'auto' }}>
+          <main style={{ 
+  paddingTop: (!isAdminMode && !isTransition) ? '100px' : '0',
+  minHeight: 'calc(100vh - 100px)',
+  overflow: isAdminMode ? 'hidden' : 'auto'
+}}>
             {currentPage === 'home' && <HomePage comercio={comercioActivo} platillos={menuItems} user={user} itemCount={itemCount} onOpenPerfil={() => setPerfilAbierto(true)} onBackToWelcome={handleBackToWelcome} setCurrentPage={setCurrentPage} />}
             {currentPage === 'carrito' && <CartPage onVolverAlMenu={() => setCurrentPage('home')} onBackToWelcome={handleBackToWelcome}/>}
             {currentPage === 'admin' && <AdminPage menuItems={menuItems} onSaveMenu={() => {}} log={[]} addLog={() => {}} pendingOrders={[]} setPendingOrders={() => {}} finishedOrders={[]} setFinishedOrders={() => {}} onBack={() => setCurrentPage('home')} />}
@@ -186,17 +184,6 @@ function CartPage({ onVolverAlMenu, onBackToWelcome }) {
 
   const totalFinal = (subtotal - ahorro).toFixed(2);
 
-  if (cartItems.length === 0) {
-    return (
-      <div style={CS.emptyCard}>
-        <div style={CS.emptyIcon}>🛒</div>
-        <div style={CS.emptyTitle}>Carrito vacío</div>
-        <div style={CS.emptyText}>Aún no has agregado nada</div>
-        <button onClick={onVolverAlMenu} style={{ ...S.backBtn, width: '100%', background: 'rgba(1, 64, 14, 0.05)' }}>Explorar menú</button>
-      </div>
-    );
-  }
-
   return (
     <section style={CS.container}>
       <h2 style={CS.pageTitle}>Resumen de Compra</h2>
@@ -213,17 +200,16 @@ function CartPage({ onVolverAlMenu, onBackToWelcome }) {
                   <h4 style={CS.itemName}>{item.nombre}</h4>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {tienePromo ? (
-  <>
-    <span style={CS.itemPrice}>${pBase.toFixed(2)} c/u</span>
-    <span style={CS.badgePromoDark}>
-      -{item.descuentoAplicado}% {item.tagPromo}
-    </span>
-  </>
-) : (
-  <span style={CS.itemPrice}>${pFinal.toFixed(2)} c/u</span>
-)}
+                      <>
+                        <span style={CS.itemPrice}>${pBase.toFixed(2)} c/u</span>
+                        <span style={CS.promoBadge}>-{item.descuentoAplicado}% {item.tagPromo}</span>
+                      </>
+                    ) : (
+                      <span style={CS.itemPrice}>${pFinal.toFixed(2)} c/u</span>
+                    )}
                   </div>
                 </div>
+                
                 <div style={CS.itemActions}>
                   <div style={CS.quantityControl}>
                     <button onClick={() => updateQuantity(item.id, (item.cantidad || 1) - 1)} disabled={(item.cantidad || 1) <= 1} style={CS.qtyBtn}>−</button>
@@ -237,15 +223,36 @@ function CartPage({ onVolverAlMenu, onBackToWelcome }) {
             );
           })}
         </div>
+
         <div style={CS.summaryCard}>
-          <div style={CS.summaryRow}><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
-          <div style={CS.ahorroRow}><span>Ahorro Total</span><span>-${ahorro.toFixed(2)}</span></div>
-          <div style={CS.totalRow}><span>TOTAL</span><span style={CS.totalAmount}>${totalFinal}</span></div>
+          <div style={CS.summaryRow}>
+            <span>Subtotal</span>
+            <span>${subtotal.toFixed(2)}</span>
+          </div>
+          
+          <div style={CS.ahorroRow}>
+            <span>Ahorro Total</span>
+            <span>-${ahorro.toFixed(2)}</span>
+          </div>
+          
+          <div style={CS.totalRow}>
+            <span>TOTAL</span>
+            <span style={CS.totalAmount}>${totalFinal}</span>
+          </div>
+          
           <button onClick={() => setPayOpen(true)} style={CS.checkoutBtn}>PAGAR</button>
           <button onClick={onVolverAlMenu} style={CS.backBtn}>🔱 Seguir Comprando</button>
         </div>
       </div>
-      <PaymentModal open={payOpen} onClose={() => setPayOpen(false)} total={parseFloat(totalFinal)} onBackToWelcome={onBackToWelcome} addLog={() => {}} setPendingOrders={() => {}} />
+
+      <PaymentModal 
+        open={payOpen} 
+        onClose={() => setPayOpen(false)} 
+        total={parseFloat(totalFinal)} 
+        onBackToWelcome={onBackToWelcome}
+        addLog={() => {}} 
+        setPendingOrders={() => {}} 
+      />
     </section>
   );
 }
@@ -275,24 +282,7 @@ const CS = {
   itemInfo: { marginBottom: '4px' },
   itemName: { fontSize: '0.9rem', fontWeight: '600', color: '#01400e' },
   itemPrice: { fontSize: '0.85rem', fontWeight: '600', color: '#333' },
-  promoBadge: { fontSize: '0.65rem', color: '#8a2be2', fontWeight: '600', background: 'rgba(138, 43, 226, 0.05)', padding: '2px 6px', borderRadius: '4px' },badgePromoDark: {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '3px',
-  padding: '2px 8px',
-  background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%)',
-  color: '#e0e0e0',
-  borderRadius: '3px 10px 3px 10px',
-  fontSize: '0.55rem',
-  fontWeight: '700',
-  letterSpacing: '1px',
-  textTransform: 'uppercase',
-  boxShadow: '0 0 12px rgba(138, 43, 226, 0.4), 0 0 0 1px rgba(138, 43, 226, 0.2) inset',
-  border: '1px solid rgba(138, 43, 226, 0.3)',
-  textShadow: '0 0 6px rgba(255, 255, 255, 0.3)',
-  whiteSpace: 'nowrap',
-  animation: 'fogPulse 3s ease-in-out infinite',
-},
+  promoBadge: { fontSize: '0.65rem', color: '#8a2be2', fontWeight: '600', background: 'rgba(138, 43, 226, 0.05)', padding: '2px 6px', borderRadius: '4px' },
   itemActions: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' },
   quantityControl: { display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(0,0,0,0.03)', borderRadius: 30, padding: '2px' },
   qtyBtn: { background: 'transparent', border: 'none', width: 28, height: 28, fontSize: '1.1rem', color: '#FF8C42', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' },
