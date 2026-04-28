@@ -11,8 +11,9 @@ import RegistroComercio from './pages/RegistroComercio';
 import uploadImageService from "./services/uploadImageService";
 import { getMenuPublicado } from './services/menuService';
 
-const DATA_VERSION = "2.0.0";
+const DATA_VERSION = "2.0.1";
 
+// 📦 1. PRIMERO definimos los datos iniciales
 const DEFAULT_MENU_ITEMS = [
   { id: 1, nombre: 'Picoteo', opciones: [
     { nombre: 'Alitas BBQ', precio: 8.50 }, { nombre: 'Patatas Bravas', precio: 5.50 }, { nombre: 'Nachos con queso', precio: 7.50 }
@@ -46,16 +47,28 @@ const COMERCIOS_INICIALES = [
   { id: 3, nombre: "Sierra y Fuego", direccion: "Calle de los Volcanes, Patate, Tungurahua", telefono: "+593 988 555 222", descripcion: "Cocina de altura con productos de los Andes ecuatorianos. Hornos de leña y recetas ancestrales.", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' }
 ];
 
+// ✅ 2. AHORA SÍ definimos la función (después de que COMERCIOS_INICIALES existe)
 function syncDataWithVersion() {
   const storedVersion = localStorage.getItem("app_data_version");
   if (storedVersion !== DATA_VERSION) {
+    localStorage.removeItem("comercios");
+    localStorage.removeItem("registros_comercios");
+    localStorage.removeItem("menus");
+    localStorage.removeItem("cart");
+    
     localStorage.setItem("comercios", JSON.stringify(COMERCIOS_INICIALES));
     localStorage.setItem("registros_comercios", JSON.stringify(COMERCIOS_INICIALES));
     localStorage.setItem("app_data_version", DATA_VERSION);
+    
+    // Recargar para aplicar cambios
+    window.location.reload();
   }
 }
+
+// ✅ 3. EJECUTAMOS la función
 syncDataWithVersion();
 
+// ✅ 4. El resto de tu código (useLocalStorage, etc.)
 function useLocalStorage(key, initialValue) {
   const [storedValue, setStoredValue] = useState(() => {
     try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : initialValue; } 
@@ -70,6 +83,7 @@ function useLocalStorage(key, initialValue) {
 export default function App() {
   return <CartProvider><MainApp /></CartProvider>;
 }
+
 
 function MainApp() {
   const { itemCount } = useCart();
