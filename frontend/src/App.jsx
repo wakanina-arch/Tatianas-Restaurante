@@ -16,10 +16,38 @@ const DATA_VERSION = "2.0.4";
 
 // ========== DEFINICIÓN DE LAS 4 DEMOS ==========
 const DEMO_COMERCIOS = [
-  { id: 1, nombre: "ONE TO ONE", direccion: "Calle Principal 123", telefono: "600 000 000", descripcion: "Cocina internacional con sabores únicos.", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 2, nombre: "Sabores del Origen", direccion: "Malecón de Ayangue, Santa Elena", telefono: "+593 988 555 111", descripcion: "Rescatamos las recetas ancestrales de Manabí.", imagen: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 3, nombre: "Sierra y Fuego", direccion: "Calle de los Volcanes, Patate, Tungurahua", telefono: "+593 988 555 222", descripcion: "Cocina de altura con productos de los Andes.", imagen: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 4, nombre: "Manglar y Mar", direccion: "Comuna de Chanduy, Santa Elena", telefono: "+593 988 555 333", descripcion: "Del manglar a tu mesa.", imagen: 'https://images.pexels.com/photos/4578827/pexels-photo-4578827.jpeg?auto=compress&cs=tinysrgb&w=600' }
+  { 
+    id: 1, 
+    nombre: "ONE TO ONE", 
+    direccion: "Calle Principal 123", 
+    telefono: "600 000 000", 
+    descripcion: "Cocina internacional con sabores únicos.", 
+    imagen: '/casas/en_su_punto.JPG'   // ← Misma que Welcome
+  },
+  { 
+    id: 2, 
+    nombre: "Sabores del Origen", 
+    direccion: "Malecón de Ayangue, Santa Elena", 
+    telefono: "+593 988 555 111", 
+    descripcion: "Rescatamos las recetas ancestrales de Manabí.", 
+    imagen: '/casas/Ceremoniales.JPG'  // ← Misma que Welcome
+  },
+  { 
+    id: 3, 
+    nombre: "Sierra y Fuego", 
+    direccion: "Calle de los Volcanes, Patate, Tungurahua", 
+    telefono: "+593 988 555 222", 
+    descripcion: "Cocina de altura con productos de los Andes.", 
+    imagen: '/casas/Como_en_casa.JPG'  // ← Misma que Welcome
+  },
+  { 
+    id: 4, 
+    nombre: "Manglar y Mar", 
+    direccion: "Comuna de Chanduy, Santa Elena", 
+    telefono: "+593 988 555 333", 
+    descripcion: "Del manglar a tu mesa.", 
+    imagen: '/casas/Casa_Caramba.JPG'  // ← Misma que Welcome
+  }
 ];
 
 const DEFAULT_MENU_ITEMS = [
@@ -95,21 +123,18 @@ function MainApp() {
   const [COMERCIOS, setComercios] = useLocalStorage('registros_comercios', DEMO_COMERCIOS);
   
   // ✅ FORZAR LAS 4 DEMOS AL INICIAR (AHORA DENTRO DE MainApp)
-  useEffect(() => {
-    const existentes = localStorage.getItem('registros_comercios');
-    if (!existentes) {
-      localStorage.setItem('registros_comercios', JSON.stringify(DEMO_COMERCIOS));
-      setComercios(DEMO_COMERCIOS);
-      console.log("✅ 4 demos inicializadas correctamente");
-    } else {
-      const parsed = JSON.parse(existentes);
-      if (parsed.length < 4) {
-        localStorage.setItem('registros_comercios', JSON.stringify(DEMO_COMERCIOS));
-        setComercios(DEMO_COMERCIOS);
-        console.log("✅ Demos reinicializadas (faltaban)");
-      }
+  // FORZAR MENÚS PARA CADA DEMO
+useEffect(() => {
+  const demosIds = [1, 2, 3, 4];
+  demosIds.forEach(id => {
+    const menuKey = `menu_comercio_${id}`;
+    if (!localStorage.getItem(menuKey)) {
+      const menuInicial = getMenuPublicado(id);
+      localStorage.setItem(menuKey, JSON.stringify(menuInicial));
+      console.log(`📋 Menú inicializado para demo ${id}`);
     }
-  }, []);
+  });
+}, []);
   
   // Handler para seleccionar comercio
   const handleSelectComercio = (categoria, id, nombreComercio) => {
