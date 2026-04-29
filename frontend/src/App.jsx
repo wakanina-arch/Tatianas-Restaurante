@@ -285,15 +285,53 @@ function CartPage({ onVolverAlMenu, onBackToWelcome }) {
 
 // ========== ESTILOS DEL HEADER ==========
 const S = {
-  header: { position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, background: 'rgba(20, 10, 10, 0.95)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,215,0,0.15)', height: '60px', display: 'flex', alignItems: 'center' },
+  header: { 
+    position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, 
+    background: 'rgba(20, 10, 10, 0.92)', 
+    backdropFilter: 'blur(20px)', 
+    borderBottom: '1px solid rgba(255, 215, 0, 0.15)',
+    height: '60px', display: 'flex', alignItems: 'center' 
+  },
   headerContent: { width: '100%', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
-  backBtn: { background: 'transparent', border: '1px solid rgba(255, 215, 0, 0.2)', borderRadius: '50%', width: '36px', height: '36px', fontSize: '1.1rem', color: '#FFD700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 },
+  
+  backBtn: { 
+    background: 'transparent', border: '1px solid rgba(255, 215, 0, 0.2)', borderRadius: '50%',
+    width: '36px', height: '36px', fontSize: '1.1rem', color: '#FFD700', cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0
+  },
+  
   logoContainer: { display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' },
-  logoIcon: { fontSize: '1.3rem' },
-  logoText: { fontSize: '1rem', fontWeight: '700', background: 'linear-gradient(135deg, #FF4500, #FFD700)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
+  
+  logoIcon: { 
+    fontSize: '1.4rem',
+    filter: 'drop-shadow(0 0 6px rgba(212, 175, 55, 0.5))',
+    animation: 'fogPulse 3s ease-in-out infinite'
+  },
+  
+  logoText: { 
+    fontSize: '1rem', 
+    fontWeight: '700', 
+    background: 'linear-gradient(135deg, #FF4500, #FFD700)',
+    WebkitBackgroundClip: 'text', 
+    WebkitTextFillColor: 'transparent', 
+    backgroundClip: 'text',
+    letterSpacing: '2px'
+  },
+  
   rightIcons: { display: 'flex', gap: '8px' },
-  iconBtn: { background: 'transparent', border: '1px solid rgba(255, 215, 0, 0.2)', borderRadius: '50%', width: '36px', height: '36px', fontSize: '1.3rem', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  badge: { position: 'absolute', top: -6, right: -6, background: '#FF4500', color: 'white', borderRadius: '50%', width: '16px', height: '16px', fontSize: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }
+  
+  iconBtn: { 
+    background: 'transparent', border: '1px solid rgba(255, 215, 0, 0.2)', borderRadius: '50%',
+    width: '36px', height: '36px', fontSize: '1.3rem', cursor: 'pointer', position: 'relative',
+    display: 'flex', alignItems: 'center', justifyContent: 'center'
+  },
+  
+  badge: { 
+    position: 'absolute', top: -6, right: -6, 
+    background: '#FF4500', color: 'white', borderRadius: '50%',
+    width: '16px', height: '16px', fontSize: '0.6rem',
+    display: 'flex', alignItems: 'center', justifyContent: 'center'
+  }
 };
 
 // ========== ESTILOS DEL CARRITO ==========

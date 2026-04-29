@@ -11,7 +11,7 @@
 }
 
 :root {
-  /* Colores principales - Mantenemos SOLO los que usamos */
+  /* Colores principales */
   --verde-selva: #01400e;
   --maracuya: #FFB347;
   --mango: #FF8C42;
@@ -25,7 +25,7 @@
   --verde-ios: #34c759;
   --azul-ios: #007aff;
 
-  /* Colores de fondo y bordes - simplificados */
+  /* Colores de fondo y bordes */
   --borde-suave: rgba(0, 0, 0, 0.05);
   --fondo-vidrio: rgba(255, 255, 255, 0.7);
 }
@@ -107,9 +107,177 @@ h3 {
   }
 }
 
-/* ---------- 5. COMPONENTES REUTILIZABLES ---------- */
+/* ========== ANIMACIONES DEL TRIDENTE (UNIFICADAS) ========== */
+@keyframes flotar {
+  0% {
+    transform: translateY(0px);
+  }
 
-/* Botones base - SOLO los que son realmente globales */
+  50% {
+    transform: translateY(-3px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pulso {
+
+  0%,
+  100% {
+    text-shadow: 0 0 0px rgba(255, 215, 0, 0);
+  }
+
+  50% {
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+  }
+}
+
+@keyframes brilloRojo {
+  0% {
+    text-shadow: 0 0 2px rgba(178, 34, 34, 0.3);
+  }
+
+  100% {
+    text-shadow: 0 0 12px rgba(178, 34, 34, 0.8);
+  }
+}
+
+@keyframes brilloVerde {
+  0% {
+    text-shadow: 0 0 2px rgba(26, 59, 26, 0.3);
+  }
+
+  100% {
+    text-shadow: 0 0 12px rgba(26, 59, 26, 0.8);
+  }
+}
+
+@keyframes brilloDorado {
+  0% {
+    text-shadow: 0 0 2px rgba(255, 215, 0, 0.3);
+  }
+
+  100% {
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* ========== ESTILOS DEL TRIDENTE (UNIFICADOS) ========== */
+.tridente {
+  font-size: 1.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: flotar 3s ease-in-out infinite, pulso 2s ease-in-out infinite;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tridente-small {
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  animation: flotar 3s ease-in-out infinite, pulso 2s ease-in-out infinite;
+  text-shadow: 0 0 4px rgba(255, 215, 0, 0.4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tridente:hover,
+.tridente-small:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.9);
+}
+
+/* ========== ANIMACIONES ADICIONALES ========== */
+@keyframes mysticPulse {
+
+  0%,
+  100% {
+    text-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+    background: linear-gradient(135deg, #2a0a0a, #4a0e2e, #8b2a4a, #eecc5e, #ff8c42);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  50% {
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.7), 0 0 10px rgba(139, 42, 74, 0.5);
+    background: linear-gradient(135deg, #ff8c42, #d4af37, #8b2a4a, #4a0e2e, #2a0a0a);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
+
+@keyframes iconFloat {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4));
+  }
+
+  50% {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.8));
+  }
+}
+
+@keyframes fogPulse {
+  0% {
+    opacity: 0.7;
+    text-shadow: 0 0 2px rgba(138, 43, 226, 0.3);
+  }
+
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(138, 43, 226, 0.8);
+  }
+
+  100% {
+    opacity: 0.7;
+    text-shadow: 0 0 2px rgba(138, 43, 226, 0.3);
+  }
+}
+
+/* ---------- 5. COMPONENTES REUTILIZABLES ---------- */
 .btn-base {
   border: none;
   border-radius: 30px;
@@ -124,7 +292,6 @@ h3 {
   transform: translateY(-2px);
 }
 
-/* Badge de notificación - útil en varios lugares */
 .notification-badge {
   background: var(--rojo-ios);
   color: white;
@@ -143,9 +310,3 @@ h3 {
     padding: 0 0.5rem;
   }
 }
-
-/* IMPORTANTE: NO incluimos estilos de componentes específicos aquí
-   Cada componente (NavBar, MenuDesplegable, WelcomeInicio, etc.)
-   maneja sus propios estilos para mantener la independencia
-   y evitar conflictos.
-*/
