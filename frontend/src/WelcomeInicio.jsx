@@ -20,26 +20,21 @@ const getFraseAleatoria = () => {
   };
 };
 
-// ✅ SOLO LAS 3 DEMOS ACTIVAS (ids 1,2,3)
-const DEMOS_ACTIVAS = [
-  { id: 1, nombre: "ONE TO ONE", imagen: "/casas/en_su_punto.JPG" },
-  { id: 2, nombre: "Sabores del Origen", imagen: "/casas/Ceremoniales.JPG" },
-  { id: 3, nombre: "Sierra y Fuego", imagen: "/casas/Como_en_casa.JPG" },
-  { id: 4, nombre: "Manglar y Mar", imagen: "/casas/Casa_Caramba.JPG" },
-];
-
-// ✅ COMERCIOS PUBLICITARIOS (ids 4-9) - Solo muestran modal
-const COMERCIOS_PUBLICITARIOS = [
-  { id: 5, nombre: "Candela Obscura", imagen: "/casas/IMG_4555.JPG" },
-  { id: 6, nombre: "Kattapa", imagen: "/casas/Kattapa.JPG" },
-  { id: 7, nombre: "Llap Grill", imagen: "/casas/Llap_Grill.JPG" },
-  { id: 8, nombre: "Pollo a la leña", imagen: "/casas/Pollo_a_la_leña.JPG" },
-  { id: 9, nombre: "Tradicional", imagen: "/casas/Tradicional.JPG" },
+// ========== COMERCIOS CON URLs DE PEXELS (FUNCIONAN SIEMPRE) ==========
+const COMERCIOS_FIJOS = [
+  { id: 1, nombre: "ONE TO ONE", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 2, nombre: "Sabores del Origen", imagen: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 3, nombre: "Sierra y Fuego", imagen: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 4, nombre: "Manglar y Mar", imagen: 'https://images.pexels.com/photos/4578827/pexels-photo-4578827.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 5, nombre: "En su punto", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 6, nombre: "Candela Obscura", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 7, nombre: "Kattapa", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 8, nombre: "Llap Grill", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 9, nombre: "Tradicional", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
 ];
 
 export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRegistroComercio, currentPage, comercioSimple }) {
   const [fraseData] = useState(() => getFraseAleatoria());
-  const [comerciosRegistrados, setComerciosRegistrados] = useState([]);
   const [modalComercio, setModalComercio] = useState(null);
 
   useEffect(() => {
@@ -50,40 +45,17 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
     }));
   }, [fraseData]);
 
-  useEffect(() => {
-    try {
-      const registros = JSON.parse(localStorage.getItem('registros_comercios') || '[]');
-      // Filtrar para no duplicar ids que ya están en demos o publicitarios
-      const idsFijos = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-      const registrosSinFijos = registros.filter(r => !idsFijos.includes(r.id));
-      setComerciosRegistrados(registrosSinFijos);
-    } catch (e) {
-      console.error('Error cargando comercios registrados:', e);
-    }
-  }, [currentPage]);
-
-  // Combinar: demos activas + publicitarios + comercios registrados
-  const todosLosComercios = [
-    ...DEMOS_ACTIVAS,
-    ...COMERCIOS_PUBLICITARIOS,
-    ...comerciosRegistrados.map(r => ({
-      id: r.id,
-      nombre: r.nombre,
-      imagen: r.imagen || r.logo || '/img/default-restaurante.png',
-    }))
-  ];
-
   const handleComercioClick = (comercio) => {
     console.log("🔥 Click en comercio:", comercio.id, comercio.nombre);
     
-    // IDs 1, 2, 3 4 = DEMOS ACTIVAS → Abrir menú
+    // Demos activas (IDs 1-4)
     if (comercio.id === 1 || comercio.id === 2 || comercio.id === 3 || comercio.id === 4) {
-      console.log("✅ Demo activa, abriendo:", comercio.nombre);
+      console.log("✅ Abriendo demo:", comercio.nombre);
       onSelectCategory('Picoteo', comercio.id);
       return;
     }
     
-    // IDs 4-9 = COMERCIOS PUBLICITARIOS → Modal "Próximamente"
+    // IDs 5-9 = publicidad
     const mensajes = [
       `🏪 ¡Este local está buscando dueño!\n\n"${comercio.nombre}" podría ser tu próximo gran éxito.\n\nPróximamente disponible en ONE TO ONE.`,
       `🍳 ¡Aquí huele a oportunidad!\n\n"${comercio.nombre}" está esperando a que alguien como tú le dé vida.\n\nMuy pronto en nuestra plataforma.`,
@@ -97,7 +69,7 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
     <div style={styles.container}>
       <div style={styles.hero}>
         <div
-          className="tridente"
+          className="tridente-unificado"
           onClick={() => onAccesoComercio && onAccesoComercio()}
           title="Acceso a comercios"
         >
@@ -117,7 +89,7 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
       </div>
 
       <div style={styles.comerciosContainer}>
-        {todosLosComercios.map((comercio) => (
+        {COMERCIOS_FIJOS.map((comercio) => (
           <div
             key={comercio.id}
             style={styles.comercioCard}
@@ -128,10 +100,10 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
               alt={comercio.nombre}
               style={styles.comercioImagen}
               onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/400x280/2a0a0a/FFD700?text=' + encodeURIComponent(comercio.nombre || 'Comercio');
+                e.target.src = 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600';
               }}
             />
-            {comercio.id >= 4 && (
+            {comercio.id >= 5 && (
               <div style={styles.disponibleBadge}>
                 🔜 Próximamente
               </div>
@@ -197,119 +169,24 @@ const styles = {
     gap: '4px',
     margin: 0,
   },
-  one: {
-    fontSize: '1.2rem',
-    fontWeight: '700',
-    color: '#B22222',
-    textShadow: '0 0 5px rgba(178,34,34,0.5)',
-    animation: 'brilloRojo 2.5s infinite alternate',
-  },
-  to: {
-    fontSize: '1.2rem',
-    fontWeight: '700',
-    color: '#1a3b1a',
-    textShadow: '0 0 5px rgba(26,59,26,0.5)',
-    animation: 'brilloVerde 2.5s infinite alternate',
-  },
-  oneEnd: {
-    fontSize: '1.2rem',
-    fontWeight: '700',
-    color: '#FFD700',
-    textShadow: '0 0 5px rgba(255,215,0,0.5)',
-    animation: 'brilloDorado 2.5s infinite alternate',
-  },
-  fraseContainer: {
-    textAlign: 'center',
-    padding: '0 15px',
-  },
-  fraseIcono: {
-    fontSize: '1rem',
-    display: 'block',
-    marginBottom: '2px',
-  },
-  fraseTexto: {
-    color: '#FFD700',
-    fontSize: '0.65rem',
-    fontStyle: 'italic',
-    margin: 0,
-    lineHeight: 1.3,
-  },
-  comerciosContainer: {
-    padding: '16px 12px 40px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px',
-  },
-  comercioCard: {
-    position: 'relative',
-    width: '100%',
-    height: '240px',
-    borderRadius: '16px',
-    overflow: 'hidden',
-    cursor: 'pointer',
-    boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
-    transition: 'transform 0.3s ease',
-  },
-  comercioImagen: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
-  disponibleBadge: {
-    position: 'absolute',
-    bottom: '10px',
-    right: '10px',
-    background: 'rgba(0, 0, 0, 0.6)',
-    color: '#FFD700',
-    padding: '3px 8px',
-    borderRadius: '12px',
-    fontSize: '0.6rem',
-    fontWeight: '600',
-    letterSpacing: '0.5px',
-    backdropFilter: 'blur(4px)',
-  },
-  registroBtnContainer: {
-    padding: '0 16px 2rem',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  registroBtn: {
-    padding: '0.7rem 1.8rem',
-    background: 'transparent',
-    border: '1px solid rgba(255,215,0,0.4)',
-    borderRadius: '30px',
-    color: '#FFD700',
-    fontSize: '0.85rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
-  modalOverlay: {
-    position: 'fixed',
-    top: 0, left: 0, right: 0, bottom: 0,
-    background: 'rgba(0, 0, 0, 0.85)',
-    backdropFilter: 'blur(12px)',
-    zIndex: 5000,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '1rem',
-  },
-  modalCard: {
-    background: 'rgba(20, 10, 10, 0.95)',
-    backdropFilter: 'blur(20px)',
-    borderRadius: '32px',
-    padding: '2rem 1.5rem',
-    maxWidth: '340px',
-    width: '100%',
-    textAlign: 'center',
-    border: '1px solid rgba(255, 215, 0, 0.3)',
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
-  },
+  one: { fontSize: '1.2rem', fontWeight: '700', color: '#B22222', textShadow: '0 0 5px rgba(178,34,34,0.5)', animation: 'brilloRojo 2.5s infinite alternate' },
+  to: { fontSize: '1.2rem', fontWeight: '700', color: '#1a3b1a', textShadow: '0 0 5px rgba(26,59,26,0.5)', animation: 'brilloVerde 2.5s infinite alternate' },
+  oneEnd: { fontSize: '1.2rem', fontWeight: '700', color: '#FFD700', textShadow: '0 0 5px rgba(255,215,0,0.5)', animation: 'brilloDorado 2.5s infinite alternate' },
+  fraseContainer: { textAlign: 'center', padding: '0 15px' },
+  fraseIcono: { fontSize: '1rem', display: 'block', marginBottom: '2px' },
+  fraseTexto: { color: '#FFD700', fontSize: '0.65rem', fontStyle: 'italic', margin: 0, lineHeight: 1.3 },
+  comerciosContainer: { padding: '16px 12px 40px', display: 'flex', flexDirection: 'column', gap: '16px' },
+  comercioCard: { position: 'relative', width: '100%', height: '240px', borderRadius: '16px', overflow: 'hidden', cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,0,0,0.3)', transition: 'transform 0.3s ease' },
+  comercioImagen: { width: '100%', height: '100%', objectFit: 'cover' },
+  disponibleBadge: { position: 'absolute', bottom: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: '#FFD700', padding: '3px 8px', borderRadius: '12px', fontSize: '0.6rem', fontWeight: '600', backdropFilter: 'blur(4px)' },
+  registroBtnContainer: { padding: '0 16px 2rem', display: 'flex', justifyContent: 'center' },
+  registroBtn: { padding: '0.7rem 1.8rem', background: 'transparent', border: '1px solid rgba(255,215,0,0.4)', borderRadius: '30px', color: '#FFD700', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer' },
+  modalOverlay: { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(12px)', zIndex: 5000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' },
+  modalCard: { background: 'rgba(20,10,10,0.95)', backdropFilter: 'blur(20px)', borderRadius: '32px', padding: '2rem 1.5rem', maxWidth: '340px', width: '100%', textAlign: 'center', border: '1px solid rgba(255,215,0,0.3)' },
   modalIcon: { fontSize: '2.5rem', marginBottom: '0.5rem' },
   modalTitulo: { color: '#FFD700', fontSize: '1.2rem', marginBottom: '0.5rem' },
   modalMensaje: { color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1rem', whiteSpace: 'pre-line' },
   modalBadge: { display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(0,200,5,0.1)', border: '1px solid rgba(0,200,5,0.3)', padding: '4px 12px', borderRadius: '20px', color: '#00c805', fontSize: '0.7rem', marginBottom: '1rem' },
   badgeDot: { fontSize: '0.5rem', animation: 'pulse 2s infinite' },
-  modalBtn: { width: '100%', padding: '0.7rem', background: 'transparent', border: '1px solid rgba(255,215,0,0.3)', borderRadius: '30px', color: '#FFD700', cursor: 'pointer' }
+  modalBtn: { width: '100%', padding: '0.7rem', background: 'transparent', border: '1px solid rgba(255,215,0,0.3)', borderRadius: '30px', color: '#FFD700', cursor: 'pointer' },
 };
