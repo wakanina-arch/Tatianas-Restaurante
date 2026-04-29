@@ -25,7 +25,7 @@ const COMERCIOS_FIJOS = [
   { id: 1, nombre: "ONE TO ONE", imagen: "/casas/en_su_punto.JPG" },
   { id: 2, nombre: "Sabores del Origen", imagen: "/casas/Ceremoniales.JPG" },
   { id: 3, nombre: "Sierra y Fuego", imagen: "/casas/Como_en_casa.JPG" },
-  { id: 4, nombre: "Manglar y Mar", imagen: "/casas/Casa_Caramba.JPG" }
+  { id: 4, nombre: "Manglar y Mar", imagen: "/casas/Casa_Caramba.JPG" },
 
   { id: 5, nombre: "Candela Obscura", imagen: "/casas/IMG_4555.JPG" },
   { id: 6, nombre: "Kattapa", imagen: "/casas/Kattapa.JPG" },
