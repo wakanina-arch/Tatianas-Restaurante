@@ -1,15 +1,15 @@
 import React from 'react';
 
 export default function ComercioHeader({ comercio }) {
+  console.log("🖼️ Imagen en Header:", comercio?.imagen);
+  
   return (
     <div style={styles.container}>
       <img 
         src={comercio?.imagen} 
         alt={comercio?.nombre}
         style={styles.imagen}
-        onError={(e) => {
-          e.target.src = 'https://via.placeholder.com/400x200/2a1414/FFD700?text=' + encodeURIComponent(comercio?.nombre || 'Comercio');
-        }}
+        // Sin onError que cambie la imagen
       />
       <div style={styles.overlay} />
     </div>
@@ -20,14 +20,15 @@ const styles = {
   container: {
     position: 'relative',
     width: '100%',
-    height: '180px',          // ← Altura reducida
+    height: '180px',
     overflow: 'hidden',
+    backgroundColor: '#2a1414', // color de respaldo
   },
   imagen: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover',        // ← Ajusta al contenedor
-    objectPosition: 'center',  // ← Centrada
+    objectFit: 'cover',
+    objectPosition: 'center',
   },
   overlay: {
     position: 'absolute',

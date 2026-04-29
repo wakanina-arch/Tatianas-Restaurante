@@ -16,38 +16,10 @@ const DATA_VERSION = "2.0.4";
 
 // ========== DEFINICIÓN DE LAS 4 DEMOS ==========
 const DEMO_COMERCIOS = [
-  { 
-    id: 1, 
-    nombre: "ONE TO ONE", 
-    direccion: "Calle Principal 123", 
-    telefono: "600 000 000", 
-    descripcion: "Cocina internacional con sabores únicos.", 
-    imagen: '/casas/en_su_punto.JPG'   // ← Misma que Welcome
-  },
-  { 
-    id: 2, 
-    nombre: "Sabores del Origen", 
-    direccion: "Malecón de Ayangue, Santa Elena", 
-    telefono: "+593 988 555 111", 
-    descripcion: "Rescatamos las recetas ancestrales de Manabí.", 
-    imagen: '/casas/Ceremoniales.JPG'  // ← Misma que Welcome
-  },
-  { 
-    id: 3, 
-    nombre: "Sierra y Fuego", 
-    direccion: "Calle de los Volcanes, Patate, Tungurahua", 
-    telefono: "+593 988 555 222", 
-    descripcion: "Cocina de altura con productos de los Andes.", 
-    imagen: '/casas/Como_en_casa.JPG'  // ← Misma que Welcome
-  },
-  { 
-    id: 4, 
-    nombre: "Manglar y Mar", 
-    direccion: "Comuna de Chanduy, Santa Elena", 
-    telefono: "+593 988 555 333", 
-    descripcion: "Del manglar a tu mesa.", 
-    imagen: '/casas/Casa_Caramba.JPG'  // ← Misma que Welcome
-  }
+  { id: 1, nombre: "ONE TO ONE", imagen: '/casas/en_su_punto.JPG' },
+  { id: 2, nombre: "Sabores del Origen", imagen: '/casas/Ceremoniales.JPG' },
+  { id: 3, nombre: "Sierra y Fuego", imagen: '/casas/Como_en_casa.JPG' },
+  { id: 4, nombre: "Manglar y Mar", imagen: '/casas/Casa_Caramba.JPG' }
 ];
 
 const DEFAULT_MENU_ITEMS = [
@@ -128,10 +100,11 @@ useEffect(() => {
   const demosIds = [1, 2, 3, 4];
   demosIds.forEach(id => {
     const menuKey = `menu_comercio_${id}`;
-    if (!localStorage.getItem(menuKey)) {
-      const menuInicial = getMenuPublicado(id);
-      localStorage.setItem(menuKey, JSON.stringify(menuInicial));
-      console.log(`📋 Menú inicializado para demo ${id}`);
+    const existingMenu = localStorage.getItem(menuKey);
+    if (!existingMenu || JSON.parse(existingMenu).length < 4) {
+      const freshMenu = getMenuPublicado(id);
+      localStorage.setItem(menuKey, JSON.stringify(freshMenu));
+      console.log(`🔄 Menú regenerado para demo ${id}`);
     }
   });
 }, []);

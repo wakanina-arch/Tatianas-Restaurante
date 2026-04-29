@@ -22,15 +22,16 @@ const getFraseAleatoria = () => {
 
 // ========== COMERCIOS CON URLs DE PEXELS (FUNCIONAN SIEMPRE) ==========
 const COMERCIOS_FIJOS = [
-  { id: 1, nombre: "ONE TO ONE", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 2, nombre: "Sabores del Origen", imagen: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 3, nombre: "Sierra y Fuego", imagen: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 4, nombre: "Manglar y Mar", imagen: 'https://images.pexels.com/photos/4578827/pexels-photo-4578827.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 5, nombre: "En su punto", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 6, nombre: "Candela Obscura", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 7, nombre: "Kattapa", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 8, nombre: "Llap Grill", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
-  { id: 9, nombre: "Tradicional", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 1, nombre: "ONE TO ONE", imagen: "/casas/en_su_punto.JPG" },
+  { id: 2, nombre: "Sabores del Origen", imagen: "/casas/Ceremoniales.JPG" },
+  { id: 3, nombre: "Sierra y Fuego", imagen: "/casas/Como_en_casa.JPG" },
+  { id: 4, nombre: "Manglar y Mar", imagen: "/casas/Casa_Caramba.JPG" }
+
+  { id: 5, nombre: "Candela Obscura", imagen: "/casas/IMG_4555.JPG" },
+  { id: 6, nombre: "Kattapa", imagen: "/casas/Kattapa.JPG" },
+  { id: 7, nombre: "Llap Grill", imagen: "/casas/Llap_Grill.JPG" },
+  { id: 8, nombre: "Pollo a la leña", imagen: "/casas/Pollo_a_la_leña.JPG" },
+  { id: 9, nombre: "Tradicional", imagen: "/casas/Tradicional.JPG" },
 ];
 
 export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRegistroComercio, currentPage, comercioSimple }) {
