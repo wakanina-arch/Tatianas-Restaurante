@@ -30,7 +30,6 @@ const DEMOS_ACTIVAS = [
 
 // ✅ COMERCIOS PUBLICITARIOS (ids 4-9) - Solo muestran modal
 const COMERCIOS_PUBLICITARIOS = [
-  { id: 4, nombre: "En su punto", imagen: "/casas/IMG_4552.JPG" },
   { id: 5, nombre: "Candela Obscura", imagen: "/casas/IMG_4555.JPG" },
   { id: 6, nombre: "Kattapa", imagen: "/casas/Kattapa.JPG" },
   { id: 7, nombre: "Llap Grill", imagen: "/casas/Llap_Grill.JPG" },
@@ -77,8 +76,8 @@ export default function WelcomeInicio({ onSelectCategory, onAccesoComercio, onRe
   const handleComercioClick = (comercio) => {
     console.log("🔥 Click en comercio:", comercio.id, comercio.nombre);
     
-    // IDs 1, 2, 3 = DEMOS ACTIVAS → Abrir menú
-    if (comercio.id === 1 || comercio.id === 2 || comercio.id === 3) {
+    // IDs 1, 2, 3 4 = DEMOS ACTIVAS → Abrir menú
+    if (comercio.id === 1 || comercio.id === 2 || comercio.id === 3 || comercio.id === 4) {
       console.log("✅ Demo activa, abriendo:", comercio.nombre);
       onSelectCategory('Picoteo', comercio.id);
       return;
