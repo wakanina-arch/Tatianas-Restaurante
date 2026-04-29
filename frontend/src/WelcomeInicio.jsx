@@ -22,9 +22,10 @@ const getFraseAleatoria = () => {
 
 // ✅ SOLO LAS 3 DEMOS ACTIVAS (ids 1,2,3)
 const DEMOS_ACTIVAS = [
-  { id: 1, nombre: "ONO TO ONE", imagen: "/casas/en_su_punto.JPG" },
+  { id: 1, nombre: "ONE TO ONE", imagen: "/casas/en_su_punto.JPG" },
   { id: 2, nombre: "Sabores del Origen", imagen: "/casas/Ceremoniales.JPG" },
   { id: 3, nombre: "Sierra y Fuego", imagen: "/casas/Como_en_casa.JPG" },
+  { id: 4, nombre: "Manglar y Mar", imagen: "/casas/Casa_Caramba.JPG" },
 ];
 
 // ✅ COMERCIOS PUBLICITARIOS (ids 4-9) - Solo muestran modal

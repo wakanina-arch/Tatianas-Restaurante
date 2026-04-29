@@ -15,9 +15,38 @@ import { getMenuPublicado } from './services/menuService';
 const DATA_VERSION = "2.0.3";
 
 const DEMO_COMERCIOS = [
-  { id: 1, nombre: "ONO TO ONE", direccion: "Calle Principal 123", telefono: "600 000 000", descripcion: "Sabores únicos que conectan contigo.", imagen: '/casas/en_su_punto.JPG' },
-  { id: 2, nombre: "Sabores del Origen", direccion: "Malecón de Ayangue, Santa Elena", telefono: "+593 988 555 111", descripcion: "Rescatamos las recetas ancestrales.", imagen: '/casas/Ceremoniales.JPG' },
-  { id: 3, nombre: "Sierra y Fuego", direccion: "Calle de los Volcanes, Patate", telefono: "+593 988 555 222", descripcion: "Cocina de altura.", imagen: '/casas/Como_en_casa.JPG' }
+  { 
+    id: 1, 
+    nombre: "ONE TO ONE", 
+    direccion: "Calle Principal 123", 
+    telefono: "600 000 000", 
+    descripcion: "Cocina internacional con sabores únicos. Platos que conectan culturas y paladares de todo el mundo.", 
+    imagen: '/casas/en_su_punto.JPG' 
+  },
+  { 
+    id: 2, 
+    nombre: "Sabores del Origen", 
+    direccion: "Malecón de Ayangue, Santa Elena", 
+    telefono: "+593 988 555 111", 
+    descripcion: "Rescatamos las recetas ancestrales de Manabí. Sal prieta, viche de jaiba y el auténtico sabor de la costa ecuatoriana.", 
+    imagen: '/casas/Ceremoniales.JPG' 
+  },
+  { 
+    id: 3, 
+    nombre: "Sierra y Fuego", 
+    direccion: "Calle de los Volcanes, Patate, Tungurahua", 
+    telefono: "+593 988 555 222", 
+    descripcion: "Cocina de altura con productos de los Andes. Runa uchu, llapingachos y el calor de la tradición andina.", 
+    imagen: '/casas/Como_en_casa.JPG' 
+  },
+  { 
+    id: 4, 
+    nombre: "Manglar y Mar", 
+    direccion: "Comuna de Chanduy, Santa Elena", 
+    telefono: "+593 988 555 333", 
+    descripcion: "Del manglar a tu mesa. Ostras gratinadas, tigrillo de pulpo y lo mejor de la pesca artesanal.", 
+    imagen: '/casas/Casa_Caramba.JPG' 
+  }
 ];
 
 const DEFAULT_MENU_ITEMS = [

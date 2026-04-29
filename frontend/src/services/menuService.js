@@ -1,47 +1,101 @@
 // src/services/menuService.js
 
-const PLATOS_DEMO = [
+// ========== MENÚ INTERNACIONAL (Demo 1 - ONE TO ONE) ==========
+const MENU_INTERNACIONAL = [
   { id: 1, nombre: 'Picoteo', opciones: [
-    { nombre: 'Alitas BBQ', precio: 8.50 },
-    { nombre: 'Patatas Bravas', precio: 5.50 },
-    { nombre: 'Nachos con queso', precio: 7.50 }
+    { nombre: 'Alitas BBQ', precio: 8.50, descripcion: 'Alitas de pollo con salsa BBQ casera' },
+    { nombre: 'Patatas Bravas', precio: 5.50, descripcion: 'Patatas con salsa brava y alioli' },
+    { nombre: 'Nachos con queso', precio: 7.50, descripcion: 'Totopos con queso fundido y guacamole' }
   ]},
   { id: 2, nombre: 'Entrantes', opciones: [
-    { nombre: 'Croquetas de jamón', precio: 6.50 },
-    { nombre: 'Calamares a la romana', precio: 8.00 },
-    { nombre: 'Gambas al ajillo', precio: 9.50 }
+    { nombre: 'Croquetas de jamón', precio: 6.50, descripcion: 'Croquetas cremosas de jamón serrano' },
+    { nombre: 'Calamares a la romana', precio: 8.00, descripcion: 'Calamares frescos rebozados' },
+    { nombre: 'Gambas al ajillo', precio: 9.50, descripcion: 'Gambas salteadas con ajo y guindilla' }
   ]},
   { id: 3, nombre: 'Gourmets', opciones: [
-    { nombre: 'Solomillo al foie', precio: 24.00 },
-    { nombre: 'Carpaccio de res', precio: 16.00 },
-    { nombre: 'Vieiras gratinadas', precio: 18.00 }
+    { nombre: 'Solomillo al foie', precio: 24.00, descripcion: 'Solomillo de res con láminas de foie' },
+    { nombre: 'Carpaccio de res', precio: 16.00, descripcion: 'Finas láminas de res con parmesano' }
   ]},
-  { id: 4, nombre: 'Escuderos', opciones: [
-    { nombre: 'Ensalada César', precio: 11.50 },
-    { nombre: 'Ensalada Caprese', precio: 10.00 },
-    { nombre: 'Ensalada Waldorf', precio: 10.50 }
+  { id: 4, nombre: 'Postres', opciones: [
+    { nombre: 'Tarta de queso', precio: 5.00, descripcion: 'Tarta de queso con mermelada de frutos rojos' },
+    { nombre: 'Brownie con helado', precio: 5.50, descripcion: 'Brownie de chocolate con helado de vainilla' }
   ]},
-  { id: 5, nombre: 'Zombies', opciones: [
-    { nombre: 'Pizza Carbonara', precio: 13.50 },
-    { nombre: 'Pizza Pepperoni', precio: 13.50 },
-    { nombre: 'Hamburguesa Monstruosa', precio: 15.00 }
-  ]},
-  { id: 6, nombre: 'FastFurious', opciones: [
-    { nombre: 'Hamburguesa Clásica', precio: 10.00 },
-    { nombre: 'Perrito Caliente', precio: 6.00 },
-    { nombre: 'Wrap de pollo', precio: 8.50 }
-  ]},
-  { id: 7, nombre: 'Postres', opciones: [
-    { nombre: 'Tarta de queso', precio: 5.00 },
-    { nombre: 'Brownie con helado', precio: 5.50 },
-    { nombre: 'Flan casero', precio: 4.00 }
-  ]},
-  { id: 8, nombre: 'Bebidas', opciones: [
+  { id: 5, nombre: 'Bebidas', opciones: [
     { nombre: 'Coca Cola', precio: 2.50 },
     { nombre: 'Cerveza', precio: 3.50 },
     { nombre: 'Agua mineral', precio: 1.50 }
-  ]},
+  ]}
 ];
+
+// ========== MENÚ MANABITA (Demo 2 - Sabores del Origen) ==========
+const MENU_MANABITA = [
+  { id: 1, nombre: 'Tradiciones Manabitas', opciones: [
+    { nombre: 'Sal Prieta', precio: 4.00, descripcion: 'Mezcla de maíz tostado, maní y achiote - Acompaña plátano asado' },
+    { nombre: 'Ceviche de Sardina (Pinchagua)', precio: 7.00, descripcion: 'Sardina fresca curtida en limón con cebolla y cilantro' }
+  ]},
+  { id: 2, nombre: 'Sopas y Caldos', opciones: [
+    { nombre: 'Viche de Jaiba', precio: 9.00, descripcion: 'Sopa espesa de jaiba con maní, verde y pescado - Tradición de Machalilla' },
+    { nombre: 'Sancocho de Pescado', precio: 8.50, descripcion: 'Caldo de pescado con yuca, verde y choclo' }
+  ]},
+  { id: 3, nombre: 'Platos Fuertes', opciones: [
+    { nombre: 'Encocado de Mariscos', precio: 12.00, descripcion: 'Mariscos en salsa de coco - Receta de Súa, Esmeraldas' },
+    { nombre: 'Torta de Pescado', precio: 10.00, descripcion: 'Pasta de pescado con maní, pasas y huevo - Tradición de Machalilla' }
+  ]},
+  { id: 4, nombre: 'Postres y Bebidas', opciones: [
+    { nombre: 'Chocolate de Cacao Original', precio: 4.00, descripcion: 'Bebida ancestral de cacao con canela y pimienta' },
+    { nombre: 'Tambores de Yuca', precio: 3.50, descripcion: 'Dulce de yuca envuelto en hoja de lechuguín' }
+  ]}
+];
+
+// ========== MENÚ ANDINA (Demo 3 - Sierra y Fuego) ==========
+const MENU_ANDINA = [
+  { id: 1, nombre: 'Tradiciones Andinas', opciones: [
+    { nombre: 'Runa Uchu (Cuy Asado)', precio: 18.00, descripcion: 'Cuy asado acompañado de colada de arveja - Tradición de Tisaleo' },
+    { nombre: 'Borrego Asado', precio: 14.00, descripcion: 'Borrego macerado en chicha de jora - Pillaro' }
+  ]},
+  { id: 2, nombre: 'Sopas y Caldos', opciones: [
+    { nombre: 'Locro de Papas', precio: 6.00, descripcion: 'Cremosa sopa de papa con queso y aguacate' },
+    { nombre: 'Chuchuca', precio: 5.50, descripcion: 'Sopa de maíz seco tostado con col - San José de Minas' }
+  ]},
+  { id: 3, nombre: 'Platos Fuertes', opciones: [
+    { nombre: 'Llapingachos', precio: 7.00, descripcion: 'Tortillas de papa rellenas de queso con chorizo' },
+    { nombre: 'Cascaritas de Chancho', precio: 9.00, descripcion: 'Cuero de chancho crocante con mote - Cañar' }
+  ]},
+  { id: 4, nombre: 'Postres y Bebidas', opciones: [
+    { nombre: 'Chicha de Jora y Amaranto', precio: 3.00, descripcion: 'Bebida fermentada de maíz - Tradición Cañari' },
+    { nombre: 'Tortillas de Choclo', precio: 4.00, descripcion: 'Tortillas dulces de maíz tierno' }
+  ]}
+];
+
+// ========== MENÚ COSTERO (Demo 4 - Manglar y Mar) ==========
+const MENU_COSTERO = [
+  { id: 1, nombre: 'Entradas del Manglar', opciones: [
+    { nombre: 'Ostras Gratinadas', precio: 8.00, descripcion: 'Ostras frescas gratinadas con queso parmesano - Ayangue' },
+    { nombre: 'Cevicangre', precio: 10.00, descripcion: 'Cangrejo encocado + ceviche de camarón - Río Verde' }
+  ]},
+  { id: 2, nombre: 'Sopas Marineras', opciones: [
+    { nombre: 'Tigrillo de Pulpo', precio: 8.50, descripcion: 'Verde majado con pulpo y maní - Manglaralto' },
+    { nombre: 'Sopa de Cangrejo', precio: 9.00, descripcion: 'Caldo de cangrejo con yuca y choclo - Comuna Engabao' }
+  ]},
+  { id: 3, nombre: 'Platos Fuertes', opciones: [
+    { nombre: 'Pangora Rellena', precio: 11.00, descripcion: 'Caparazón relleno con carne de cangrejo - Data de Posorja' },
+    { nombre: 'Arroz Ayanguero', precio: 10.00, descripcion: 'Arroz mixto con mariscos y pescado - Ayangue' }
+  ]},
+  { id: 4, nombre: 'Bebidas', opciones: [
+    { nombre: 'Chicha de Maní', precio: 3.00, descripcion: 'Bebida refrescante de maní y maíz - Chanduy' },
+    { nombre: 'Champú de Arroz y Maní', precio: 3.50, descripcion: 'Bebida espesa aromatizada con canela' }
+  ]}
+];
+
+// ========== MAPEO DE MENÚS POR COMERCIO ==========
+const MENUS_POR_COMERCIO = {
+  1: MENU_INTERNACIONAL,
+  2: MENU_MANABITA,
+  3: MENU_ANDINA,
+  4: MENU_COSTERO
+};
+
+const MENU_DEFAULT = MENU_INTERNACIONAL;
 
 /**
  * Obtiene el menú PUBLICADO de un comercio
@@ -56,11 +110,11 @@ export const getMenuPublicado = (comercioId) => {
       const tienePlatos = parsed.some(cat => cat.opciones?.length > 0);
       if (tienePlatos) return parsed;
     }
-    // Si no hay menú guardado o está vacío, usar platos demo
-    return PLATOS_DEMO;
+    // Si no hay menú guardado, usar el menú por defecto del comercio
+    return MENUS_POR_COMERCIO[comercioId] || MENU_DEFAULT;
   } catch (e) {
     console.error('Error cargando menú publicado:', e);
-    return PLATOS_DEMO;
+    return MENUS_POR_COMERCIO[comercioId] || MENU_DEFAULT;
   }
 };
 
@@ -79,13 +133,10 @@ export const getMenuBorrador = (comercioId) => {
     return publicado;
   } catch (e) {
     console.error('Error cargando borrador:', e);
-    return PLATOS_DEMO;
+    return MENUS_POR_COMERCIO[comercioId] || MENU_DEFAULT;
   }
 };
 
-/**
- * Guarda el menú BORRADOR
- */
 export const saveMenuBorrador = (comercioId, menu) => {
   try {
     const key = `borrador_comercio_${comercioId}`;
@@ -97,9 +148,6 @@ export const saveMenuBorrador = (comercioId, menu) => {
   }
 };
 
-/**
- * PUBLICA el borrador
- */
 export const publicarMenu = (comercioId) => {
   try {
     const borrador = getMenuBorrador(comercioId);
@@ -117,9 +165,6 @@ export const publicarMenu = (comercioId) => {
   }
 };
 
-/**
- * Verifica si hay cambios sin publicar
- */
 export const tieneCambiosSinPublicar = (comercioId) => {
   try {
     const publicado = JSON.stringify(getMenuPublicado(comercioId));
@@ -130,9 +175,6 @@ export const tieneCambiosSinPublicar = (comercioId) => {
   }
 };
 
-/**
- * Descarta el borrador
- */
 export const descartarBorrador = (comercioId) => {
   try {
     const publicado = getMenuPublicado(comercioId);
