@@ -12,41 +12,14 @@ import uploadImageService from "./services/uploadImageService";
 import { getMenuPublicado } from './services/menuService';
 
 // ========== CONTROL DE VERSIÓN ==========
-const DATA_VERSION = "2.0.3";
+const DATA_VERSION = "2.0.4";
 
+// ========== DEFINICIÓN DE LAS 4 DEMOS ==========
 const DEMO_COMERCIOS = [
-  { 
-    id: 1, 
-    nombre: "ONE TO ONE", 
-    direccion: "Calle Principal 123", 
-    telefono: "600 000 000", 
-    descripcion: "Cocina internacional con sabores únicos. Platos que conectan culturas y paladares de todo el mundo.", 
-    imagen: '/casas/en_su_punto.JPG' 
-  },
-  { 
-    id: 2, 
-    nombre: "Sabores del Origen", 
-    direccion: "Malecón de Ayangue, Santa Elena", 
-    telefono: "+593 988 555 111", 
-    descripcion: "Rescatamos las recetas ancestrales de Manabí. Sal prieta, viche de jaiba y el auténtico sabor de la costa ecuatoriana.", 
-    imagen: '/casas/Ceremoniales.JPG' 
-  },
-  { 
-    id: 3, 
-    nombre: "Sierra y Fuego", 
-    direccion: "Calle de los Volcanes, Patate, Tungurahua", 
-    telefono: "+593 988 555 222", 
-    descripcion: "Cocina de altura con productos de los Andes. Runa uchu, llapingachos y el calor de la tradición andina.", 
-    imagen: '/casas/Como_en_casa.JPG' 
-  },
-  { 
-    id: 4, 
-    nombre: "Manglar y Mar", 
-    direccion: "Comuna de Chanduy, Santa Elena", 
-    telefono: "+593 988 555 333", 
-    descripcion: "Del manglar a tu mesa. Ostras gratinadas, tigrillo de pulpo y lo mejor de la pesca artesanal.", 
-    imagen: '/casas/Casa_Caramba.JPG' 
-  }
+  { id: 1, nombre: "ONE TO ONE", direccion: "Calle Principal 123", telefono: "600 000 000", descripcion: "Cocina internacional con sabores únicos.", imagen: 'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 2, nombre: "Sabores del Origen", direccion: "Malecón de Ayangue, Santa Elena", telefono: "+593 988 555 111", descripcion: "Rescatamos las recetas ancestrales de Manabí.", imagen: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 3, nombre: "Sierra y Fuego", direccion: "Calle de los Volcanes, Patate, Tungurahua", telefono: "+593 988 555 222", descripcion: "Cocina de altura con productos de los Andes.", imagen: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600' },
+  { id: 4, nombre: "Manglar y Mar", direccion: "Comuna de Chanduy, Santa Elena", telefono: "+593 988 555 333", descripcion: "Del manglar a tu mesa.", imagen: 'https://images.pexels.com/photos/4578827/pexels-photo-4578827.jpeg?auto=compress&cs=tinysrgb&w=600' }
 ];
 
 const DEFAULT_MENU_ITEMS = [
@@ -121,9 +94,27 @@ function MainApp() {
   const [menuItems, setMenuItems] = useState([]);
   const [COMERCIOS, setComercios] = useLocalStorage('registros_comercios', DEMO_COMERCIOS);
   
-  // Handler para seleccionar comercio - AHORA DENTRO DE MainApp
+  // ✅ FORZAR LAS 4 DEMOS AL INICIAR (AHORA DENTRO DE MainApp)
+  useEffect(() => {
+    const existentes = localStorage.getItem('registros_comercios');
+    if (!existentes) {
+      localStorage.setItem('registros_comercios', JSON.stringify(DEMO_COMERCIOS));
+      setComercios(DEMO_COMERCIOS);
+      console.log("✅ 4 demos inicializadas correctamente");
+    } else {
+      const parsed = JSON.parse(existentes);
+      if (parsed.length < 4) {
+        localStorage.setItem('registros_comercios', JSON.stringify(DEMO_COMERCIOS));
+        setComercios(DEMO_COMERCIOS);
+        console.log("✅ Demos reinicializadas (faltaban)");
+      }
+    }
+  }, []);
+  
+  // Handler para seleccionar comercio
   const handleSelectComercio = (categoria, id, nombreComercio) => {
-    switchComercio(id);  // Cambia el carrito activo
+    console.log("🔄 Seleccionando comercio:", id, nombreComercio);
+    switchComercio(id);
     setSelectedComercio(id);
     setMenuItems(getMenuPublicado(id));
     setShowWelcome(false);
@@ -136,6 +127,7 @@ function MainApp() {
   useEffect(() => {
     if (selectedComercio) {
       const menu = getMenuPublicado(selectedComercio);
+      console.log("📋 Menú cargado para comercio", selectedComercio, ":", menu?.length || 0, "categorías");
       setMenuItems(menu && menu.length > 0 ? menu : DEFAULT_MENU_ITEMS);
     }
   }, [selectedComercio]);
@@ -314,53 +306,15 @@ function CartPage({ onVolverAlMenu, onBackToWelcome }) {
 
 // ========== ESTILOS DEL HEADER ==========
 const S = {
-  header: { 
-    position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, 
-    background: 'rgba(20, 10, 10, 0.92)', 
-    backdropFilter: 'blur(20px)', 
-    borderBottom: '1px solid rgba(255, 215, 0, 0.15)',
-    height: '60px', display: 'flex', alignItems: 'center' 
-  },
+  header: { position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, background: 'rgba(20, 10, 10, 0.95)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,215,0,0.15)', height: '60px', display: 'flex', alignItems: 'center' },
   headerContent: { width: '100%', padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
-  
-  backBtn: { 
-    background: 'transparent', border: '1px solid rgba(255, 215, 0, 0.2)', borderRadius: '50%',
-    width: '36px', height: '36px', fontSize: '1.1rem', color: '#FFD700', cursor: 'pointer',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0
-  },
-  
+  backBtn: { background: 'transparent', border: '1px solid rgba(255, 215, 0, 0.2)', borderRadius: '50%', width: '36px', height: '36px', fontSize: '1.1rem', color: '#FFD700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 },
   logoContainer: { display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' },
-  
-  logoIcon: { 
-    fontSize: '1.4rem',
-    filter: 'drop-shadow(0 0 6px rgba(212, 175, 55, 0.5))',
-    animation: 'fogPulse 3s ease-in-out infinite'
-  },
-  
-  logoText: { 
-    fontSize: '1rem', 
-    fontWeight: '700', 
-    background: 'linear-gradient(135deg, #FF4500, #FFD700)',
-    WebkitBackgroundClip: 'text', 
-    WebkitTextFillColor: 'transparent', 
-    backgroundClip: 'text',
-    letterSpacing: '2px'
-  },
-  
+  logoIcon: { fontSize: '1.3rem' },
+  logoText: { fontSize: '1rem', fontWeight: '700', background: 'linear-gradient(135deg, #FF4500, #FFD700)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' },
   rightIcons: { display: 'flex', gap: '8px' },
-  
-  iconBtn: { 
-    background: 'transparent', border: '1px solid rgba(255, 215, 0, 0.2)', borderRadius: '50%',
-    width: '36px', height: '36px', fontSize: '1.3rem', cursor: 'pointer', position: 'relative',
-    display: 'flex', alignItems: 'center', justifyContent: 'center'
-  },
-  
-  badge: { 
-    position: 'absolute', top: -6, right: -6, 
-    background: '#FF4500', color: 'white', borderRadius: '50%',
-    width: '16px', height: '16px', fontSize: '0.6rem',
-    display: 'flex', alignItems: 'center', justifyContent: 'center'
-  }
+  iconBtn: { background: 'transparent', border: '1px solid rgba(255, 215, 0, 0.2)', borderRadius: '50%', width: '36px', height: '36px', fontSize: '1.3rem', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  badge: { position: 'absolute', top: -6, right: -6, background: '#FF4500', color: 'white', borderRadius: '50%', width: '16px', height: '16px', fontSize: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }
 };
 
 // ========== ESTILOS DEL CARRITO ==========
