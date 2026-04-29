@@ -1,14 +1,46 @@
 // src/services/menuService.js
 
-const DEFAULT_MENU = [
-  { id: 1, nombre: 'Picoteo', opciones: [] },
-  { id: 2, nombre: 'Entrantes', opciones: [] },
-  { id: 3, nombre: 'Gourmets', opciones: [] },
-  { id: 4, nombre: 'Escuderos', opciones: [] },
-  { id: 5, nombre: 'Zombies', opciones: [] },
-  { id: 6, nombre: 'FastFurious', opciones: [] },
-  { id: 7, nombre: 'Postres', opciones: [] },
-  { id: 8, nombre: 'Bebidas', opciones: [] },
+const PLATOS_DEMO = [
+  { id: 1, nombre: 'Picoteo', opciones: [
+    { nombre: 'Alitas BBQ', precio: 8.50 },
+    { nombre: 'Patatas Bravas', precio: 5.50 },
+    { nombre: 'Nachos con queso', precio: 7.50 }
+  ]},
+  { id: 2, nombre: 'Entrantes', opciones: [
+    { nombre: 'Croquetas de jamón', precio: 6.50 },
+    { nombre: 'Calamares a la romana', precio: 8.00 },
+    { nombre: 'Gambas al ajillo', precio: 9.50 }
+  ]},
+  { id: 3, nombre: 'Gourmets', opciones: [
+    { nombre: 'Solomillo al foie', precio: 24.00 },
+    { nombre: 'Carpaccio de res', precio: 16.00 },
+    { nombre: 'Vieiras gratinadas', precio: 18.00 }
+  ]},
+  { id: 4, nombre: 'Escuderos', opciones: [
+    { nombre: 'Ensalada César', precio: 11.50 },
+    { nombre: 'Ensalada Caprese', precio: 10.00 },
+    { nombre: 'Ensalada Waldorf', precio: 10.50 }
+  ]},
+  { id: 5, nombre: 'Zombies', opciones: [
+    { nombre: 'Pizza Carbonara', precio: 13.50 },
+    { nombre: 'Pizza Pepperoni', precio: 13.50 },
+    { nombre: 'Hamburguesa Monstruosa', precio: 15.00 }
+  ]},
+  { id: 6, nombre: 'FastFurious', opciones: [
+    { nombre: 'Hamburguesa Clásica', precio: 10.00 },
+    { nombre: 'Perrito Caliente', precio: 6.00 },
+    { nombre: 'Wrap de pollo', precio: 8.50 }
+  ]},
+  { id: 7, nombre: 'Postres', opciones: [
+    { nombre: 'Tarta de queso', precio: 5.00 },
+    { nombre: 'Brownie con helado', precio: 5.50 },
+    { nombre: 'Flan casero', precio: 4.00 }
+  ]},
+  { id: 8, nombre: 'Bebidas', opciones: [
+    { nombre: 'Coca Cola', precio: 2.50 },
+    { nombre: 'Cerveza', precio: 3.50 },
+    { nombre: 'Agua mineral', precio: 1.50 }
+  ]},
 ];
 
 /**
@@ -18,16 +50,22 @@ export const getMenuPublicado = (comercioId) => {
   try {
     const key = `menu_comercio_${comercioId}`;
     const saved = localStorage.getItem(key);
-    return saved ? JSON.parse(saved) : DEFAULT_MENU;
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Verificar si tiene platos o está vacío
+      const tienePlatos = parsed.some(cat => cat.opciones?.length > 0);
+      if (tienePlatos) return parsed;
+    }
+    // Si no hay menú guardado o está vacío, usar platos demo
+    return PLATOS_DEMO;
   } catch (e) {
     console.error('Error cargando menú publicado:', e);
-    return DEFAULT_MENU;
+    return PLATOS_DEMO;
   }
 };
 
 /**
  * Obtiene el menú BORRADOR de un comercio
- * Si no existe, se inicializa con el menú publicado
  */
 export const getMenuBorrador = (comercioId) => {
   try {
@@ -36,13 +74,12 @@ export const getMenuBorrador = (comercioId) => {
     if (saved) {
       return JSON.parse(saved);
     }
-    // Si no hay borrador, usar el menú publicado como base
     const publicado = getMenuPublicado(comercioId);
     localStorage.setItem(key, JSON.stringify(publicado));
     return publicado;
   } catch (e) {
     console.error('Error cargando borrador:', e);
-    return DEFAULT_MENU;
+    return PLATOS_DEMO;
   }
 };
 
@@ -61,24 +98,18 @@ export const saveMenuBorrador = (comercioId, menu) => {
 };
 
 /**
- * PUBLICA el borrador (sobrescribe el menú público)
+ * PUBLICA el borrador
  */
 export const publicarMenu = (comercioId) => {
   try {
     const borrador = getMenuBorrador(comercioId);
-    
-    // ✅ SOLUCIÓN: Filtrar platos marcados como eliminados
     const menuLimpio = borrador.map(categoria => ({
       ...categoria,
       opciones: categoria.opciones.filter(opt => !opt._deleted)
     }));
-    
     const key = `menu_comercio_${comercioId}`;
     localStorage.setItem(key, JSON.stringify(menuLimpio));
-    
-    // Actualizar también el borrador para que quede limpio
     localStorage.setItem(`borrador_comercio_${comercioId}`, JSON.stringify(menuLimpio));
-    
     return { success: true, menu: menuLimpio };
   } catch (e) {
     console.error('Error publicando menú:', e);
@@ -100,7 +131,7 @@ export const tieneCambiosSinPublicar = (comercioId) => {
 };
 
 /**
- * Descarta el borrador (vuelve al menú publicado)
+ * Descarta el borrador
  */
 export const descartarBorrador = (comercioId) => {
   try {
