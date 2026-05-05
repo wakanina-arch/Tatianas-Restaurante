@@ -8,7 +8,7 @@ export default function PlatoCard({ plato, onUpdateCart }) {
   const COLOR_NARANJA = '#FF8C42'; 
   
   // Fallback para Cloudinary y locales
-  const imagen = plato.imagen || (plato.opciones && plato.opciones?.imagen) || 'https://placeholder.com';
+  const imagen = plato.imagen || (plato.opciones && plato.opciones?.imagen) || '';
 
   const handleAdd = (e) => {
     e.stopPropagation();
@@ -26,7 +26,7 @@ export default function PlatoCard({ plato, onUpdateCart }) {
           alt={plato.nombre} 
           style={styles.imagen}
           loading="lazy" 
-          onError={(e) => { e.target.src = 'https://placeholder.com'; }}
+          onError={(e) => { console.error('Error cargando imagen:', imagen); e.target.style.display = 'none'; }}
         />
       </div>
 
